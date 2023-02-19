@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:saferoad/Auth/Repository/auth_provider.dart';
+import 'package:saferoad/Auth/provider/auth_provider.dart';
 import 'package:saferoad/Auth/ui/views/welcome_screen.dart';
 import 'package:saferoad/firebase_options.dart';
 import 'package:provider/provider.dart';

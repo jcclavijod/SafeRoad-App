@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:saferoad/Auth/Repository/auth_provider.dart';
+import 'package:saferoad/Auth/provider/auth_provider.dart';
 import 'package:saferoad/Auth/ui/views/homes_screen.dart';
 import 'package:saferoad/Auth/bloc/register_screen.dart';
 import 'package:saferoad/Auth/ui/widgets/custom_button.dart';
@@ -54,18 +54,25 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 SizedBox(
                     width: double.infinity,
                     child: CustomButton(
-                      onPressed: () {
-                        ap.isSignedIn == true
-                            ? Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const HomeScreen()))
-                            : Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const RegisterScreen(),
+                      onPressed: () async {
+                        if (ap.isSignedIn == true) {
+                          await ap.getDataFromSP().whenComplete(
+                                () => Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const WelcomeScreen(),
+                                  ),
                                 ),
                               );
+                        } else {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const RegisterScreen(),
+                            ),
+                          );
+                        }
+                        ;
                       },
                       text: "Continuar",
                     )),

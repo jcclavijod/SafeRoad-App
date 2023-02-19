@@ -1,7 +1,7 @@
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:saferoad/Auth/Repository/auth_provider.dart';
+import 'package:saferoad/Auth/provider/auth_provider.dart';
 import 'package:saferoad/Auth/ui/widgets/custom_button.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -36,6 +36,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
           padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 35),
           child: Column(
             children: [
+              Align(
+                  alignment: Alignment.topLeft,
+                  child: GestureDetector(
+                    onTap: () => Navigator.of(context).pop(),
+                    child: const Icon(Icons.arrow_back),
+                  )),
               Container(
                 width: 350,
                 height: 200,
