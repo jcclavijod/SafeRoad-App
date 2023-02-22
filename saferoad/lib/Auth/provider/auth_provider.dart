@@ -80,6 +80,7 @@ class AuthProvider extends ChangeNotifier {
 
       User? user = (await _firebaseAuth.signInWithCredential(creds)).user!;
 
+      // ignore: unnecessary_null_comparison
       if (user != null) {
         _uid = user.uid;
         onSucces();
@@ -95,11 +96,13 @@ class AuthProvider extends ChangeNotifier {
 
   Future<bool> checkExistingUser() async {
     DocumentSnapshot snapshot =
-        await _firebaseFirestore.collection("users").doc(_uid).get();
+        await _firebaseFirestore.collection("mecanicos").doc(_uid).get();
     if (snapshot.exists) {
+      // ignore: avoid_print
       print("Usuario encontrado");
       return true;
     } else {
+      // ignore: avoid_print
       print("Nuevo usuario");
       return false;
     }
@@ -119,7 +122,7 @@ class AuthProvider extends ChangeNotifier {
         userModel.profilePic = value;
         userModel.createdAt = DateTime.now().microsecondsSinceEpoch.toString();
         userModel.phoneNumber = _firebaseAuth.currentUser!.phoneNumber!;
-        userModel.uid = _firebaseAuth.currentUser!.phoneNumber!;
+        userModel.uid = _firebaseAuth.currentUser!.uid.toString();
       });
       _userModel = userModel;
       //SUBIR A LA BASE DE DATOS

@@ -51,7 +51,7 @@ class _OtpScreenState extends State<OtpScreen> {
                           shape: BoxShape.circle,
                           color: Colors.blue.shade50,
                         ),
-                        child: Image.asset("assets/1.jpg"),
+                        child: Image.asset("assets/1.png"),
                       ),
                       const SizedBox(height: 20),
                       const Text(

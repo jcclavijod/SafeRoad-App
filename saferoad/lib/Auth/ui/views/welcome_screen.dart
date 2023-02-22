@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:saferoad/Auth/provider/auth_provider.dart';
-import 'package:saferoad/Auth/ui/views/homes_screen.dart';
 import 'package:saferoad/Auth/bloc/register_screen.dart';
 import 'package:saferoad/Auth/ui/widgets/custom_button.dart';
 
@@ -26,7 +25,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset(
-                  "assets/1.jpg",
+                  "assets/1.png",
                   height: 400,
                 ),
                 const SizedBox(
@@ -72,7 +71,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             ),
                           );
                         }
-                        ;
                       },
                       text: "Continuar",
                     )),

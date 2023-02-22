@@ -50,7 +50,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   shape: BoxShape.circle,
                   color: Colors.blue.shade50,
                 ),
-                child: Image.asset("assets/1.jpg"),
+                child: Image.asset("assets/1.png"),
               ),
               const SizedBox(height: 20),
               const Text(
@@ -75,6 +75,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               const SizedBox(height: 20),
               TextFormField(
                 cursorColor: Colors.blue,
+                keyboardType: TextInputType.number,
                 controller: phoneController,
                 style:
                     const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
