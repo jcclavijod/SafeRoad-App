@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../Auth/model/user_model.dart';
+
 import '../../bloc/messageReceiverBlc/msReceiverBloc.dart';
 import '../../bloc/messageSenderBlc/msSenderBloc.dart';
 import '../../provider/messageProvider.dart';
@@ -11,8 +13,8 @@ import 'chatSender.dart';
 
 
 class ConversationMainView extends StatelessWidget {
-  final AppUser loginUser;
-  final AppUser receiver;
+  final UserModel loginUser;
+  final UserModel receiver;
   final String conversationId;
 
   const ConversationMainView({

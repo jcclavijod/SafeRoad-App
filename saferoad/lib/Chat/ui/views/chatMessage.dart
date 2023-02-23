@@ -4,9 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../bloc/messageReceiverBlc/msReceiverBloc.dart';
 import '../../model/message.dart';
 
+import '../../../Auth/model/user_model.dart';
+
 class ConversationMessageView extends StatelessWidget {
-  final AppUser loginUser;
-  final AppUser receiver;
+  final UserModel loginUser;
+  final UserModel receiver;
 
   const ConversationMessageView({
     Key? key,
