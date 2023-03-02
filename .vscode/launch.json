@@ -1,0 +1,11 @@
+{
+    "configurations": [
+        {
+            "name": "Flutter",
+            "program": "lib/main.dart",
+            "cwd": "saferoad",
+            "request": "launch",
+            "type": "dart"
+        }
+    ]
+}
