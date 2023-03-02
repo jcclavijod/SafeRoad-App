@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1004752253194",
+    "firebase_url": "https://saferoad-2ef0d-default-rtdb.firebaseio.com",
+    "project_id": "saferoad-2ef0d",
+    "storage_bucket": "saferoad-2ef0d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1004752253194:android:bef3e2f9b502e6138d8af3",
+        "android_client_info": {
+          "package_name": "com.example.saferoad"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1004752253194-fndmnjds0tg5ii71vr91o1bdvtfpel05.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.saferoad",
+            "certificate_hash": "f28319ece08a0831db5cdb7178d5bba101553da3"
+          }
+        },
+        {
+          "client_id": "1004752253194-of0p3r68j4322kck4v737956pejdvu9v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3y-bGqllr7k3udyuAv9xU4EJTvR4ROBo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1004752253194-of0p3r68j4322kck4v737956pejdvu9v.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1004752253194-meptnelkrbm2uj32gjrhbsn7apnt55r2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.saferoad"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
