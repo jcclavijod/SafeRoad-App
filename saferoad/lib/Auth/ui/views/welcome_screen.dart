@@ -7,8 +7,6 @@ import 'package:saferoad/Auth/ui/views/register_screen.dart';
 import 'package:saferoad/Auth/ui/views/welcome_view.dart';
 import 'package:saferoad/Auth/ui/widgets/custom_button.dart';
 
-import 'home.dart';
-
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
 

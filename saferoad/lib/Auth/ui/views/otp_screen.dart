@@ -6,7 +6,7 @@ import 'package:saferoad/Auth/ui/views/homes_screen.dart';
 import 'package:saferoad/Auth/ui/widgets/custom_button.dart';
 import 'package:saferoad/Auth/ui/widgets/utils.dart';
 
-import '../../Repository/UserInformation.dart';
+import 'UserInformation.dart';
 
 class OtpScreen extends StatefulWidget {
   final String verificationId;

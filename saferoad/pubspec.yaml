@@ -53,6 +53,8 @@ dependencies:
   page_transition: ^2.0.9
   equatable: ^2.0.5
   lottie: ^2.2.0
+  google_sign_in: ^6.0.2
+  email_validator: ^2.1.17
   
 dev_dependencies:
   flutter_test:
