@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -9,6 +10,7 @@ import 'package:saferoad/Auth/ui/widgets/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+
 class AuthProvider extends ChangeNotifier {
   bool _isSignedIn = false;
   bool get isSignedIn => _isSignedIn;
@@ -17,6 +19,7 @@ class AuthProvider extends ChangeNotifier {
   String? _uid;
   String get uid => _uid!;
   UserModel? _userModel;
+
   UserModel get userModel => _userModel!;
 
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
@@ -174,6 +177,10 @@ class AuthProvider extends ChangeNotifier {
     SharedPreferences s = await SharedPreferences.getInstance();
     await s.setString("user_model", jsonEncode(userModel.toMap()));
   }
+
+
+
+
 
   Future getDataFromSP() async {
     SharedPreferences s = await SharedPreferences.getInstance();
