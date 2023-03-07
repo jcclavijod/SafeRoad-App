@@ -3,9 +3,9 @@ import 'package:lottie/lottie.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:saferoad/Auth/provider/auth_provider.dart';
+import 'package:saferoad/Auth/ui/views/homes_screen.dart';
 import 'package:saferoad/Auth/ui/views/register_screen.dart';
 import 'package:saferoad/Auth/ui/views/welcome_view.dart';
-import 'package:saferoad/Auth/ui/widgets/custom_button.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -63,8 +63,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                   () => Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) =>
-                                          const WelcomeScreen(),
+                                      builder: (context) => const HomeScreen(),
                                     ),
                                   ),
                                 );

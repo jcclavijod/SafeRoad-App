@@ -3,11 +3,12 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:saferoad/Auth/provider/auth_provider.dart';
 import 'package:saferoad/Auth/provider/provider.dart';
 import 'package:saferoad/Auth/ui/views/homes_screen.dart';
 import 'package:saferoad/Auth/ui/widgets/custom_button.dart';
 import 'package:saferoad/Auth/ui/widgets/utils.dart';
-import 'package:saferoad/Auth/model/Models.dart';
+import 'package:saferoad/Auth/model/user_model.dart';
 
 class userInformations extends StatefulWidget {
   const userInformations({super.key});
@@ -102,7 +103,7 @@ class _userInformationsState extends State<userInformations> {
                                 icon: Icons.phone,
                                 inputType: TextInputType.number,
                                 maxLines: 1,
-                                controller: nameController,
+                                controller: phoneController,
                               ),
                               //Campo del local
                               textFeld(
@@ -195,7 +196,7 @@ class _userInformationsState extends State<userInformations> {
   // ENVIAR DATOS A LA BASE DE DATOS
   void storeData() async {
     final ap = Provider.of<AuthProvider>(context, listen: false);
-    UserModels userModel = UserModels(
+    UserModel userModel = UserModel(
       name: nameController.text.trim(),
       phoneNumber: phoneController.text.trim(),
       cedula: cedulaControler.text.trim(),
@@ -209,7 +210,7 @@ class _userInformationsState extends State<userInformations> {
     if (image != null) {
       ap.saveUserDataToFirebases(
         context: context,
-        userModels: userModel,
+        userModel: userModel,
         profilePic: image!,
         onSuccess: () {
           ap.saveUserDataToSP().then(

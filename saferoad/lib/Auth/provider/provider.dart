@@ -4,27 +4,26 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:saferoad/Auth/ui/views/otp_screen.dart';
-import 'package:saferoad/Auth/model/user_model.dart';
 import 'package:saferoad/Auth/ui/widgets/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../model/Models.dart';
+import 'package:saferoad/Auth/model/user_model.dart';
 
-class AuthProvider extends ChangeNotifier {
+class AuthProviders extends ChangeNotifier {
   bool _isSignedIn = false;
   bool get isSignedIn => _isSignedIn;
   bool _isLoading = false;
   bool get isLoading => _isLoading;
   String? _uid;
   String get uid => _uid!;
-  UserModels? _userModels;
-  UserModels get userModels => _userModels!;
+  UserModel? _userModel;
+  UserModel get userModel => _userModel!;
 
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
 
-  AuthProvider() {
+  AuthProviders() {
     checkSign();
   }
 
@@ -34,7 +33,7 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future setSignIn() async {
+  Future setSignIns() async {
     final SharedPreferences s = await SharedPreferences.getInstance();
     s.setBool("is_signedin", true);
     _isSignedIn = true;
@@ -111,7 +110,7 @@ class AuthProvider extends ChangeNotifier {
 
   void saveUserDataToFirebases({
     required BuildContext context,
-    required UserModels userModels,
+    required UserModel userModel,
     required File profilePic,
     required Function onSuccess,
   }) async {
@@ -120,17 +119,17 @@ class AuthProvider extends ChangeNotifier {
     try {
       //Subir imagen a firebase storage
       await storeFileToStorage("profilePic/$_uid", profilePic).then((value) {
-        userModels.profilePic = value;
-        userModels.createdAt = DateTime.now().microsecondsSinceEpoch.toString();
-        userModels.phoneNumber = _firebaseAuth.currentUser!.email!;
-        userModels.uid = _firebaseAuth.currentUser!.uid.toString();
+        userModel.profilePic = value;
+        userModel.createdAt = DateTime.now().microsecondsSinceEpoch.toString();
+        userModel.email = _firebaseAuth.currentUser!.email!.toString();
+        userModel.uid = _firebaseAuth.currentUser!.uid.toString();
       });
-      _userModels = userModels;
+      _userModel = userModel;
       //SUBIR A LA BASE DE DATOS
       await _firebaseFirestore
           .collection("mecanicos")
           .doc(_uid)
-          .set(userModels.toMap())
+          .set(userModel.toMap())
           .then((value) {
         onSuccess();
         _isLoading = false;
@@ -156,7 +155,7 @@ class AuthProvider extends ChangeNotifier {
         .doc(_firebaseAuth.currentUser!.uid)
         .get()
         .then((DocumentSnapshot snapshot) {
-      _userModels = UserModels(
+      _userModel = UserModel(
         name: snapshot['name'],
         cedula: snapshot['cedula'],
         local: snapshot['local'],
@@ -167,20 +166,20 @@ class AuthProvider extends ChangeNotifier {
         phoneNumber: snapshot['phoneNumber'],
         uid: snapshot['uid'],
       );
-      _uid = userModels.uid;
+      _uid = userModel.uid;
     });
   }
 
-  Future saveUserDataToSP() async {
+  Future saveUserDataToSPs() async {
     SharedPreferences s = await SharedPreferences.getInstance();
-    await s.setString("user_model", jsonEncode(userModels.toMap()));
+    await s.setString("user_model", jsonEncode(userModel.toMap()));
   }
 
-  Future getDataFromSP() async {
+  Future getDataFromSPs() async {
     SharedPreferences s = await SharedPreferences.getInstance();
     String data = s.getString("user_model") ?? '';
-    _userModels = UserModels.fromMap(jsonDecode(data));
-    _uid = _userModels!.uid;
+    _userModel = UserModel.fromMap(jsonDecode(data));
+    _uid = _userModel!.uid;
     notifyListeners();
   }
 

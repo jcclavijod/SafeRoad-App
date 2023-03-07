@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:provider/provider.dart';
 import 'package:saferoad/Auth/auth_error.dart';
 import 'package:saferoad/Auth/provider/auth_provider.dart';
 import 'package:saferoad/Auth/ui/views/register_view.dart';
@@ -71,7 +70,7 @@ class welcomeView extends StatelessWidget {
                   Navigator.push(
                       context,
                       PageTransition(
-                          child: const LoginView(),
+                          child: const SignIn(),
                           type: PageTransitionType.rightToLeftWithFade,
                           duration: const Duration(milliseconds: 250)));
                 },

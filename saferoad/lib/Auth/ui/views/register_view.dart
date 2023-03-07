@@ -131,7 +131,7 @@ class _SignUpState extends State<SignUp> {
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const LoginView()),
+                                builder: (context) => const SignIn()),
                           );
                         },
                         child: const Text("Ingresa aquí"),

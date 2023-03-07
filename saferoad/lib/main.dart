@@ -1,8 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:saferoad/Auth/provider/auth_provider.dart';
+import 'package:saferoad/Auth/provider/provider.dart';
 import 'package:saferoad/Auth/ui/views/welcome_screen.dart';
 import 'package:saferoad/firebase_options.dart';
 import 'package:provider/provider.dart';
@@ -18,45 +18,39 @@ Future<void> main() async {
   runApp(
     ChangeNotifierProvider<AuthProvider>(
       create: (context) => AuthProvider(),
-      child: const MyApp(),
+      child: MyApp(),
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final AuthRepository _authRepository = AuthRepository();
+
+  MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        RepositoryProvider(
-          create: (context) => AuthRepository(),
-          child: BlocProvider(
-            create: (context) => AuthBloc(
-              authRepository: RepositoryProvider.of<AuthRepository>(context),
-            ),
-          ),
+        BlocProvider<AuthBloc>(
+          create: (context) => AuthBloc(authRepository: _authRepository),
         ),
-        // Elimina la creación de AuthProvider aquí
+        ChangeNotifierProvider<AuthProvider>(
+          create: (_) => AuthProvider(),
+        ),
+        ChangeNotifierProvider<AuthProviders>(
+          create: (_) => AuthProviders(),
+        ), // envolver su widget con ChangeNotifierProvider<AuthProvider>
       ],
-      child: RepositoryProvider(
-        create: (context) => AuthRepository(),
-        child: BlocProvider(
-          create: (context) => AuthBloc(
-            authRepository: RepositoryProvider.of<AuthRepository>(context),
-          ),
-          child: MaterialApp(
-            debugShowCheckedModeBanner: false,
-            home: StreamBuilder<User?>(
-                stream: FirebaseAuth.instance.authStateChanges(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return const WelcomeScreen();
-                  }
-                  return const WelcomeScreen();
-                }),
-            title: "Safe Road",
-          ),
+      child: MaterialApp(
+        title: 'Saferoad',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: BlocBuilder<AuthBloc, AuthState>(
+          builder: (context, state) {
+            return const WelcomeScreen();
+          },
         ),
       ),
     );

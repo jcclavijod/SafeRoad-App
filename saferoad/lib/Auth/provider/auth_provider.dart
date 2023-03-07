@@ -190,4 +190,38 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
     s.clear();
   }
+
+  void saveUserDataToFirebases({
+    required BuildContext context,
+    required UserModel userModel,
+    required File profilePic,
+    required Function onSuccess,
+  }) async {
+    _isLoading = true;
+    notifyListeners();
+    try {
+      //Subir imagen a firebase storage
+      await storeFileToStorage("profilePic/$_uid", profilePic).then((value) {
+        userModel.profilePic = value;
+        userModel.createdAt = DateTime.now().microsecondsSinceEpoch.toString();
+        userModel.email = _firebaseAuth.currentUser!.email!.toString();
+        userModel.uid = _firebaseAuth.currentUser!.uid.toString();
+      });
+      _userModel = userModel;
+      //SUBIR A LA BASE DE DATOS
+      await _firebaseFirestore
+          .collection("mecanicos")
+          .doc(_uid)
+          .set(userModel.toMap())
+          .then((value) {
+        onSuccess();
+        _isLoading = false;
+        notifyListeners();
+      });
+    } on FirebaseAuthException catch (e) {
+      showSnackBar(context, e.message.toString());
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
 }
