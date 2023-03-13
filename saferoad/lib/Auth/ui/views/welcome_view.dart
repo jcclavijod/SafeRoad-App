@@ -72,7 +72,7 @@ class welcomeView extends StatelessWidget {
                   Navigator.push(
                       context,
                       PageTransition(
-                          child: const LoginView(),
+                          child: const SignIn(),
                           type: PageTransitionType.rightToLeftWithFade,
                           duration: const Duration(milliseconds: 250)));
                 },

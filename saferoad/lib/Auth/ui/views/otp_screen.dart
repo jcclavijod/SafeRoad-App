@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
 import 'package:saferoad/Auth/provider/auth_provider.dart';
+import 'package:saferoad/Auth/ui/views/UserInformation.dart';
 import 'package:saferoad/Auth/ui/views/homes_screen.dart';
 import 'package:saferoad/Auth/ui/widgets/custom_button.dart';
 import 'package:saferoad/Auth/ui/widgets/utils.dart';
-
-import '../../Repository/UserInformation.dart';
 
 class OtpScreen extends StatefulWidget {
   final String verificationId;
