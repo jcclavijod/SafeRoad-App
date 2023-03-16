@@ -22,7 +22,7 @@ class _MyAuthState extends State<MyAuth> {
   @override
   Widget build(BuildContext context) {
     if (showloginPage) {
-      return MyHomePage(showRegisterPage: toggleScrean);
+      return Login(showRegisterPage: toggleScrean);
     } else {
       return RegisterPage(showlogingPage: toggleScrean);
     }

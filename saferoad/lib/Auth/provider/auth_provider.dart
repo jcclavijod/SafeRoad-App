@@ -19,18 +19,18 @@ class FirebaseDataSource {
     return firestore.collection('tmp').doc().id;
   }
 
-  Stream<Iterable<MyUser>> getMyUsers() {
+  Stream<Iterable<UserModel>> getMyUsers() {
     return firestore
         .collection('user/${currentUser.uid}/myUsers')
         .snapshots()
-        .map((it) => it.docs.map((e) => MyUser.fromFirebaseMap(e.data())));
+        .map((it) => it.docs.map((e) => UserModel.fromMap(e.data())));
   }
 
-  Future<void> saveMyUser(MyUser myUser, File? image) async {
-    final ref = firestore.doc('user/${currentUser.uid}/myUsers/${myUser.id}');
+  Future<void> saveMyUser(UserModel myUser, File? image) async {
+    final ref = firestore.doc('user/${currentUser.uid}/myUsers/${myUser.uid}');
     if (image != null) {
-      if (myUser.image != null) {
-        await storage.refFromURL(myUser.image!).delete();
+      if (myUser.profilePic != null) {
+        await storage.refFromURL(myUser.profilePic!).delete();
       }
 
       final fileName = image.uri.pathSegments.last;
@@ -39,15 +39,14 @@ class FirebaseDataSource {
       final storageRef = storage.ref(imagePath);
       await storageRef.putFile(image);
       final url = await storageRef.getDownloadURL();
-      myUser = myUser.copyWith(image: url);
     }
-    await ref.set(myUser.toFirebaseMap(), SetOptions(merge: true));
+    await ref.set(myUser.toMap(), SetOptions(merge: true));
   }
 
-  Future<void> deleteMyUser(MyUser myUser) async {
-    final ref = firestore.doc('user/${currentUser.uid}/myUsers/${myUser.id}');
-    if (myUser.image != null) {
-      await storage.refFromURL(myUser.image!).delete();
+  Future<void> deleteMyUser(UserModel myUser) async {
+    final ref = firestore.doc('user/${currentUser.uid}/myUsers/${myUser.uid}');
+    if (myUser.profilePic != null) {
+      await storage.refFromURL(myUser.profilePic!).delete();
     }
     await ref.delete();
   }

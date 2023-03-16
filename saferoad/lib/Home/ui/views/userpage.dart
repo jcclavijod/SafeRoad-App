@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:saferoad/Home/ui/views/perfil.dart';
+import 'package:saferoad/Map/ui/views/mapView.dart';
 
 
 class UserPage extends StatefulWidget {
@@ -73,7 +74,7 @@ class _UserPageState extends State<UserPage> {
           // ignore: prefer_const_constructors
           body: TabBarView(
             children: const [
-              Icon(Icons.directions_car),
+              MapView(),
               Icon(Icons.directions_transit),
               Perfil(),
             ],

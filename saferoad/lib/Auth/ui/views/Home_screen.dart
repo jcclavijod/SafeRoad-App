@@ -8,15 +8,15 @@ import 'package:saferoad/Auth/ui/views/decision.dart';
 import 'package:page_transition/page_transition.dart';
 import 'password_reset.dart';
 
-class MyHomePage extends StatefulWidget {
+class Login extends StatefulWidget {
   final VoidCallback showRegisterPage;
-  const MyHomePage({super.key, required this.showRegisterPage});
+  const Login({super.key, required this.showRegisterPage});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<Login> createState() => _LoginState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _LoginState extends State<Login> {
   final _emailConroller = TextEditingController();
   final _passwordConroller = TextEditingController();
   Future signin() async {
