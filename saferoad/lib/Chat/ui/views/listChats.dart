@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:saferoad/Home/ui/widgets/SideMenuWidget.dart';
 
 import '../../../Auth/model/user_model.dart';
 import '../../bloc/chatBlc/chat_blc_bloc.dart';
@@ -19,16 +21,24 @@ class ChatPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
+    UserModel userM = UserModel();
     //print(authenticatedUser.uid);
-    return BlocProvider(
-      create: (context) => ChatBloc(
-        chatRepository: ChatRepository(
-          chatFirebaseProvider:
-              ChatFirebaseProvider(firestore: FirebaseFirestore.instance),
+    return Scaffold(
+      appBar: (AppBar(
+        title: Text("Chats"),
+      )),
+      drawer: SideMenuWidget(userM: userM),
+      body: BlocProvider(
+        create: (context) => ChatBloc(
+          chatRepository: ChatRepository(
+            chatFirebaseProvider:
+                ChatFirebaseProvider(firestore: FirebaseFirestore.instance),
+          ),
+        )..add(ChatRequested(loginUID: authenticatedUser.uid)),
+        child: _ChatView(
+          authenticatedUser: authenticatedUser,
         ),
-      )..add(ChatRequested(loginUID: authenticatedUser.uid)),
-      child: _ChatView(
-        authenticatedUser: authenticatedUser,
       ),
     );
   }

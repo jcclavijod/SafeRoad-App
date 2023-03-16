@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:saferoad/Home/ui/views/perfil.dart';
+import 'package:saferoad/Home/ui/widgets/SideMenuWidget.dart';
 import 'package:saferoad/Map/ui/views/mapView.dart';
 
 import '../../../Auth/model/user_model.dart';
@@ -74,64 +75,10 @@ class _UserPageState extends State<UserPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Drawer(
-        child: ListView(
-          children: [
-            const UserAccountsDrawerHeader(
-              accountName: Text('User Name'),
-              accountEmail: Text('user.email@example.com'),
-              currentAccountPicture: CircleAvatar(
-                backgroundImage: NetworkImage(
-                    'https://randomuser.me/api/portraits/men/1.jpg'),
-              ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.map_outlined),
-              title: const Text('Map'),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const Loading(),
-                    ));
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.chat_bubble),
-              title: const Text('Chat'),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ChatPage(authenticatedUser: userM),
-                    ));
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.settings),
-              title: const Text('Settings'),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const Perfil(),
-                    ));
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.logout),
-              title: const Text('Logout'),
-              onTap: () {
-                FirebaseAuth.instance.signOut();
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        ),
-      ),
       appBar: AppBar(
         title: const Text('Safe Road'),
       ),
+      drawer: SideMenuWidget(userM: userM),
       body: const Loading(),
     );
   }

@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:saferoad/Auth/model/user_model.dart';
+import 'package:saferoad/Home/ui/widgets/SideMenuWidget.dart';
 
 import '../../bloc/location/my_location_bloc.dart';
 import '../../bloc/map/map_bloc.dart';
@@ -16,6 +19,8 @@ class MapView extends StatefulWidget {
 }
 
 class _MapViewState extends State<MapView> {
+  final user = FirebaseAuth.instance.currentUser;
+  UserModel userM = UserModel();
   @override
   void initState() {
     final myLocationBloc = BlocProvider.of<MyLocationBloc>(context);
@@ -35,11 +40,15 @@ class _MapViewState extends State<MapView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text("Mapa"),
+      ),
+      drawer: SideMenuWidget(userM: userM),
       body: BlocBuilder<MyLocationBloc, MyLocationState>(
           builder: (context, state) => createMap(state)),
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
-        children: [const BtnLocation()],
+        children: const [BtnLocation()],
       ),
     );
   }

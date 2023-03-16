@@ -4,7 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:saferoad/Auth/model/user_model.dart';
 import 'package:saferoad/Auth/ui/views/update.dart';
+import 'package:saferoad/Home/ui/widgets/SideMenuWidget.dart';
 
 class Perfil extends StatefulWidget {
   const Perfil({Key? key}) : super(key: key);
@@ -14,6 +16,8 @@ class Perfil extends StatefulWidget {
 }
 
 class _PerfilState extends State<Perfil> {
+  final user = FirebaseAuth.instance.currentUser;
+  UserModel userM = UserModel();
   late String fullName = '';
   late String email = '';
   late String cedula = '';
@@ -75,6 +79,10 @@ class _PerfilState extends State<Perfil> {
       return const CircularProgressIndicator();
     } else {
       return Scaffold(
+        appBar: AppBar(
+          title: const Text("Perfil"),
+        ),
+        drawer: SideMenuWidget(userM: userM),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Column(
