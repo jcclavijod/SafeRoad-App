@@ -1,101 +1,53 @@
-class UserModel {
-  String name;
-  String cedula;
-  String local;
-  String email;
-  String bio;
-  String profilePic;
-  String createdAt;
-  String phoneNumber;
-  String uid;
+import 'package:equatable/equatable.dart';
 
-  UserModel(
-      {required this.name,
-      required this.cedula,
-      required this.local,
-      required this.email,
-      required this.bio,
-      required this.profilePic,
-      required this.createdAt,
-      required this.phoneNumber,
-      required this.uid});
+class MyUser extends Equatable {
+  final String id;
+  final String name;
+  final String lastName;
+  final int age;
+  final String? image;
 
-// Obteniendo los datos del servidor
-  factory UserModel.fromMap(Map<String, dynamic> map) {
-    return UserModel(
-      name: map['name'] ?? '',
-      cedula: map['cedula'] ?? '',
-      local: map['local'] ?? '',
-      email: map['email'] ?? '',
-      bio: map['bio'] ?? '',
-      profilePic: map['profilePic'] ?? '',
-      createdAt: map['createdAt'] ?? '',
-      phoneNumber: map['phoneNumber'] ?? '',
-      uid: map['uid'] ?? '',
-    );
-  }
+  const MyUser({
+    required this.id,
+    required this.name,
+    required this.lastName,
+    required this.age,
+    this.image,
+  });
 
-// Enviando los datos al servidor DB
-  Map<String, dynamic> toMap() {
-    return {
-      "name": name,
-      "cedula": cedula,
-      "local": local,
-      "email": email,
-      "bio": bio,
-      "profilePic": profilePic,
-      "createdAt": createdAt,
-      "phoneNumber": phoneNumber,
-      "uid": uid,
+  @override
+  List<Object?> get props => [id, name, lastName, age, image];
+
+  Map<String, Object?> toFirebaseMap() {
+    return <String, Object?>{
+      'id': id,
+      'name': name,
+      'lastName': lastName,
+      'age': age,
+      'image': image,
     };
   }
-}
 
-class UserModelU {
-  String name;
-  String cedula;
-  String email;
-  String bio;
-  String profilePic;
-  String createdAt;
-  String phoneNumber;
-  String uid;
+  MyUser.fromFirebaseMap(Map<String, Object?> data)
+      : id = data['id'] as String,
+        name = data['name'] as String,
+        lastName = data['lastName'] as String,
+        age = data['age'] as int,
+        image = data['image'] as String?;
 
-  UserModelU(
-      {required this.name,
-      required this.cedula,
-      required this.email,
-      required this.bio,
-      required this.profilePic,
-      required this.createdAt,
-      required this.phoneNumber,
-      required this.uid});
-
-// Obteniendo los datos del servidor
-  factory UserModelU.fromMap(Map<String, dynamic> map) {
-    return UserModelU(
-      name: map['name'] ?? '',
-      cedula: map['cedula'] ?? '',
-      email: map['email'] ?? '',
-      bio: map['bio'] ?? '',
-      profilePic: map['profilePic'] ?? '',
-      createdAt: map['createdAt'] ?? '',
-      phoneNumber: map['phoneNumber'] ?? '',
-      uid: map['uid'] ?? '',
+  MyUser copyWith({
+    String? id,
+    String? name,
+    String? lastName,
+    int? age,
+    String? image,
+  }) {
+    return MyUser(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      lastName: lastName ?? this.lastName,
+      age: age ?? this.age,
+      image: image ?? this.image,
     );
-  }
-
-// Enviando los datos al servidor DB
-  Map<String, dynamic> toMap() {
-    return {
-      "name": name,
-      "cedula": cedula,
-      "email": email,
-      "bio": bio,
-      "profilePic": profilePic,
-      "createdAt": createdAt,
-      "phoneNumber": phoneNumber,
-      "uid": uid,
-    };
   }
 }

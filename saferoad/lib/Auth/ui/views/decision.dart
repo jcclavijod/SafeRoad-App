@@ -1,93 +1,80 @@
-// ignore_for_file: unused_field
+// ignore_for_file: use_key_in_widget_constructors
 
 import 'package:flutter/material.dart';
-import 'package:saferoad/Auth/ui/views/UserInformation.dart';
-import 'package:saferoad/Auth/ui/views/decisionUser.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:saferoad/Auth/ui/views/registerM.dart';
+import 'package:saferoad/Auth/ui/views/registerpage.dart';
 
-class UserMechanicScreen extends StatefulWidget {
-  const UserMechanicScreen({Key? key}) : super(key: key);
-
-  @override
-  _UserMechanicScreenState createState() => _UserMechanicScreenState();
-}
-
-class _UserMechanicScreenState extends State<UserMechanicScreen> {
-  String? _selectedUserType;
+class MyView extends StatelessWidget {
+  late final VoidCallback showRegisterPage;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Builder(
-          builder: (BuildContext context) {
-            return IconButton(
-              icon: const Icon(Icons.arrow_back),
-              onPressed: () {
-                Navigator.pushReplacementNamed(context, '/');
-              },
-            );
-          },
-        ),
-        title: Text('Volver'),
+        title: const Text('Selecciona una opción'),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
-              '¿Qué tipo de usuario eres?',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
+            const Padding(
+              padding: EdgeInsets.all(15),
+              child: Text(
+                '¿Qué quieres ser?',
+                style: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-            const SizedBox(height: 40),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const decisionUser()),
-                    (route) => false);
-              },
-              // ignore: sort_child_properties_last
-              child: const Text(
-                'Soy un usuario',
-                style: TextStyle(fontSize: 20),
-              ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                foregroundColor: Colors.blue,
-                minimumSize: const Size(200, 60),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
+            SizedBox(
+              width: 250,
+              height: 50,
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      PageTransition(
+                          child: RegisterM(
+                            showlogingPage: () {},
+                          ),
+                          type: PageTransitionType.rightToLeftWithFade,
+                          duration: const Duration(milliseconds: 250)));
+                },
+                child: const Text(
+                  'Mecánico',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                elevation: 5,
               ),
             ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const userInformation()),
-                    (route) => false);
-              },
-              // ignore: sort_child_properties_last
-              child: const Text(
-                'Soy un mecánico',
-                style: TextStyle(fontSize: 20),
-              ),
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.teal,
-                backgroundColor: Colors.white,
-                minimumSize: const Size(200, 60),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
+            const SizedBox(height: 20.0),
+            SizedBox(
+              width: 250,
+              height: 50,
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      PageTransition(
+                          child: RegisterPage(
+                            showlogingPage: () {},
+                          ),
+                          type: PageTransitionType.rightToLeftWithFade,
+                          duration: const Duration(milliseconds: 250)));
+                },
+                child: const Text(
+                  'Usuario',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                elevation: 5,
               ),
             ),
           ],
