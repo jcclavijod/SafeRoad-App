@@ -6,6 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:saferoad/Home/ui/views/perfil.dart';
 import 'package:saferoad/Map/ui/views/mapView.dart';
 
+import '../../../Auth/model/user_model.dart';
+import '../../../Chat/ui/views/listChats.dart';
+import '../../../Map/ui/views/loading.dart';
 
 class UserPage extends StatefulWidget {
   const UserPage({super.key});
@@ -16,6 +19,8 @@ class UserPage extends StatefulWidget {
 
 class _UserPageState extends State<UserPage> {
   final user = FirebaseAuth.instance.currentUser;
+  UserModel userM = UserModel();
+
   // document IDs
   List<String> docIDs = [];
 
@@ -42,8 +47,28 @@ class _UserPageState extends State<UserPage> {
     snapshot.docs.forEach((doc) {
       docIds.add(doc.id);
     });
-
+    getDataFromFirestore();
     return docIds;
+  }
+
+  Future getDataFromFirestore() async {
+    await FirebaseFirestore.instance
+        .collection('mecanicos')
+        .doc(docIDs[0])
+        .get()
+        .then((DocumentSnapshot snapshot) {
+      userM = UserModel(
+        name: snapshot['name'],
+        cedula: snapshot['cedula'],
+        local: snapshot['local'],
+        email: snapshot['email'],
+        bio: snapshot['bio'],
+        profilePic: snapshot['profilePic'],
+        createdAt: snapshot['createdAt'],
+        phoneNumber: snapshot['phoneNumber'],
+        uid: snapshot['uid'],
+      );
+    });
   }
 
   @override
@@ -74,8 +99,9 @@ class _UserPageState extends State<UserPage> {
           // ignore: prefer_const_constructors
           body: TabBarView(
             children: const [
-              MapView(),
-              Icon(Icons.directions_transit),
+              Loading(),
+              //ChatPage(authenticatedUser: userM),
+              Icon(Icons.chat_bubble),
               Perfil(),
             ],
           ),

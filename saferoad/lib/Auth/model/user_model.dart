@@ -10,15 +10,15 @@ class UserModel {
   String uid;
 
   UserModel(
-      {required this.name,
-      required this.cedula,
-      required this.local,
-      required this.email,
-      required this.bio,
-      required this.profilePic,
-      required this.createdAt,
-      required this.phoneNumber,
-      required this.uid});
+      {this.name = '',
+      this.cedula = '',
+      this.local = '',
+      this.email = '',
+      this.bio = '',
+      this.profilePic = '',
+      this.createdAt = '',
+      this.phoneNumber = '',
+      this.uid = ''});
 
 // Obteniendo los datos del servidor
   factory UserModel.fromMap(Map<String, dynamic> map) {

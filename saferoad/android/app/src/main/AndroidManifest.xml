@@ -1,9 +1,36 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.saferoad">
+
+     <!-- INTERNET -->
+     <uses-permission android:name="android.permission.INTERNET" />
+
+     <!-- GPS-->
+     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+ 
+     <!-- Geofences-->
+     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+ 
+     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+     <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+     
    <application
         android:label="saferoad"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+
+        <service
+        android:name="com.pravera.flutter_foreground_task.service.ForegroundService"
+        android:foregroundServiceType="location"
+        android:stopWithTask="true" />
+
+        <meta-data android:name="com.google.android.geo.API_KEY"
+        android:value="AIzaSyD_o0r4GZfrq0C9fDyLU6rXSdHe-WLfv78"/>
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
