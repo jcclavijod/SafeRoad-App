@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:saferoad/Auth/provider/auth_provider.dart';
-import 'package:saferoad/Auth/ui/views/register_screen.dart';
-import 'package:saferoad/Auth/ui/views/welcome_view.dart';
+import 'package:saferoad/Auth/bloc/register_screen.dart';
 import 'package:saferoad/Auth/ui/widgets/custom_button.dart';
-
-import 'home.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -29,8 +24,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Lottie.asset('assets/person.json',
-                    width: 500, fit: BoxFit.cover, reverse: true),
+                Image.asset(
+                  "assets/1.png",
+                  height: 400,
+                ),
                 const SizedBox(
                   height: 20,
                 ),
@@ -52,58 +49,37 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 50),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(15),
-                  child: SizedBox(
-                      width: 300,
-                      height: 50,
-                      child: MaterialButton(
-                        onPressed: () async {
-                          if (ap.isSignedIn == true) {
-                            await ap.getDataFromSP().whenComplete(
-                                  () => Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const WelcomeScreen(),
-                                    ),
+                const SizedBox(height: 20),
+                SizedBox(
+                    width: double.infinity,
+                    child: CustomButton(
+                      onPressed: () async {
+                        if (ap.isSignedIn == true) {
+                          await ap.getDataFromSP().whenComplete(
+                                () => Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const WelcomeScreen(),
                                   ),
-                                );
-                          } else {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const RegisterScreen(),
-                              ),
-                            );
-                          }
-                        },
-                        color: Colors.blue,
-                        child: const Center(
-                          child: Text(
-                            'Ingresa con tu telefono',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      )),
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          PageTransition(
-                              child: const welcomeView(),
-                              type: PageTransitionType.rightToLeftWithFade,
-                              duration: const Duration(milliseconds: 250)));
-                    },
-                    child: const Text(
-                      'Otros metodos de registro',
-                      style: TextStyle(
-                          color: Colors.black, fontWeight: FontWeight.bold),
+                                ),
+                              );
+                        } else {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const RegisterScreen(),
+                            ),
+                          );
+                        }
+                      },
+                      text: "Continuar",
+                    )),
+                const SizedBox(height: 20),
+                SizedBox(
+                    width: double.infinity,
+                    child: CustomButton(
+                      onPressed: () {},
+                      text: "Otros metodos de registro",
                     )),
               ],
             ),
