@@ -73,40 +73,66 @@ class _UserPageState extends State<UserPage> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: DefaultTabController(
-        length: 3,
-        child: Scaffold(
-          appBar: AppBar(
-            actions: [
-              IconButton(
-                onPressed: () {
-                  FirebaseAuth.instance.signOut();
-                },
-                icon: const Icon(Icons.logout),
+    return Scaffold(
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            const UserAccountsDrawerHeader(
+              accountName: Text('User Name'),
+              accountEmail: Text('user.email@example.com'),
+              currentAccountPicture: CircleAvatar(
+                backgroundImage: NetworkImage(
+                    'https://randomuser.me/api/portraits/men/1.jpg'),
               ),
-            ],
-            bottom: const TabBar(
-              tabs: [
-                Tab(icon: Icon(Icons.map_outlined)),
-                Tab(icon: Icon(Icons.chat_bubble)),
-                Tab(icon: Icon(Icons.settings)),
-              ],
             ),
-            title: const Text('Safe Road'),
-          ),
-          // ignore: prefer_const_constructors
-          body: TabBarView(
-            children: const [
-              Loading(),
-              //ChatPage(authenticatedUser: userM),
-              Icon(Icons.chat_bubble),
-              Perfil(),
-            ],
-          ),
+            ListTile(
+              leading: const Icon(Icons.map_outlined),
+              title: const Text('Map'),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const Loading(),
+                    ));
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.chat_bubble),
+              title: const Text('Chat'),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ChatPage(authenticatedUser: userM),
+                    ));
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.settings),
+              title: const Text('Settings'),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const Perfil(),
+                    ));
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.logout),
+              title: const Text('Logout'),
+              onTap: () {
+                FirebaseAuth.instance.signOut();
+                Navigator.pop(context);
+              },
+            ),
+          ],
         ),
       ),
+      appBar: AppBar(
+        title: const Text('Safe Road'),
+      ),
+      body: const Loading(),
     );
   }
 }
