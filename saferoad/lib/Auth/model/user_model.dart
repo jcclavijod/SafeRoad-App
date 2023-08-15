@@ -8,17 +8,20 @@ class UserModel {
   String createdAt;
   String phoneNumber;
   String uid;
+  //bool estado;
 
-  UserModel(
-      {this.name = '',
-      this.cedula = '',
-      this.local = '',
-      this.email = '',
-      this.bio = '',
-      this.profilePic = '',
-      this.createdAt = '',
-      this.phoneNumber = '',
-      this.uid = ''});
+  UserModel({
+    this.name = '',
+    this.cedula = '',
+    this.local = '',
+    this.email = '',
+    this.bio = '',
+    this.profilePic = '',
+    this.createdAt = '',
+    this.phoneNumber = '',
+    this.uid = '',
+    //this.estado = false
+  });
 
 // Obteniendo los datos del servidor
   factory UserModel.fromMap(Map<String, dynamic> map) {
@@ -32,6 +35,7 @@ class UserModel {
       createdAt: map['createdAt'] ?? '',
       phoneNumber: map['phoneNumber'] ?? '',
       uid: map['uid'] ?? '',
+      //estado: map['estado'] ?? '',
     );
   }
 

@@ -19,18 +19,3 @@ class ChatFirebaseProvider {
     return querySnap.docs.map((e) => e.data()).toList();
   }
 }
-
-
-/*
-class ChatFirebaseProvider {
-  late FirebaseFirestore firestore;
-  
-  Future<List<Map<String, dynamic>>> getChats({required String loginUID}) async {
-    final querySnap = await firestore
-        .collection(ConversationKey.collectionName)
-        .where(ConversationKey.members, arrayContains: loginUID)
-        .get();
-    return querySnap.docs.map((e) => e.data()).toList();
-  }
-}
-*/

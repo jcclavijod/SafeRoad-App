@@ -7,7 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:saferoad/Home/ui/views/userpage.dart';
-
+import 'package:firebase_messaging/firebase_messaging.dart';
 import '../widgets/utils.dart';
 
 class RegisterM extends StatefulWidget {
@@ -31,6 +31,8 @@ class _RegisterMState extends State<RegisterM> {
   final _phoneConroller = TextEditingController();
   final _LocalConroller = TextEditingController();
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
   @override
   void dispose() {
@@ -82,7 +84,7 @@ class _RegisterMState extends State<RegisterM> {
           await addUserDetails(
             _firstNameConroller.text.trim(),
             _LastNameConroller.text.trim(),
-            int.parse(_cedulaConroller.text.trim()),
+            _cedulaConroller.text.trim(),
             _emailConroller.text.trim(),
             _uid = _firebaseAuth.currentUser!.uid.toString(),
             value,
@@ -94,7 +96,7 @@ class _RegisterMState extends State<RegisterM> {
         await addUserDetails(
           _firstNameConroller.text.trim(),
           _LastNameConroller.text.trim(),
-          int.parse(_cedulaConroller.text.trim()),
+          _cedulaConroller.text.trim(),
           _emailConroller.text.trim(),
           uid,
           null,
@@ -123,12 +125,13 @@ class _RegisterMState extends State<RegisterM> {
   Future addUserDetails(
       String firstName,
       String lastName,
-      int cedula,
+      String cedula,
       String email,
       String uid,
       String? profilePicUrl,
       phoneNumber,
       local) async {
+    String? token = await _firebaseMessaging.getToken();
     await FirebaseFirestore.instance.collection('mecanicos').doc(uid).set({
       'first name': firstName,
       'last name': lastName,
@@ -138,6 +141,7 @@ class _RegisterMState extends State<RegisterM> {
       'uid': uid,
       'phoneNumber': phoneNumber,
       'local': local,
+      'token': token,
     });
   }
 

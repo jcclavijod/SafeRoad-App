@@ -9,10 +9,12 @@ class Loading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: BlocBuilder<GpsBloc, GpsState>(
-      builder: (context, state) {
-        return state.isAllReady ? const MapView() : const GpsAccess();
-      },
-    ));
+    return Scaffold(
+      body: BlocBuilder<GpsBloc, GpsState>(
+        builder: (context, state) {
+          return state.isAllReady ? const MapView() : const GpsAccess();
+        },
+      ),
+    );
   }
 }

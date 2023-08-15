@@ -82,7 +82,7 @@ class _PerfilState extends State<Perfil> {
         appBar: AppBar(
           title: const Text("Perfil"),
         ),
-        drawer: SideMenuWidget(userM: userM),
+        drawer: const SideMenuWidget(),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Column(

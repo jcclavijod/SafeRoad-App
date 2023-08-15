@@ -2,8 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-
 import '../../bloc/map/map_bloc.dart';
 
 class LoadingDialog extends StatefulWidget {
@@ -14,15 +12,15 @@ class LoadingDialog extends StatefulWidget {
   const LoadingDialog(
       {Key? key,
       this.message = 'Buscando locales cercanos en 2 KM',
-      this.duration = 2000,
+      this.duration = 9000,
       })
       : super(key: key);
 
   @override
-  _LoadingDialogState createState() => _LoadingDialogState();
+  LoadingDialogState createState() => LoadingDialogState();
 }
 
-class _LoadingDialogState extends State<LoadingDialog> {
+class LoadingDialogState extends State<LoadingDialog> {
   bool _isLoading = true;
 
   @override

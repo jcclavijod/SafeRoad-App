@@ -3,7 +3,7 @@
 
      <!-- INTERNET -->
      <uses-permission android:name="android.permission.INTERNET" />
-
+     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
      <!-- GPS-->
      <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
      <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -27,6 +27,7 @@
         android:name="com.pravera.flutter_foreground_task.service.ForegroundService"
         android:foregroundServiceType="location"
         android:stopWithTask="true" />
+        
 
         <meta-data android:name="com.google.android.geo.API_KEY"
         android:value="AIzaSyD_o0r4GZfrq0C9fDyLU6rXSdHe-WLfv78"/>
@@ -48,7 +49,7 @@
               android:resource="@style/NormalTheme"
               />
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" android:exported="true"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>

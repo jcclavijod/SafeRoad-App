@@ -6,7 +6,9 @@ class MapState extends Equatable {
   final bool showDialog;
   final bool showDialogLoading;
   final LatLng location;
-  final List<LatLng> nearbyPlaces;
+  final List<DocumentSnapshot> nearbyPlaces;
+  final BitmapDescriptor icon;
+  final bool mechanicState;
 
   /*final bool drawPath;
   final bool followLocation;
@@ -19,41 +21,45 @@ class MapState extends Equatable {
   const MapState({
     this.mapReady = false,
     this.showDialog = false,
+    this.mechanicState = false,
     this.showDialogLoading = true,
-    this.range = 1000,
+    this.range = 1.6,
     this.location = const LatLng(0, 0),
     this.nearbyPlaces = const [],
-    /*this.drawPath = false,
-    this.followLocation = false,
-    required this.centralLocation,*/
-    /*required Map<String, Polyline> polylines*/
-  }); /*: polylines = polylines ?? new Map();*/
+    this.icon = BitmapDescriptor.defaultMarker,
+    Map<String, Polyline>? polylines,
+  });
 
   MapState copyWith({
     bool? mapReady,
     double? range,
+    bool? mechanicState,
     bool? showDialog,
     bool? showDialogLoading,
     LatLng? location,
-    List<LatLng>? nearbyPlaces,
-    /*bool? drawPath,
-    bool? followLocation,
-    LatLng? centralLocation,
-    Map<String, Polyline>? polylines*/
+    BitmapDescriptor? icon,
+    List<DocumentSnapshot>? nearbyPlaces,
   }) =>
       MapState(
-        mapReady: mapReady ?? this.mapReady,
-        range: range ?? this.range,
-        showDialog: showDialog ?? this.showDialog,
-        showDialogLoading: showDialogLoading ?? this.showDialogLoading,
-        location: location ?? this.location,
-        nearbyPlaces: nearbyPlaces ?? this.nearbyPlaces,
-        /*polylines: polylines ?? this.polylines,
-        centralLocation: centralLocation ?? this.centralLocation,
-        followLocation: followLocation ?? this.followLocation,
-        drawPath: drawPath ?? this.drawPath,*/
-      );
+          mapReady: mapReady ?? this.mapReady,
+          range: range ?? this.range,
+          mechanicState: mechanicState ?? this.mechanicState,
+          showDialog: showDialog ?? this.showDialog,
+          showDialogLoading: showDialogLoading ?? this.showDialogLoading,
+          location: location ?? this.location,
+          nearbyPlaces: nearbyPlaces ?? this.nearbyPlaces,
+          icon: icon ?? this.icon,
+          );
 
   @override
-  List<Object> get props => [mapReady, range, showDialog, showDialogLoading, location, nearbyPlaces];
+  List<Object> get props => [
+        mapReady,
+        range,
+        mechanicState,
+        showDialog,
+        showDialogLoading,
+        location,
+        nearbyPlaces,
+        icon
+      ];
 }

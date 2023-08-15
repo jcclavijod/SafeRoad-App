@@ -7,8 +7,8 @@ import '../utils/conversationKey.dart';
 
 class Conversation extends Equatable {
   final String? id;
-  final UserModel creator;
-  final UserModel receiver;
+  final UserModel? creator;
+  final UserModel? receiver;
   final List<String> members;
   const Conversation({
     this.id,
@@ -34,8 +34,8 @@ class Conversation extends Equatable {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       ConversationKey.id: id,
-      ConversationKey.creator: creator.toMap(),
-      ConversationKey.receiver: receiver.toMap(),
+      ConversationKey.creator: creator!.toMap(),
+      ConversationKey.receiver: receiver!.toMap(),
       ConversationKey.members: members,
     };
   }
@@ -63,5 +63,5 @@ class Conversation extends Equatable {
   }
 
   @override
-  List<Object> get props => [creator, receiver, members];
+  List<Object> get props => [creator!, receiver!, members];
 }

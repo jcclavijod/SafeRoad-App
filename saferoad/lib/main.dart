@@ -1,23 +1,56 @@
-
+//import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:saferoad/Auth/app.dart';
+import 'package:saferoad/Map/bloc/availability/availability_bloc.dart';
 import 'package:saferoad/Map/bloc/gps/gps_bloc.dart';
-import 'package:saferoad/firebase_options.dart';
-
 import 'Map/bloc/location/my_location_bloc.dart';
 import 'Map/bloc/map/map_bloc.dart';
+//import 'package:dcdg/dcdg.dart';
+import 'Request/bloc/request/mechanical_request_bloc.dart';
+import 'helpers/notificationHelper.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.web,
+  await NotificationHelper.setupFirebase();
+  await NotificationHelper.initializeNotification();
+
+  /*
+   final FirebaseMessaging _fireMessage = FirebaseMessaging.instance;
+
+   _fireMessage.configure(
+    onMessage: (Map<String, dynamic> message) async {
+      print('Mensaje de notificación recibido: $message');
+
+      final requestId = message['data']['requestId'];
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => RequestDetailsPage(requestId: requestId),
+        ),
+      );
+    },
+    onResume: (Map<String, dynamic> message) async {
+      print('La aplicación estaba en segundo plano: $message');
+    },
+    onLaunch: (Map<String, dynamic> message) async {
+      print('La aplicación estaba cerrada: $message');
+
+      final requestId = message['data']['requestId'];
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => RequestDetailsPage(requestId: requestId),
+        ),
+      );
+    },
   );
+*/
   runApp(MultiBlocProvider(
     providers: [
       BlocProvider(create: (context) => GpsBloc()),
       BlocProvider(create: (context) => MyLocationBloc()),
-      BlocProvider(create: (context) => MapBloc())
+      BlocProvider(create: (context) => MapBloc()),
+      BlocProvider(create: (context) => MechanicalRequestBloc()),
+      BlocProvider(create: (context) => AvailabilityBloc())
     ],
     child: const MyApp(),
   ));

@@ -8,6 +8,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:saferoad/Auth/ui/widgets/utils.dart';
 import 'package:saferoad/Home/ui/views/userpage.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 class RegisterPage extends StatefulWidget {
   final VoidCallback showlogingPage;
@@ -31,6 +32,8 @@ class _RegisterPageState extends State<RegisterPage> {
   File? profilePic;
   final _phoneConroller = TextEditingController();
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
   @override
   void dispose() {
@@ -124,6 +127,7 @@ class _RegisterPageState extends State<RegisterPage> {
     String? profilePicUrl,
     int phone,
   ) async {
+    String? token = await _firebaseMessaging.getToken();
     await FirebaseFirestore.instance.collection('users').doc(uid).set({
       'first name': firstName,
       'last name': lastName,
@@ -132,6 +136,7 @@ class _RegisterPageState extends State<RegisterPage> {
       'profilePic': profilePicUrl,
       'uid': uid,
       'phone': phone,
+      'token': token,
     });
   }
 

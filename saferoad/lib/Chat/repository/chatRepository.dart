@@ -12,13 +12,3 @@ class ChatRepository {
     return chatMaps.map((chatMap) => Conversation.fromMap(chatMap)).toList();
   }
 }
-/*
-class ChatRepository {
-  late ChatFirebaseProvider chatFirebaseProvider;
-
-  Future<List<Conversation>> getChats({required String loginUID}) async {
-    final chatMaps = await chatFirebaseProvider.getChats(loginUID: loginUID);
-    return chatMaps.map((chatMap) => Conversation.fromMap(chatMap)).toList();
-  }
-}
-*/

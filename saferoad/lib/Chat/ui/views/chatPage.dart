@@ -10,8 +10,8 @@ import 'chat.dart';
 
 class ConversationPage extends StatelessWidget {
   final String? converasationId;
-  final UserModel sender;
-  final UserModel receiver;
+  final UserModel? sender;
+  final UserModel? receiver;
 
   const ConversationPage({
     Key? key,
@@ -44,8 +44,8 @@ class ConversationPage extends StatelessWidget {
 }
 
 class ConversationView extends StatelessWidget {
-  final UserModel loginUser;
-  final UserModel receiver;
+  final UserModel? loginUser;
+  final UserModel? receiver;
 
   const ConversationView({
     Key? key,
@@ -60,10 +60,10 @@ class ConversationView extends StatelessWidget {
         "Estamos cargando tu conversación, por favor intenta de nuevo";
     return Scaffold(
       appBar: AppBar(
-        title: Text(receiver.name),
+        title: Text(receiver!.name),
         actions: [
           CircleAvatar(
-            backgroundImage: NetworkImage(receiver.profilePic),
+            backgroundImage: NetworkImage(receiver!.profilePic),
           )
         ],
       ),

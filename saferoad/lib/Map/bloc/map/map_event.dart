@@ -15,8 +15,12 @@ class OnMapDone extends MapEvent {}
 
 class UpdateRange extends MapEvent {
   final double range;
-
   const UpdateRange(this.range);
+}
+
+class UpdateMechanicState extends MapEvent {
+  final bool mechanicState;
+  const UpdateMechanicState(this.mechanicState);
 }
 
 class SaveShowDialog extends MapEvent {
@@ -27,8 +31,13 @@ class SaveShowDialog extends MapEvent {
 }
 
 class SaveNearbyPlaces extends MapEvent {
-  final List<LatLng> nearbyPlaces;
+  final List<DocumentSnapshot> nearbyPlaces;
   const SaveNearbyPlaces(this.nearbyPlaces);
+}
+
+class SaveIcon extends MapEvent {
+  final BitmapDescriptor icon;
+  const SaveIcon(this.icon);
 }
 
 class OnLocation extends MapEvent {
@@ -39,9 +48,4 @@ class OnLocation extends MapEvent {
 class OnMovedMapa extends MapEvent {
   final LatLng centerMap;
   const OnMovedMapa(this.centerMap);
-}
-
-class OnNewLocation extends MapEvent {
-  final LatLng location;
-  const OnNewLocation(this.location);
 }

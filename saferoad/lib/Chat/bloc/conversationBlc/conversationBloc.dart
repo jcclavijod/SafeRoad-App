@@ -28,8 +28,8 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
     try {
       emit(ConversationLoadInprogress());
       final conversationDetail = await conversationRepository.getConversation(
-        senderUID: event.loginUser.uid,
-        receiverUID: event.receiver.uid,
+        senderUID: event.loginUser!.uid,
+        receiverUID: event.receiver!.uid,
       );
 
       if (conversationDetail != null) {
@@ -40,7 +40,7 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
             conversation: Conversation(
               creator: event.loginUser,
               receiver: event.receiver,
-              members: [event.loginUser.uid, event.receiver.uid],
+              members: [event.loginUser!.uid, event.receiver!.uid],
             ),
           ),
         );

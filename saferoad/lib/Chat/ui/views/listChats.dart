@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:saferoad/Home/ui/widgets/SideMenuWidget.dart';
@@ -13,7 +12,7 @@ import '../widgets/buttonChat.dart';
 import '../widgets/icon_empty.dart';
 
 class ChatPage extends StatelessWidget {
-  final UserModel authenticatedUser;
+  final UserModel? authenticatedUser;
   const ChatPage({
     Key? key,
     required this.authenticatedUser,
@@ -21,21 +20,19 @@ class ChatPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser;
-    UserModel userM = UserModel();
     //print(authenticatedUser.uid);
     return Scaffold(
       appBar: (AppBar(
-        title: Text("Chats"),
+        title: const Text("Chats"),
       )),
-      drawer: SideMenuWidget(userM: userM),
+      drawer: const SideMenuWidget(),
       body: BlocProvider(
         create: (context) => ChatBloc(
           chatRepository: ChatRepository(
             chatFirebaseProvider:
                 ChatFirebaseProvider(firestore: FirebaseFirestore.instance),
           ),
-        )..add(ChatRequested(loginUID: authenticatedUser.uid)),
+        )..add(ChatRequested(loginUID: authenticatedUser!.uid)),
         child: _ChatView(
           authenticatedUser: authenticatedUser,
         ),
@@ -61,7 +58,7 @@ class ChatPage extends StatelessWidget {
 */
 
 class _ChatView extends StatelessWidget {
-  final UserModel authenticatedUser;
+  final UserModel? authenticatedUser;
   const _ChatView({
     Key? key,
     required this.authenticatedUser,
@@ -99,7 +96,7 @@ class _ChatList extends StatelessWidget {
     required this.authenticatedUser,
   }) : super(key: key);
 
-  final UserModel authenticatedUser;
+  final UserModel? authenticatedUser;
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +106,7 @@ class _ChatList extends StatelessWidget {
             itemCount: chats.length,
             itemBuilder: (BuildContext context, int index) {
               final chat = chats.elementAt(index);
-              final receiver = chat.creator.uid != authenticatedUser.uid
+              final receiver = chat.creator!.uid != authenticatedUser!.uid
                   ? chat.creator
                   : chat.receiver;
               return ChatBody(

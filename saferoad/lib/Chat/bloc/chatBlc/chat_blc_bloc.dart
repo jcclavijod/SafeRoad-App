@@ -23,9 +23,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   ) async {
     try {
       emit(ChatLoadInprogress());
-      print(event.loginUID);
       final chats = await chatRepository.getChats(loginUID: event.loginUID);
-      print(chats.length);
       emit(ChatLoadSuccess(chats: chats));
     } on Exception catch (e, trace) {
       emit(const ChatLoadFailure(message: 'unable to load chats'));

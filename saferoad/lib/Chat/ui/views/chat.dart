@@ -13,8 +13,8 @@ import 'chatSender.dart';
 
 
 class ConversationMainView extends StatelessWidget {
-  final UserModel loginUser;
-  final UserModel receiver;
+  final UserModel? loginUser;
+  final UserModel? receiver;
   final String conversationId;
 
   const ConversationMainView({
@@ -62,8 +62,8 @@ class ConversationMainView extends StatelessWidget {
               ),
               child: ConversationSenderView(
                 conversationId: conversationId,
-                senderUID: loginUser.uid,
-                receiverUID: receiver.uid,
+                senderUID: loginUser!.uid,
+                receiverUID: receiver!.uid,
               ),
             ),
           ),

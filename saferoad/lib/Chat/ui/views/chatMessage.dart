@@ -7,8 +7,8 @@ import '../../model/message.dart';
 import '../../../Auth/model/user_model.dart';
 
 class ConversationMessageView extends StatelessWidget {
-  final UserModel loginUser;
-  final UserModel receiver;
+  final UserModel? loginUser;
+  final UserModel? receiver;
 
   const ConversationMessageView({
     Key? key,
@@ -29,7 +29,7 @@ class ConversationMessageView extends StatelessWidget {
           } else if (state is MessageLoadSuccess) {
             return _MessageListBuilder(
               messages: state.messages,
-              loginUID: loginUser.uid,
+              loginUID: loginUser!.uid,
             );
           }
           return Text( estado );

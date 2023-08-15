@@ -1,4 +1,3 @@
-import 'package:latlng/latlng.dart';
 import 'package:poly_geofence_service/models/poly_geofence.dart';
 
 class Mechanic {
