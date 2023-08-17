@@ -34,10 +34,6 @@ class _MapViewState extends State<MapViewAux> {
   BitmapDescriptor? _selectedMarkerIcon;
   BitmapDescriptor? _locationIcon;
   final user = FirebaseAuth.instance.currentUser;
-  late LatLng locationUser = const LatLng(0, 0);
-  late LatLng locationUser2 = const LatLng(0, 0);
-  UserModel userM = UserModel();
-  String userType = "";
 
   @override
   void initState() {
@@ -45,14 +41,6 @@ class _MapViewState extends State<MapViewAux> {
     myLocationBloc.startTracking();
     super.initState();
     _setMarkerIcon();
-    _setLocationIcon();
-    final _repoAuth = FirebaseDataSource();
-
-    _repoAuth.getUserType().then((value) {
-      setState(() {
-        userType = value;
-      });
-    });
   }
 
   void _setMarkerIcon() async {
@@ -62,13 +50,6 @@ class _MapViewState extends State<MapViewAux> {
     });
   }
 
-  void _setLocationIcon() async {
-    BitmapDescriptor locationIcon =
-        await _getMarkerIcon('assets/iconoMecanico.png');
-    setState(() {
-      _locationIcon = locationIcon;
-    });
-  }
 
 /*
   @override
@@ -89,49 +70,6 @@ class _MapViewState extends State<MapViewAux> {
     );
   }
 
-  Widget createMap(MyLocationState state) {
-    if (!state.existsLocation) return const Center(child: Text('Ubicando...'));
-
-    final mapBloc = BlocProvider.of<MapBloc>(context);
-
-    //final locationBloc = BlocProvider.of<MyLocationBloc>(context);
-
-    LatLng location = state.location;
-    mapBloc.location(location);
-    final CameraPosition cameraPosition = CameraPosition(
-      target: location,
-      zoom: 15,
-    );
-    mapBloc.searchNearbyPlaces(location);
-    //final List<LatLng> puntos = mapBloc.getNearbyPlaces();
-    return BlocBuilder<MapBloc, MapState>(
-      builder: (context, state) {
-        return Stack(children: [
-          if (state.showDialogLoading)
-            const LoadingDialog(
-              message: 'Buscando locales cercanos en 2 KM...',
-              duration: 9000,
-            ),
-          if (state.showDialog)
-            buildDialog(context),
-          GoogleMap(
-            initialCameraPosition: cameraPosition,
-            myLocationEnabled: true,
-            zoomControlsEnabled: false,
-            onMapCreated: mapBloc.initMap,
-            markers: {
-              Marker(
-                markerId: const MarkerId('destino'),
-                position: location,
-                icon: BitmapDescriptor.defaultMarkerWithHue(200),
-              ),
-            },
-          ),
-        ]);
-      },
-    );
-  }
-
   Widget createMapMechanic(MyLocationState state) {
     if (!state.existsLocation) return const Center(child: Text('Ubicando...'));
 
@@ -147,7 +85,7 @@ class _MapViewState extends State<MapViewAux> {
       zoom: 15,
     );
     mapBloc.searchNearbyPlaces(locationM);
-    //final List<LatLng> puntos = mapBloc.getNearbyPlaces();
+    mapBloc.icon('assets/iconoMecanico.png');
     return BlocBuilder<MapBloc, MapState>(
       builder: (context, state) {
         return Scaffold(
@@ -168,7 +106,7 @@ class _MapViewState extends State<MapViewAux> {
                 Marker(
                   markerId: const MarkerId('mi_ubicacion'),
                   position: locationM,
-                  icon: _locationIcon ?? BitmapDescriptor.defaultMarker,
+                  icon: state.icon,
                   infoWindow: const InfoWindow(
                     title: 'Mi ubicación',
                   ),

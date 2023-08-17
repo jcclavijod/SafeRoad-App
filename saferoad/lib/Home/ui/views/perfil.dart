@@ -17,7 +17,7 @@ class Perfil extends StatefulWidget {
 
 class _PerfilState extends State<Perfil> {
   final user = FirebaseAuth.instance.currentUser;
-  UserModel userM = UserModel();
+  UserModel userM = UserModel.complete();
   late String fullName = '';
   late String email = '';
   late String cedula = '';

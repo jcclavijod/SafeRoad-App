@@ -34,7 +34,7 @@ class FirebaseDataSource {
       return UserModel.fromMap(mecanicoData);
     } else {
       // El usuario autenticado no se encuentra en ninguna colección
-      return UserModel();
+      return UserModel.complete();
     }
   }
 

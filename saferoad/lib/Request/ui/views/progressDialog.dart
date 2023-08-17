@@ -1,9 +1,10 @@
-
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import '../../../Auth/model/user_model.dart';
+import '../../../Map/ui/views/mapAux.dart';
 import '../../Repository/requestRepository.dart';
 import '../widgets/widgetAux.dart';
 
@@ -16,12 +17,18 @@ class ConnectingDialog extends StatefulWidget {
 
 class ConnectingDialogState extends State<ConnectingDialog> {
   int elapsedTimeInSeconds = 0;
+  late LatLng location;
+  late UserModel? authenticatedUser;
+  late UserModel? receiver;
   late Timer _timer;
   final repository = RequestRepository();
-  late LatLng location;
+
   @override
   void initState() {
     super.initState();
+    _setUserAuth();
+    _setClient();
+    _setLocation();
     /*repository.locationUser2().then((result) {
       setState(() {
         location = result;
@@ -34,6 +41,27 @@ class ConnectingDialogState extends State<ConnectingDialog> {
       if (elapsedTimeInSeconds == 120) {
         timer.cancel();
       }
+    });
+  }
+
+  void _setUserAuth() async {
+    final user = await repository.getUserAuth();
+    setState(() {
+      authenticatedUser = user;
+    });
+  }
+
+  void _setClient() async {
+    final client = await repository.getClientMECANICO();
+    setState(() {
+      receiver = client;
+    });
+  }
+
+  void _setLocation() async {
+    final _location = await repository.locationUserUSUARIO();
+    setState(() {
+      location = _location;
     });
   }
 
@@ -142,8 +170,12 @@ class ConnectingDialogState extends State<ConnectingDialog> {
               if (userId == FirebaseAuth.instance.currentUser!.uid &&
                   status == 'accepted') {
                 //final location =
-                    //snapshot.data!.docs.first.get('mechanicLocation');
-                return const CenteredTextWidget();
+                //snapshot.data!.docs.first.get('mechanicLocation');
+                return MapViewAux(
+                  location: location,
+                  authenticatedUser: authenticatedUser,
+                  receiver: receiver,
+                );
               }
             }
             return Container();

@@ -42,7 +42,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
 
   void location(LatLng position) {
     add(OnLocation(position));
-    //searchRepository.saveGeoHash(position);
+    searchRepository.saveGeoHash(position);
   }
 
   void updateMechanicState(bool mechanicState) {

@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:saferoad/Request/ui/views/progressDialog.dart';
 
-import '../../bloc/request/mechanical_request_bloc.dart';
+import '../../bloc/request/request_bloc.dart';
 
 class CreateRequest extends StatelessWidget {
   const CreateRequest({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<MechanicalRequestBloc, MechanicalRequestState>(
+    return BlocBuilder<RequestBloc, RequestState>(
       builder: (context, state) {
         return Container(
           height: 100.0,
@@ -42,7 +42,7 @@ class CreateRequest extends StatelessWidget {
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: () {
-                          BlocProvider.of<MechanicalRequestBloc>(context)
+                          BlocProvider.of<RequestBloc>(context)
                               .createRequest();
                           showDialog(
                             barrierDismissible: false,

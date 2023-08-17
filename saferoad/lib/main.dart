@@ -7,7 +7,7 @@ import 'package:saferoad/Map/bloc/gps/gps_bloc.dart';
 import 'Map/bloc/location/my_location_bloc.dart';
 import 'Map/bloc/map/map_bloc.dart';
 //import 'package:dcdg/dcdg.dart';
-import 'Request/bloc/request/mechanical_request_bloc.dart';
+import 'Request/bloc/request/request_bloc.dart';
 import 'helpers/notificationHelper.dart';
 
 Future<void> main() async {
@@ -49,7 +49,7 @@ Future<void> main() async {
       BlocProvider(create: (context) => GpsBloc()),
       BlocProvider(create: (context) => MyLocationBloc()),
       BlocProvider(create: (context) => MapBloc()),
-      BlocProvider(create: (context) => MechanicalRequestBloc()),
+      BlocProvider(create: (context) => RequestBloc()),
       BlocProvider(create: (context) => AvailabilityBloc())
     ],
     child: const MyApp(),

@@ -15,7 +15,7 @@ class SideMenuWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    UserModel? userM = UserModel();
+    UserModel? userM = UserModel.complete();
     return FutureBuilder<UserModel>(
       future: FirebaseDataSource().getMyUsers(),
       builder: (BuildContext context, AsyncSnapshot<UserModel> snapshot) {

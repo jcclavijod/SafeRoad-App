@@ -5,7 +5,7 @@ import 'package:saferoad/Request/ui/widgets/iconEmpty.dart';
 
 import '../../../Chat/ui/widgets/icon_empty.dart';
 import '../../../Home/ui/widgets/SideMenuWidget.dart';
-import '../../bloc/request/mechanical_request_bloc.dart';
+import '../../bloc/request/request_bloc.dart';
 import '../../model/Request.dart';
 
 class ListRequests extends StatelessWidget {
@@ -22,9 +22,9 @@ class ListRequests extends StatelessWidget {
 }
 
 Widget _buildFinishedRequestCard(context) {
-  final requestBloc = BlocProvider.of<MechanicalRequestBloc>(context);
+  final requestBloc = BlocProvider.of<RequestBloc>(context);
   requestBloc.loadListRequest();
-  return BlocBuilder<MechanicalRequestBloc, MechanicalRequestState>(
+  return BlocBuilder<RequestBloc, RequestState>(
     builder: (context, state) {
       return state.finishedRequests.isEmpty
           ? requestEmpty(context)

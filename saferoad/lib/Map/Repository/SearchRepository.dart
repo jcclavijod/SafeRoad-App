@@ -13,10 +13,10 @@ class SearchRepository {
 
   Future<void> saveGeoHash(ma.LatLng location) async {
     GeoFirePoint myLocation =
-        geo.point(latitude: 3.448581, longitude: -76.511758);
+        geo.point(latitude: 3.467705, longitude: -76.524467);
     await firestore
         .collection('mecanicos')
-        .doc(user.uid)
+        .doc("BEdPsCRFCAegeUUMlZtO1Vw9Unk1")
         .update({'position': myLocation.data});
   }
 
