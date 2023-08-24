@@ -2,11 +2,13 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../../Auth/model/user_model.dart';
 import '../../../Map/ui/views/mapAux.dart';
 import '../../Repository/requestRepository.dart';
-import '../widgets/widgetAux.dart';
+import '../../bloc/request/request_bloc.dart';
+import '../../model/Request.dart';
 
 class ConnectingDialog extends StatefulWidget {
   const ConnectingDialog({Key? key}) : super(key: key);
@@ -20,20 +22,16 @@ class ConnectingDialogState extends State<ConnectingDialog> {
   late LatLng location;
   late UserModel? authenticatedUser;
   late UserModel? receiver;
+  late Request? request;
   late Timer _timer;
   final repository = RequestRepository();
 
   @override
   void initState() {
     super.initState();
-    _setUserAuth();
-    _setClient();
-    _setLocation();
-    /*repository.locationUser2().then((result) {
-      setState(() {
-        location = result;
-      });
-    });*/
+    final requestBloc = BlocProvider.of<RequestBloc>(context);
+    requestBloc.loadRequestData();
+    
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         elapsedTimeInSeconds++;
@@ -44,26 +42,6 @@ class ConnectingDialogState extends State<ConnectingDialog> {
     });
   }
 
-  void _setUserAuth() async {
-    final user = await repository.getUserAuth();
-    setState(() {
-      authenticatedUser = user;
-    });
-  }
-
-  void _setClient() async {
-    final client = await repository.getClientMECANICO();
-    setState(() {
-      receiver = client;
-    });
-  }
-
-  void _setLocation() async {
-    final _location = await repository.locationUserUSUARIO();
-    setState(() {
-      location = _location;
-    });
-  }
 
   @override
   void dispose() {
@@ -75,6 +53,12 @@ class ConnectingDialogState extends State<ConnectingDialog> {
 
   @override
   Widget build(BuildContext context) {
+    return BlocBuilder<RequestBloc, RequestState>(builder: (context, state) {
+      return progressDialog(state);
+    });
+  }
+
+  Widget progressDialog(RequestState state) {
     return Stack(children: [
       AlertDialog(
         shape: RoundedRectangleBorder(
@@ -163,18 +147,21 @@ class ConnectingDialogState extends State<ConnectingDialog> {
           builder: (context, snapshot) {
             if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
               //final requestId = snapshot.data!.docs.first.id;
+              final requestBloc = BlocProvider.of<RequestBloc>(context);
 
               final userId = snapshot.data!.docs.first.get('userId');
               final status = snapshot.data!.docs.first.get('status');
 
               if (userId == FirebaseAuth.instance.currentUser!.uid &&
-                  status == 'accepted') {
+                  status == 'inProcess') {
+                requestBloc.loadMechanic();
                 //final location =
                 //snapshot.data!.docs.first.get('mechanicLocation');
                 return MapViewAux(
-                  location: location,
-                  authenticatedUser: authenticatedUser,
-                  receiver: receiver,
+                  location: state.location2,
+                  authenticatedUser: state.authenticatedUser,
+                  receiver: state.receiver,
+                  request: state.request,
                 );
               }
             }

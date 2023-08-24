@@ -9,9 +9,6 @@ abstract class MapEvent extends Equatable {
 
 class OnMapDone extends MapEvent {}
 
-//class OnDialTour extends MapEvent {}
-
-//class OnFollowLocation extends MapEvent {}
 
 class UpdateRange extends MapEvent {
   final double range;
@@ -40,10 +37,12 @@ class SaveIcon extends MapEvent {
   const SaveIcon(this.icon);
 }
 
+
 class OnLocation extends MapEvent {
   final LatLng location;
   const OnLocation(this.location);
 }
+
 
 class OnMovedMapa extends MapEvent {
   final LatLng centerMap;

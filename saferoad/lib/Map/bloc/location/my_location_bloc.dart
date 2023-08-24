@@ -17,7 +17,6 @@ class MyLocationBloc extends Bloc<MyLocationEvent, MyLocationState> {
 
   SearchRepository searchRepository = SearchRepository();
   StreamSubscription<Position>? _positionSubscription;
-  List<poly.LatLng> puntosCercanos = [];
 
   @override
   Future<void> close() {

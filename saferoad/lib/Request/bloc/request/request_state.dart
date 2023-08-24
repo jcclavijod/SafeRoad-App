@@ -5,8 +5,10 @@ class RequestState extends Equatable {
   final List<DocumentSnapshot> finishedRequests;
   final String address;
   final LatLng location;
+  final LatLng location2;
   final UserModel authenticatedUser;
   final UserModel receiver;
+  final Request request;
 
   const RequestState(
       {this.requestCreated = false,
@@ -34,23 +36,35 @@ class RequestState extends Equatable {
         uid: "",
       ),
       this.location = const LatLng(0, 0),
-      this.address = ""});
+      this.location2 = const LatLng(0, 0),
+      this.address = "",
+      this.request = const Request(
+          createdAt:  DateTimeObject(date:'',time: ''),
+          mecanicoId: "",
+          requestDetails: "",
+          status: "",
+          userId: "",
+          userLocation:  GeoPoint(0,0) )});
 
   RequestState copyWith({
     bool? requestCreated,
     List<DocumentSnapshot>? finishedRequests,
     String? address,
     LatLng? location,
+    LatLng? location2,
     UserModel? authenticatedUser,
     UserModel? receiver,
+    Request? request,
   }) =>
       RequestState(
         requestCreated: requestCreated ?? this.requestCreated,
         finishedRequests: finishedRequests ?? this.finishedRequests,
         address: address ?? this.address,
         location: location ?? this.location,
+        location2: location2 ?? this.location2,
         authenticatedUser: authenticatedUser ?? this.authenticatedUser,
         receiver: receiver ?? this.receiver,
+        request: request ?? this.request,
       );
 
   @override
@@ -59,7 +73,9 @@ class RequestState extends Equatable {
         finishedRequests,
         address,
         location,
+        location2,
         authenticatedUser,
-        receiver
+        receiver,
+        request
       ];
 }

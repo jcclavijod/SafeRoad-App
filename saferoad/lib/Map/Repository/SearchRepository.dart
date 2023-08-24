@@ -5,6 +5,7 @@ import 'package:geoflutterfire2/geoflutterfire2.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:poly_geofence_service/poly_geofence_service.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as ma;
+import 'package:saferoad/Request/model/Request.dart';
 
 class SearchRepository {
   final geo = GeoFlutterFire();
@@ -69,5 +70,44 @@ class SearchRepository {
       }
     }
     return filteredMechanics;
+  }
+
+  Stream<ma.LatLng> watchMechanicLocationChanges(
+      Request? request, ma.LatLng location) {
+    return firestore
+        .collection('requests')
+        .doc(request!.id)
+        .snapshots()
+        .map((snapshot) {
+      if (snapshot.exists) {
+        final mechanicLocation = snapshot.get('mechanicLocation') as GeoPoint;
+        return ma.LatLng(mechanicLocation.latitude, mechanicLocation.longitude);
+      } else {
+        return location;
+      }
+    });
+  }
+
+  Future<void> updateRequestMechanicLocation(
+      Request? request, ma.LatLng newLocation) async {
+    final newGeoPoint = GeoPoint(newLocation.latitude, newLocation.longitude);
+
+    await firestore
+        .collection('requests')
+        .doc(request!
+            .id) // Aquí asumo que el objeto Request tiene un atributo "id"
+        .update({'mechanicLocation': newGeoPoint});
+  }
+
+  Future<String> getTypeUser() async {
+    final usuario = await firestore.collection('users').doc(user.uid).get();
+    final mecanico =
+        await firestore.collection('mecanicos').doc(user.uid).get();
+    if (usuario.exists) {
+      return "usuario";
+    } else if (mecanico.exists) {
+      return "mecanico";
+    }
+    return "";
   }
 }

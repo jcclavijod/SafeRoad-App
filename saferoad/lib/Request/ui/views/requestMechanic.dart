@@ -182,7 +182,7 @@ class RequestPopupState extends State<RequestPopup> {
                   ),
                 ),
                 onPressed: () {
-                  repository.updateRequestStatus('accepted');
+                  BlocProvider.of<RequestBloc>(context).changeRequest();
 
                   Navigator.push(
                     context,
@@ -191,6 +191,7 @@ class RequestPopupState extends State<RequestPopup> {
                         location: state.location,
                         authenticatedUser: state.authenticatedUser,
                         receiver: state.receiver,
+                        request: state.request,
                       ),
                     ),
                   );

@@ -25,25 +25,44 @@ class RequestBloc extends Bloc<RequestEvent, RequestState> {
         authenticatedUser: event.authenticatedUser,
         receiver: event.receiver,
         location: event.location,
-        address: event.address)));
+        address: event.address,
+        request: event.request)));
+    on<LoadLocation2>(
+        (event, emit) => emit(state.copyWith(location2: event.location2)));
   }
 
   Future<void> createRequest() async {
-    add(CreateRequest(await _requestRepository.createRequest()));
+    final request = await _requestRepository.createRequest();
+    print("!DESDE EL BLOC!, YA SE CREO LA REQUEST???????????");
+    print(request);
+    add(CreateRequest(request));
   }
 
   void loadListRequest() async {
     add(FinishedRequestsLoaded(await _requestRepository.getFinishedRequests()));
   }
 
+  void loadMechanic() async {
+    final location = await _requestRepository.locationMechanic();
+    add(LoadLocation2(location));
+  }
+
   void loadRequestData() async {
-    //final address = await _requestRepository.getAddressFromCoordinates();
-    final authenticatedUser = await _requestRepository.getUserAuthMech();
+    final authenticatedUser = await _requestRepository.getUser();
     final receiver = await _requestRepository.getClient();
     final location = await _requestRepository.locationUser();
-    add(LoadRequestData(authenticatedUser, receiver, location, state.address));
+    final request = await _requestRepository.getRequest();
+    print("MOSTRANDO LOS DATOS QUE SE ESTAN ENVIANDO AL MAPA HIJO PUTA");
+    print(authenticatedUser);
+    print(receiver);
+    print(location);
+    print(request);
+    add(LoadRequestData(
+        authenticatedUser, receiver, location, state.address, request));
     print("SE ESTAN ENVIANDO LOS DATOS AL MAP FINAL");
   }
 
-  
+  void changeRequest() async {
+    await _requestRepository.updateRequestStatus('inProcess');
+  }
 }
