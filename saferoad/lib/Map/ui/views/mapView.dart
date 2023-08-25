@@ -8,7 +8,6 @@ import 'package:saferoad/Auth/model/user_model.dart';
 import 'package:saferoad/Home/ui/widgets/SideMenuWidget.dart';
 import 'package:saferoad/Request/ui/views/ListRequests.dart';
 import '../../../Auth/provider/auth_provider.dart';
-import '../../../Membresia/ui/widgets/verificationMembership.dart';
 import '../../../Request/ui/views/createRequest.dart';
 import '../../../Request/ui/views/requestMechanic.dart';
 import '../../bloc/location/my_location_bloc.dart';
@@ -16,6 +15,7 @@ import '../../bloc/map/map_bloc.dart';
 import '../widgets/loading_dialog.dart';
 import '../widgets/show_dialog.dart';
 import 'availability.dart';
+import '../../../Membresia/ui/widgets/verificationMembership.dart';
 
 class MapView extends StatefulWidget {
   const MapView({Key? key}) : super(key: key);
@@ -96,7 +96,7 @@ class _MapViewState extends State<MapView> {
                     }
                   }
                   return Visibility(
-                    visible: false, // No mostrar el widget RequestPopup
+                    visible: false, 
                     child: Container(),
                   );
                 },

@@ -1,10 +1,12 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:poly_geofence_service/poly_geofence_service.dart' as poly;
+import '../../../Request/model/Request.dart';
 import '../../Repository/mapRepository.dart';
 import '../../repository/SearchRepository.dart';
 
@@ -31,6 +33,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
 
   SearchRepository searchRepository = SearchRepository();
   MapRepository mapRepository = MapRepository();
+  late StreamSubscription<LatLng> _locationSubscription;
 
   void initMap(GoogleMapController controller) {
     if (!state.mapReady) {
@@ -42,7 +45,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
 
   void location(LatLng position) {
     add(OnLocation(position));
-    searchRepository.saveGeoHash(position);
+    //searchRepository.saveGeoHash(position);
   }
 
   void updateMechanicState(bool mechanicState) {
@@ -89,7 +92,14 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   }
 
   Future<void> icon(String assetName) async {
-    BitmapDescriptor icon = await mapRepository.getMarkerIcon(assetName);
+    BitmapDescriptor icon = await mapRepository.getMarkerIcon(assetName, 150);
     add(SaveIcon(icon));
+  }
+
+
+  @override
+  Future<void> close() {
+    _locationSubscription.cancel();
+    return super.close();
   }
 }

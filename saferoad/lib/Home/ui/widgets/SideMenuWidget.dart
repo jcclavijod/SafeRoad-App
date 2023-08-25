@@ -1,13 +1,11 @@
-// ignore_for_file: file_names
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:saferoad/Auth/model/user_model.dart';
 import 'package:saferoad/Chat/ui/views/listChats.dart';
 import 'package:saferoad/Home/ui/views/perfil.dart';
+import 'package:saferoad/Membresia/ui/membershipPage.dart';
 
 import '../../../Auth/provider/auth_provider.dart';
-import '../../../Membresia/ui/membershipPage.dart';
 import '../../../Request/ui/views/ListRequests.dart';
 import '../views/userpage.dart';
 
@@ -42,7 +40,7 @@ class SideMenuWidget extends StatelessWidget {
                 ),
                 ListTile(
                   leading: const Icon(Icons.map_outlined),
-                  title: const Text('Mapa'),
+                  title: const Text('Map'),
                   onTap: () {
                     Navigator.pushReplacement(
                       context,
@@ -61,7 +59,7 @@ class SideMenuWidget extends StatelessWidget {
                   },
                 ),
                 ListTile(
-                  leading: const Icon(Icons.chat_bubble),
+                  leading: const Icon(Icons.chat_bubble_outline_outlined),
                   title: const Text('Chat'),
                   onTap: () {
                     Navigator.push(
@@ -74,8 +72,19 @@ class SideMenuWidget extends StatelessWidget {
                   },
                 ),
                 ListTile(
+                  leading: const Icon(Icons.credit_card),
+                  title: const Text('Membresia'),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const MembershipPage()),
+                    );
+                  },
+                ),
+                ListTile(
                   leading: const Icon(Icons.settings),
-                  title: const Text('Configuracion'),
+                  title: const Text('Settings'),
                   onTap: () {
                     Navigator.push(
                       context,
@@ -84,19 +93,8 @@ class SideMenuWidget extends StatelessWidget {
                   },
                 ),
                 ListTile(
-                  leading: const Icon(Icons.payment),
-                  title: const Text('Membresia'),
-                  onTap: () {
-                    Navigator.push(
-                      context,       
-                      MaterialPageRoute(
-                          builder: (context) => const MembershipPage()),
-                    );
-                  },
-                ),
-                ListTile(
                   leading: const Icon(Icons.logout),
-                  title: const Text('Salir'),
+                  title: const Text('Logout'),
                   onTap: () {
                     FirebaseAuth.instance.signOut();
                     Navigator.pop(context);

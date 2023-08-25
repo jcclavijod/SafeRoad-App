@@ -1,5 +1,3 @@
-// ignore_for_file: depend_on_referenced_packages, unused_catch_stack
-
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';

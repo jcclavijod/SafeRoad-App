@@ -7,7 +7,6 @@ abstract class RequestEvent extends Equatable {
   List<Object> get props => [];
 }
 
-
 class CreateRequest extends RequestEvent {
   final bool requestCreated;
   const CreateRequest(this.requestCreated);
@@ -16,7 +15,7 @@ class CreateRequest extends RequestEvent {
 class FinishedRequestsLoaded extends RequestEvent {
   final List<DocumentSnapshot> finishedRequests;
 
-  const FinishedRequestsLoaded( this.finishedRequests);
+  const FinishedRequestsLoaded(this.finishedRequests);
 }
 
 class LoadRequestData extends RequestEvent {
@@ -24,6 +23,12 @@ class LoadRequestData extends RequestEvent {
   final LatLng location;
   final UserModel authenticatedUser;
   final UserModel receiver;
-  const LoadRequestData(this.authenticatedUser, this.receiver, this.location, this.address);
+  final Request request;
+  const LoadRequestData(this.authenticatedUser, this.receiver, this.location,
+      this.address, this.request);
 }
 
+class LoadLocation2 extends RequestEvent {
+  final LatLng location2;
+  const LoadLocation2(this.location2);
+}

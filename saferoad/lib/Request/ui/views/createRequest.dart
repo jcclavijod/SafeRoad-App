@@ -42,15 +42,24 @@ class CreateRequest extends StatelessWidget {
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: () {
-                          BlocProvider.of<RequestBloc>(context)
-                              .createRequest();
-                          showDialog(
-                            barrierDismissible: false,
-                            context: context,
-                            builder: (BuildContext context) {
-                              return const ConnectingDialog();
-                            },
-                          );
+                          BlocProvider.of<RequestBloc>(context).createRequest();
+                          print("YA SE CCREO LA REQUEST DEL TODO??????");
+                          print(state.requestCreated);
+                          if (state.requestCreated) {
+                            showDialog(
+                              barrierDismissible: false,
+                              context: context,
+                              builder: (BuildContext context) {
+                                return const ConnectingDialog();
+                              },
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Error al crear la solicitud.'),
+                              ),
+                            );
+                          }
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blue,

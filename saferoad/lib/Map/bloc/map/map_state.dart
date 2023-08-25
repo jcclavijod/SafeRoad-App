@@ -10,13 +10,6 @@ class MapState extends Equatable {
   final BitmapDescriptor icon;
   final bool mechanicState;
 
-  /*final bool drawPath;
-  final bool followLocation;
-
- final LatLng centralLocation;*/
-
-  // Polylines
-  /*final Map<String, Polyline> polylines;*/
 
   const MapState({
     this.mapReady = false,
@@ -60,6 +53,6 @@ class MapState extends Equatable {
         showDialogLoading,
         location,
         nearbyPlaces,
-        icon
+        icon,
       ];
 }
