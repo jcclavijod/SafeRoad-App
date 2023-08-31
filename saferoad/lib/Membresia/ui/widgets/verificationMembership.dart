@@ -2,7 +2,7 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:saferoad/Membresia/ui/membershipPage.dart';
+import 'package:saferoad/Membresia/ui/views/membershipPage.dart';
 import '../../Bloc/membership_bloc.dart';
 
 class VerificationMembership {

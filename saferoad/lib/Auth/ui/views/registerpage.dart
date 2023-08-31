@@ -1,13 +1,14 @@
-// ignore_for_file: use_build_context_synchronously, non_constant_identifier_names
+// ignore_for_file: use_build_context_synchronously
 
 import 'dart:io';
-import 'package:flutter/material.dart';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'package:saferoad/Auth/ui/widgets/utils.dart';
 import 'package:saferoad/Home/ui/views/userpage.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 class RegisterPage extends StatefulWidget {
   final VoidCallback showlogingPage;
@@ -22,13 +23,16 @@ class _RegisterPageState extends State<RegisterPage> {
   String get uid => _uid!;
   final _emailConroller = TextEditingController();
   final _passwordConroller = TextEditingController();
+  // ignore: non_constant_identifier_names
   final _confirm_pw_Conroller = TextEditingController();
   final _firstNameConroller = TextEditingController();
+  // ignore: non_constant_identifier_names
   final _LastNameConroller = TextEditingController();
   final _cedulaConroller = TextEditingController();
   File? profilePic;
   final _phoneConroller = TextEditingController();
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
   @override
@@ -45,6 +49,7 @@ class _RegisterPageState extends State<RegisterPage> {
     setState(() {});
   }
 
+// check password confirmation
   void checkConfirmPW() {
     if (_passwordConroller.text.trim() == _confirm_pw_Conroller.text.trim() &&
         _firstNameConroller.text.isNotEmpty &&
@@ -52,7 +57,7 @@ class _RegisterPageState extends State<RegisterPage> {
         _cedulaConroller.text.isNotEmpty &&
         _emailConroller.text.isNotEmpty &&
         _phoneConroller.text.isNotEmpty) {
-      sinUp();
+      sinUp(); // with no issues then going to call sinUp()
     } else {
       showDialog(
         context: context,
@@ -71,8 +76,6 @@ class _RegisterPageState extends State<RegisterPage> {
           email: _emailConroller.text.trim(),
           password: _passwordConroller.text.trim());
 
-      _uid = _firebaseAuth.currentUser!.uid.toString(); // Assigning _uid here
-
       if (profilePic != null) {
         await storeFileToStorage("profilePic/$uid", profilePic!)
             .then((value) async {
@@ -81,7 +84,7 @@ class _RegisterPageState extends State<RegisterPage> {
             _LastNameConroller.text.trim(),
             int.parse(_cedulaConroller.text.trim()),
             _emailConroller.text.trim(),
-            uid,
+            _uid = _firebaseAuth.currentUser!.uid.toString(),
             value,
             int.parse(_phoneConroller.text.trim()),
           );
@@ -114,6 +117,7 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
+  // add user details
   Future addUserDetails(
     String firstName,
     String lastName,

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:saferoad/Auth/model/user_model.dart';
 import 'package:saferoad/Chat/ui/views/listChats.dart';
 import 'package:saferoad/Home/ui/views/perfil.dart';
-import 'package:saferoad/Membresia/ui/membershipPage.dart';
+import 'package:saferoad/Membresia/ui/views/membershipPage.dart';
 
 import '../../../Auth/provider/auth_provider.dart';
 import '../../../Request/ui/views/ListRequests.dart';
