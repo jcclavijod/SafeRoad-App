@@ -12,7 +12,6 @@ class UserModel {
   final String uid;
   final String token;
   //bool estado;
-
   const UserModel(
       {required this.name,
       required this.cedula,
@@ -31,59 +30,6 @@ class UserModel {
     String? name,
     String? cedula,
     String? local,
-    String? email,
-    String? bio,
-    String? profilePic,
-    String? createdAt,
-    String? phoneNumber,
-    String? uid,
-    String? token,
-  }) {
-    return UserModel(
-      name: name ?? this.name,
-      cedula: cedula ?? this.cedula,
-      local: local ?? this.local,
-      email: email ?? this.email,
-      bio: bio ?? this.bio,
-      profilePic: profilePic ?? this.profilePic,
-      createdAt: createdAt ?? this.createdAt,
-      phoneNumber: phoneNumber ?? this.phoneNumber,
-      uid: uid ?? this.uid,
-      token: token ?? this.token,
-    );
-  }
-
-  factory UserModel.complete({
-    String name = '',
-    String cedula = '',
-    String local = '',
-    String email = '',
-    String bio = '',
-    String profilePic = '',
-    String createdAt = '',
-    String phoneNumber = '',
-    String uid = '',
-    String token = '',
-    // Otros campos aquí...
-  }) {
-    return UserModel(
-      name: name,
-      cedula: cedula,
-      local: local,
-      email: email,
-      bio: bio,
-      profilePic: profilePic,
-      createdAt: createdAt,
-      phoneNumber: phoneNumber,
-      uid: uid,
-      token: token,
-    );
-  }
-
-  UserModel copyWith({
-    String? name,
-    String? cedula,
-    String? local,
     String? genero,
     String? ubicacion,
     String? email,
@@ -92,6 +38,7 @@ class UserModel {
     String? createdAt,
     String? phoneNumber,
     String? uid,
+    String? token,
   }) {
     return UserModel(
       name: name ?? this.name,
@@ -105,6 +52,7 @@ class UserModel {
       createdAt: createdAt ?? this.createdAt,
       phoneNumber: phoneNumber ?? this.phoneNumber,
       uid: uid ?? this.uid,
+      token: token ?? this.token,
     );
   }
 
@@ -120,6 +68,7 @@ class UserModel {
     String createdAt = '',
     String phoneNumber = '',
     String uid = '',
+    String token = '',
     // Otros campos aquí...
   }) {
     return UserModel(
@@ -134,6 +83,7 @@ class UserModel {
       createdAt: createdAt,
       phoneNumber: phoneNumber,
       uid: uid,
+      token: token,
     );
   }
 

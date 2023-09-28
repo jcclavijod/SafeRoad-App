@@ -17,28 +17,32 @@ class UsersInRoadState extends Equatable {
     this.icon = BitmapDescriptor.defaultMarker,
     this.icon2 = BitmapDescriptor.defaultMarker,
     this.authenticatedUser = const UserModel(
-        name: "",
+         name: "",
         cedula: "",
         local: "",
         email: "",
+        genero: "",
+        ubicacion: "",
         bio: "",
         profilePic: "",
         createdAt: "",
         phoneNumber: "",
         uid: "",
-        token: ""
+        token: "" 
       ),
       this.receiver = const UserModel(
-        name: "",
+         name: "",
         cedula: "",
         local: "",
         email: "",
+        genero: "",
+        ubicacion: "",
         bio: "",
         profilePic: "",
         createdAt: "",
         phoneNumber: "",
         uid: "",
-        token: ""
+        token: "" 
       ),
   });
 
