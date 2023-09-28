@@ -1,6 +1,7 @@
 // ignore_for_file: library_private_types_in_public_api, file_names
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class MembershipPopUp extends StatefulWidget {
   final VoidCallback onMembershipConfirmed;
@@ -88,8 +89,20 @@ class _MembershipPopUpState extends State<MembershipPopUp> {
                             if (value == null || value.isEmpty) {
                               return 'Ingresa el número de tarjeta';
                             }
+                            final cardNumber = value.replaceAll(' ', '');
+                            if (cardNumber.length != 16) {
+                              return 'El número de tarjeta debe tener 16 dígitos';
+                            }
+                            if (!cardNumber.runes
+                                .every((rune) => rune >= 48 && rune <= 57)) {
+                              return 'El número de tarjeta solo debe contener números';
+                            }
                             return null;
                           },
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                            LengthLimitingTextInputFormatter(16),
+                          ],
                         ),
                         const SizedBox(height: 1),
                         TextFormField(
@@ -108,20 +121,33 @@ class _MembershipPopUpState extends State<MembershipPopUp> {
                         Row(
                           children: [
                             Expanded(
-                              child: TextFormField(
-                                controller: _expirationDateController,
-                                decoration: const InputDecoration(
-                                  labelText: 'Fecha de caducidad',
-                                ),
-                                keyboardType: TextInputType.datetime,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Ingresa la fecha de caducidad';
-                                  }
-                                  return null;
-                                },
+                                child: TextFormField(
+                              controller: _expirationDateController,
+                              decoration: const InputDecoration(
+                                labelText: 'Fecha de caducidad',
                               ),
-                            ),
+                              keyboardType: TextInputType.datetime,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Ingresa la fecha de caducidad';
+                                }
+                                return null;
+                              },
+                              onChanged: (value) {
+                                if (value.length == 2 && !value.contains('/')) {
+                                  _expirationDateController.text = '$value/';
+                                  _expirationDateController.selection =
+                                      TextSelection.fromPosition(
+                                    TextPosition(
+                                        offset: _expirationDateController
+                                            .text.length),
+                                  );
+                                }
+                              },
+                              inputFormatters: [
+                                LengthLimitingTextInputFormatter(5),
+                              ],
+                            )),
                             const SizedBox(width: 10),
                             Expanded(
                               child: TextFormField(
@@ -134,8 +160,20 @@ class _MembershipPopUpState extends State<MembershipPopUp> {
                                   if (value == null || value.isEmpty) {
                                     return 'Ingresa el CVV';
                                   }
+                                  final cvvNumber = value.replaceAll(' ', '');
+                                  if (cvvNumber.length != 3) {
+                                    return 'El número de CVV debe tener 3 dígitos';
+                                  }
+                                  if (!cvvNumber.runes.every(
+                                      (rune) => rune >= 48 && rune <= 57)) {
+                                    return 'El número de tarjeta solo debe contener números';
+                                  }
                                   return null;
                                 },
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                  LengthLimitingTextInputFormatter(3),
+                                ],
                               ),
                             ),
                           ],

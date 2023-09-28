@@ -2,6 +2,8 @@ class UserModel {
   final String name;
   final String cedula;
   final String local;
+  final String genero;
+  final String ubicacion;
   final String email;
   final String bio;
   final String profilePic;
@@ -14,6 +16,8 @@ class UserModel {
       {required this.name,
       required this.cedula,
       required this.local,
+      required this.genero,
+      required this.ubicacion,
       required this.email,
       required this.bio,
       required this.profilePic,
@@ -25,6 +29,8 @@ class UserModel {
     String? name,
     String? cedula,
     String? local,
+    String? genero,
+    String? ubicacion,
     String? email,
     String? bio,
     String? profilePic,
@@ -36,6 +42,8 @@ class UserModel {
       name: name ?? this.name,
       cedula: cedula ?? this.cedula,
       local: local ?? this.local,
+      genero: genero ?? this.genero,
+      ubicacion: ubicacion ?? this.ubicacion,
       email: email ?? this.email,
       bio: bio ?? this.bio,
       profilePic: profilePic ?? this.profilePic,
@@ -49,6 +57,8 @@ class UserModel {
     String name = '',
     String cedula = '',
     String local = '',
+    String genero = '',
+    String ubicacion = '',
     String email = '',
     String bio = '',
     String profilePic = '',
@@ -61,6 +71,8 @@ class UserModel {
       name: name,
       cedula: cedula,
       local: local,
+      genero: genero,
+      ubicacion: ubicacion,
       email: email,
       bio: bio,
       profilePic: profilePic,
@@ -76,6 +88,8 @@ class UserModel {
       name: map['name'] ?? '',
       cedula: map['cedula'] ?? '',
       local: map['local'] ?? '',
+      genero: map['genero'] ?? '',
+      ubicacion: map['ubicacion'] ?? '',
       email: map['email'] ?? '',
       bio: map['bio'] ?? '',
       profilePic: map['profilePic'] ?? '',
@@ -92,6 +106,8 @@ class UserModel {
       "name": name,
       "cedula": cedula,
       "local": local,
+      "genero": genero,
+      "ubicacion": ubicacion,
       "email": email,
       "bio": bio,
       "profilePic": profilePic,

@@ -9,7 +9,6 @@ class auth_repository extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // get collection
     CollectionReference user = FirebaseFirestore.instance.collection('users');
     return FutureBuilder(
       future: user.doc(documetId).get(),

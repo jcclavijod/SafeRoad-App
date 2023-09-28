@@ -1,6 +1,5 @@
 // ignore_for_file: camel_case_types
 class membresiaModel{
-  String? id;
   String? uid;
   String? membresia;
   String? precio;
@@ -8,10 +7,9 @@ class membresiaModel{
   String? fechaFinal;
   String? estado;
 
-  membresiaModel({this.id, this.uid, this.membresia, this.precio, this.fechaInicial, this.fechaFinal, this.estado});
+  membresiaModel({ this.uid, this.membresia, this.precio, this.fechaInicial, this.fechaFinal, this.estado});
 
   membresiaModel.fromMap(Map<String, dynamic> map){
-    id = map['id'];
     uid = map['uid'];
     membresia = map['membresia'];
     precio = map['precio'];
@@ -22,7 +20,6 @@ class membresiaModel{
 
   Map<String, dynamic> toMap(){
     return{
-      'id': id,
       'uid': uid,
       'membresia': membresia,
       'precio': precio,

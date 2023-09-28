@@ -40,7 +40,7 @@ class SideMenuWidget extends StatelessWidget {
                 ),
                 ListTile(
                   leading: const Icon(Icons.map_outlined),
-                  title: const Text('Map'),
+                  title: const Text('Mapa'),
                   onTap: () {
                     Navigator.pushReplacement(
                       context,
@@ -60,7 +60,7 @@ class SideMenuWidget extends StatelessWidget {
                 ),
                 ListTile(
                   leading: const Icon(Icons.chat_bubble_outline_outlined),
-                  title: const Text('Chat'),
+                  title: const Text('Mensajes'),
                   onTap: () {
                     Navigator.push(
                       context,
@@ -84,7 +84,7 @@ class SideMenuWidget extends StatelessWidget {
                 ),
                 ListTile(
                   leading: const Icon(Icons.settings),
-                  title: const Text('Settings'),
+                  title: const Text('Configuracion'),
                   onTap: () {
                     Navigator.push(
                       context,
@@ -94,7 +94,7 @@ class SideMenuWidget extends StatelessWidget {
                 ),
                 ListTile(
                   leading: const Icon(Icons.logout),
-                  title: const Text('Logout'),
+                  title: const Text('Salir'),
                   onTap: () {
                     FirebaseAuth.instance.signOut();
                     Navigator.pop(context);

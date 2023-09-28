@@ -18,6 +18,8 @@ class RequestState extends Equatable {
         cedula: "",
         local: "",
         email: "",
+        genero: "",
+        ubicacion: "",
         bio: "",
         profilePic: "",
         createdAt: "",
@@ -29,6 +31,8 @@ class RequestState extends Equatable {
         cedula: "",
         local: "",
         email: "",
+        genero: "",
+        ubicacion: "",
         bio: "",
         profilePic: "",
         createdAt: "",
@@ -39,12 +43,12 @@ class RequestState extends Equatable {
       this.location2 = const LatLng(0, 0),
       this.address = "",
       this.request = const Request(
-          createdAt:  DateTimeObject(date:'',time: ''),
+          createdAt: DateTimeObject(date: '', time: ''),
           mecanicoId: "",
           requestDetails: "",
           status: "",
           userId: "",
-          userLocation:  GeoPoint(0,0) )});
+          userLocation: GeoPoint(0, 0))});
 
   RequestState copyWith({
     bool? requestCreated,

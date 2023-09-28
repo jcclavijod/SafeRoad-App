@@ -1,7 +1,9 @@
+// ignore_for_file: depend_on_referenced_packages, unused_import, avoid_print
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:saferoad/Membresia/model/membresia_model.dart';
 import 'package:saferoad/Membresia/repository/membresia_repository.dart';
+import 'package:bloc/bloc.dart';
 
 class MembresiaBloc {
   final MembresiaRepository _repository = MembresiaRepository();
@@ -22,7 +24,6 @@ class MembresiaBloc {
   }
 
   Future<void> addMembresia(String uid, int selectedDuration) async {
-    double monthlyCost = 20000;
 
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
@@ -31,7 +32,6 @@ class MembresiaBloc {
         print('El usuario ya tiene una membresía activa.');
         return;
       }
-
       final planName = selectedPlan(selectedDuration);
       final membresia = membresiaModel(
         uid: user.uid,
