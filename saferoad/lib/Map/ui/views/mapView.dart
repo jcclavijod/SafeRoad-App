@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:saferoad/Auth/model/user_model.dart';
 import 'package:saferoad/Home/ui/widgets/SideMenuWidget.dart';
 import 'package:saferoad/Request/ui/views/ListRequests.dart';
 import '../../../Auth/provider/auth_provider.dart';

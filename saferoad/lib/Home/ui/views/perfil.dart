@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:saferoad/Auth/model/user_model.dart';
+import 'package:saferoad/Auth/model/usuario_model.dart';
 import 'package:saferoad/Auth/ui/views/update.dart';
 import 'package:saferoad/Home/ui/widgets/SideMenuWidget.dart';
 

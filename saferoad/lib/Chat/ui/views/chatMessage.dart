@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:saferoad/Auth/model/usuario_model.dart';
 
 import '../../bloc/messageReceiverBlc/msReceiverBloc.dart';
 import '../../model/message.dart';
-
-import '../../../Auth/model/user_model.dart';
 
 class ConversationMessageView extends StatelessWidget {
   final UserModel? loginUser;

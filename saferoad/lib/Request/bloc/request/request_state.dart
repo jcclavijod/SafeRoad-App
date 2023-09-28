@@ -12,60 +12,58 @@ class RequestState extends Equatable {
   final TextEditingController problemController;
 
   const RequestState(
-      {
-      required this.problemController,
+      {required this.problemController,
       this.requestCreated = false,
       this.finishedRequests = const [],
       this.authenticatedUser = const UserModel(
         name: "",
-        cedula: "",
-        local: "",
-        email: "",
-        genero: "",
-        ubicacion: "",
-        bio: "",
-        profilePic: "",
-        createdAt: "",
+        lastname: "",
+        mail: "",
+        password: "",
+        identification: "",
+        gender: "",
         phoneNumber: "",
+        birthday: "",
         uid: "",
-        token: ""
+        profilePic: "",
+        isAviable: false,
+        token: "",
       ),
       this.receiver = const UserModel(
         name: "",
-        cedula: "",
-        local: "",
-        email: "",
-        genero: "",
-        ubicacion: "",
-        bio: "",
-        profilePic: "",
-        createdAt: "",
+        lastname: "",
+        mail: "",
+        password: "",
+        identification: "",
+        gender: "",
         phoneNumber: "",
+        birthday: "",
         uid: "",
-        token: "" 
+        profilePic: "",
+        isAviable: false,
+        token: "",
       ),
       this.location = const LatLng(0, 0),
       this.location2 = const LatLng(0, 0),
       this.address = "",
       this.request = const Request(
-          createdAt:  DateTimeObject(date:'',time: ''),
+          createdAt: DateTimeObject(date: '', time: ''),
           mechanicId: "",
           requestDetails: "",
           status: "",
           userId: "",
-          userLocation:  GeoPoint(0,0) )});
+          userLocation: GeoPoint(0, 0))});
 
-  RequestState copyWith({
-    bool? requestCreated,
-    List<DocumentSnapshot>? finishedRequests,
-    String? address,
-    LatLng? location,
-    LatLng? location2,
-    UserModel? authenticatedUser,
-    UserModel? receiver,
-    Request? request,
-    TextEditingController? problemController
-  }) =>
+  RequestState copyWith(
+          {bool? requestCreated,
+          List<DocumentSnapshot>? finishedRequests,
+          String? address,
+          LatLng? location,
+          LatLng? location2,
+          UserModel? authenticatedUser,
+          UserModel? receiver,
+          Request? request,
+          TextEditingController? problemController}) =>
       RequestState(
         requestCreated: requestCreated ?? this.requestCreated,
         finishedRequests: finishedRequests ?? this.finishedRequests,

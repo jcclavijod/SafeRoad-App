@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:saferoad/Auth/model/usuario_model.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import '../../../Auth/model/user_model.dart';
 import '../../../Chat/ui/widgets/buttonChat.dart';
 import '../../../Home/ui/views/userpage.dart';
 import '../../../Request/model/Request.dart';

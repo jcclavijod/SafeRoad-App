@@ -6,9 +6,9 @@ import 'package:geolocator/geolocator.dart';
 //import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import '../../Auth/model/user_model.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
+import 'package:saferoad/Auth/model/usuario_model.dart';
 import '../model/Request.dart';
 
 class RequestRepository {

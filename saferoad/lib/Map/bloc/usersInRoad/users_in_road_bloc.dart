@@ -3,9 +3,8 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:saferoad/Auth/model/usuario_model.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import '../../../Auth/model/user_model.dart';
 import '../../../Request/model/Request.dart';
 import '../../../helpers/notificationHelper.dart';
 import '../../Repository/mapRepository.dart';

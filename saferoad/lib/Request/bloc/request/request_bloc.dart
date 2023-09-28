@@ -8,7 +8,8 @@ import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:saferoad/Auth/model/user_model.dart';
+import 'package:saferoad/Auth/model/usuario_model.dart';
+
 
 import '../../Repository/requestRepository.dart';
 import '../../model/Request.dart';

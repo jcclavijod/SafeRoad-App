@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:saferoad/Auth/model/user_model.dart';
+import 'package:saferoad/Auth/model/usuario_model.dart';
 import 'package:saferoad/Chat/ui/views/listChats.dart';
 import 'package:saferoad/Home/ui/views/perfil.dart';
 import 'package:saferoad/Membresia/ui/views/membershipPage.dart';
@@ -33,7 +33,7 @@ class SideMenuWidget extends StatelessWidget {
               children: [
                 UserAccountsDrawerHeader(
                   accountName: Text(userM!.name),
-                  accountEmail: Text(userM!.email),
+                  accountEmail: Text(userM!.mail),
                   currentAccountPicture: CircleAvatar(
                     backgroundImage: NetworkImage(userM!.profilePic),
                   ),

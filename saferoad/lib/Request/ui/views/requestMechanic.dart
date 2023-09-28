@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-//import 'package:http/http.dart';
-import '../../../Auth/model/user_model.dart';
+import 'package:saferoad/Auth/model/usuario_model.dart';
 import '../../../Map/ui/views/mapAux.dart';
 import '../../Repository/requestRepository.dart';
 import '../../bloc/request/request_bloc.dart';

@@ -1,8 +1,6 @@
 
-import 'package:flutter/material.dart';
 
-import '../ui/views/Home_screen.dart';
-import '../ui/views/registerpage.dart';
+import 'package:flutter/cupertino.dart';
 
 class MyAuth extends StatefulWidget {
   const MyAuth({super.key});
