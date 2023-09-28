@@ -30,7 +30,6 @@ class ConnectingDialogState extends State<ConnectingDialog> {
   void initState() {
     super.initState();
     final requestBloc = BlocProvider.of<RequestBloc>(context);
-
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         elapsedTimeInSeconds++;

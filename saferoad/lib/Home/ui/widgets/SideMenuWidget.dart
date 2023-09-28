@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:saferoad/Auth/model/user_model.dart';
 import 'package:saferoad/Chat/ui/views/listChats.dart';
 import 'package:saferoad/Home/ui/views/perfil.dart';
-import 'package:saferoad/Membresia/ui/membershipPage.dart';
+import 'package:saferoad/Membresia/ui/views/membershipPage.dart';
 
 import '../../../Auth/provider/auth_provider.dart';
 import '../../../Request/ui/views/ListRequests.dart';
@@ -40,7 +40,7 @@ class SideMenuWidget extends StatelessWidget {
                 ),
                 ListTile(
                   leading: const Icon(Icons.map_outlined),
-                  title: const Text('Map'),
+                  title: const Text('Mapa'),
                   onTap: () {
                     Navigator.pushReplacement(
                       context,
@@ -60,7 +60,7 @@ class SideMenuWidget extends StatelessWidget {
                 ),
                 ListTile(
                   leading: const Icon(Icons.chat_bubble_outline_outlined),
-                  title: const Text('Chat'),
+                  title: const Text('Mensajes'),
                   onTap: () {
                     Navigator.push(
                       context,
@@ -84,7 +84,7 @@ class SideMenuWidget extends StatelessWidget {
                 ),
                 ListTile(
                   leading: const Icon(Icons.settings),
-                  title: const Text('Settings'),
+                  title: const Text('Configuracion'),
                   onTap: () {
                     Navigator.push(
                       context,
@@ -94,7 +94,7 @@ class SideMenuWidget extends StatelessWidget {
                 ),
                 ListTile(
                   leading: const Icon(Icons.logout),
-                  title: const Text('Logout'),
+                  title: const Text('Salir'),
                   onTap: () {
                     FirebaseAuth.instance.signOut();
                     Navigator.pop(context);

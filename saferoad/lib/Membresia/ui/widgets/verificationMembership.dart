@@ -1,8 +1,9 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, file_names
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:saferoad/Membresia/ui/membershipPage.dart';
+import 'package:saferoad/Auth/app.dart';
+import 'package:saferoad/Membresia/ui/views/membershipPage.dart';
 import '../../Bloc/membership_bloc.dart';
 
 class VerificationMembership {
@@ -18,8 +19,7 @@ class VerificationMembership {
       } else {
         showDialog(
           context: context,
-          barrierDismissible:
-              false,
+          barrierDismissible: false,
           builder: (context) => const NoMembershipAlertDialog(),
         );
       }
@@ -42,6 +42,18 @@ class NoMembershipAlertDialog extends StatelessWidget {
       content:
           const Text('Para usar los servicios necesitas tener una membresía'),
       actions: [
+        TextButton(
+          onPressed: () async {
+            await FirebaseAuth.instance.signOut();
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const Home(),
+              ),
+            );
+          },
+          child: const Text('Cerrar Sesión'),
+        ),
         TextButton(
           onPressed: () {
             Navigator.pushReplacement(

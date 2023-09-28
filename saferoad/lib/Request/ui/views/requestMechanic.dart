@@ -28,7 +28,6 @@ class RequestPopupState extends State<RequestPopup> {
     requestBloc.loadRequestData();
     //_setUserAuth();
     //_setClient();
-
     repository.getAddressFromCoordinates().then((result) {
       setState(() {
         address = result;

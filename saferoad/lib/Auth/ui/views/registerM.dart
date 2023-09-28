@@ -13,7 +13,6 @@ import '../widgets/utils.dart';
 class RegisterM extends StatefulWidget {
   final VoidCallback showlogingPage;
   const RegisterM({super.key, required this.showlogingPage});
-
   @override
   State<RegisterM> createState() => _RegisterMState();
 }
@@ -21,6 +20,7 @@ class RegisterM extends StatefulWidget {
 class _RegisterMState extends State<RegisterM> {
   String? _uid;
   String get uid => _uid!;
+  late TextEditingController _selectedGenderController;
   final _emailConroller = TextEditingController();
   final _passwordConroller = TextEditingController();
   final _confirm_pw_Conroller = TextEditingController();
@@ -29,9 +29,10 @@ class _RegisterMState extends State<RegisterM> {
   final _cedulaConroller = TextEditingController();
   File? profilePic;
   final _phoneConroller = TextEditingController();
+  final _GeneroConroller = TextEditingController();
+  final _ubicacionConroller = TextEditingController();
   final _LocalConroller = TextEditingController();
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
   @override
@@ -41,6 +42,8 @@ class _RegisterMState extends State<RegisterM> {
     _confirm_pw_Conroller.dispose();
     _phoneConroller.dispose();
     _LocalConroller.dispose();
+    _GeneroConroller.dispose();
+    _ubicacionConroller.dispose();
     super.dispose();
   }
 
@@ -49,7 +52,11 @@ class _RegisterMState extends State<RegisterM> {
     setState(() {});
   }
 
-// check password confirmation
+  void initState() {
+    super.initState();
+    _selectedGenderController = TextEditingController(text: 'Hombre');
+  }
+
   void checkConfirmPW() {
     if (_passwordConroller.text.trim() == _confirm_pw_Conroller.text.trim() &&
         _firstNameConroller.text.isNotEmpty &&
@@ -57,8 +64,10 @@ class _RegisterMState extends State<RegisterM> {
         _cedulaConroller.text.isNotEmpty &&
         _emailConroller.text.isNotEmpty &&
         _phoneConroller.text.isNotEmpty &&
-        _LocalConroller.text.isNotEmpty) {
-      sinUp(); // with no issues then going to call sinUp()
+        _LocalConroller.text.isNotEmpty &&
+        _GeneroConroller.text.isEmpty &&
+        _ubicacionConroller.text.isEmpty) {
+      sinUp();
     } else {
       showDialog(
         context: context,
@@ -77,7 +86,6 @@ class _RegisterMState extends State<RegisterM> {
           email: _emailConroller.text.trim(),
           password: _passwordConroller.text.trim());
 
-      // Subir imagen a Firebase Storage
       if (profilePic != null) {
         await storeFileToStorage("profilePic/$_uid", profilePic!)
             .then((value) async {
@@ -86,6 +94,8 @@ class _RegisterMState extends State<RegisterM> {
             _LastNameConroller.text.trim(),
             _cedulaConroller.text.trim(),
             _emailConroller.text.trim(),
+            _GeneroConroller.text.trim(),
+            _ubicacionConroller.text.trim(),
             _uid = _firebaseAuth.currentUser!.uid.toString(),
             value,
             _phoneConroller.text.trim(),
@@ -98,6 +108,8 @@ class _RegisterMState extends State<RegisterM> {
           _LastNameConroller.text.trim(),
           _cedulaConroller.text.trim(),
           _emailConroller.text.trim(),
+          _GeneroConroller.text.trim(),
+          _ubicacionConroller.text.trim(),
           uid,
           null,
           _phoneConroller.text.trim(),
@@ -121,11 +133,12 @@ class _RegisterMState extends State<RegisterM> {
     );
   }
 
-  // add user details
   Future addUserDetails(
       String firstName,
       String lastName,
       String cedula,
+      String genero,
+      String ubicacion,
       String email,
       String uid,
       String? profilePicUrl,
@@ -137,6 +150,8 @@ class _RegisterMState extends State<RegisterM> {
       'last name': lastName,
       'cedula': cedula,
       'email': email,
+      'genero': genero,
+      'ubicacion': ubicacion,
       'profilePic': profilePicUrl,
       'uid': uid,
       'phoneNumber': phoneNumber,
@@ -186,45 +201,59 @@ class _RegisterMState extends State<RegisterM> {
                       ),
               ),
               const SizedBox(height: 20),
-              // first name textfield
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25),
-                child: TextField(
-                  controller: _firstNameConroller,
-                  decoration: InputDecoration(
-                      hintText: 'Nombre',
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.white),
-                          borderRadius: BorderRadius.circular(12)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.blue),
-                          borderRadius: BorderRadius.circular(12)),
-                      fillColor: Colors.grey[200],
-                      filled: true),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            controller: _firstNameConroller,
+                            decoration: InputDecoration(
+                              hintText: 'Nombre',
+                              enabledBorder: OutlineInputBorder(
+                                borderSide:
+                                    const BorderSide(color: Colors.white),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide:
+                                    const BorderSide(color: Colors.blue),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              fillColor: Colors.grey[200],
+                              filled: true,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: TextFormField(
+                            controller: _LastNameConroller,
+                            decoration: InputDecoration(
+                              hintText: 'Apellido',
+                              enabledBorder: OutlineInputBorder(
+                                borderSide:
+                                    const BorderSide(color: Colors.white),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide:
+                                    const BorderSide(color: Colors.blue),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              fillColor: Colors.grey[200],
+                              filled: true,
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
                 ),
               ),
               const SizedBox(height: 10),
-
-              // last name textfield
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25),
-                child: TextField(
-                  controller: _LastNameConroller,
-                  decoration: InputDecoration(
-                      hintText: 'Apellido',
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.white),
-                          borderRadius: BorderRadius.circular(12)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.blue),
-                          borderRadius: BorderRadius.circular(12)),
-                      fillColor: Colors.grey[200],
-                      filled: true),
-                ),
-              ),
-              const SizedBox(height: 10),
-
-              // age textfield
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25),
                 child: TextField(
@@ -243,39 +272,78 @@ class _RegisterMState extends State<RegisterM> {
                 ),
               ),
               const SizedBox(height: 10),
-              // email textfield
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25),
-                child: TextField(
-                  controller: _emailConroller,
-                  decoration: InputDecoration(
-                      hintText: 'Email',
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.white),
-                          borderRadius: BorderRadius.circular(12)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.blue),
-                          borderRadius: BorderRadius.circular(12)),
-                      fillColor: Colors.grey[200],
-                      filled: true),
+                child: DropdownButtonFormField(
+                  value: _selectedGenderController.text,
+                  items: const [
+                    DropdownMenuItem(
+                      value: 'Hombre',
+                      child: Text('Masculino'),
+                    ),
+                    DropdownMenuItem(
+                      value: 'mujer',
+                      child: Text('Femenino'),
+                    ),
+                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedGenderController.text = value!;
+                    });
+                  },
                 ),
               ),
               const SizedBox(height: 10),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25),
-                child: TextField(
-                  keyboardType: TextInputType.number,
-                  controller: _phoneConroller,
-                  decoration: InputDecoration(
-                      hintText: 'Telefono',
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.white),
-                          borderRadius: BorderRadius.circular(12)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.blue),
-                          borderRadius: BorderRadius.circular(12)),
-                      fillColor: Colors.grey[200],
-                      filled: true),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            controller: _emailConroller,
+                            decoration: InputDecoration(
+                              hintText: 'Email',
+                              enabledBorder: OutlineInputBorder(
+                                borderSide:
+                                    const BorderSide(color: Colors.white),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide:
+                                    const BorderSide(color: Colors.blue),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              fillColor: Colors.grey[200],
+                              filled: true,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: TextFormField(
+                            controller: _phoneConroller,
+                            decoration: InputDecoration(
+                              hintText: 'Telefono',
+                              enabledBorder: OutlineInputBorder(
+                                borderSide:
+                                    const BorderSide(color: Colors.white),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide:
+                                    const BorderSide(color: Colors.blue),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              fillColor: Colors.grey[200],
+                              filled: true,
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
                 ),
               ),
               const SizedBox(height: 10),
@@ -296,36 +364,12 @@ class _RegisterMState extends State<RegisterM> {
                 ),
               ),
               const SizedBox(height: 10),
-              // password textfield
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25),
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      border: Border.all(color: Colors.white),
-                      borderRadius: BorderRadius.circular(12)),
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 20),
-                    child: TextField(
-                      controller: _passwordConroller,
-                      obscureText: true,
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Contraseña',
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10),
-              // password confirm
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25),
                 child: TextField(
-                  controller: _confirm_pw_Conroller,
-                  obscureText: true,
+                  controller: _ubicacionConroller,
                   decoration: InputDecoration(
-                      hintText: 'Confirmar Contraseña',
+                      hintText: 'Ubicacion',
                       enabledBorder: OutlineInputBorder(
                           borderSide: const BorderSide(color: Colors.white),
                           borderRadius: BorderRadius.circular(12)),
@@ -337,7 +381,61 @@ class _RegisterMState extends State<RegisterM> {
                 ),
               ),
               const SizedBox(height: 10),
-              // signUp button
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            controller: _passwordConroller,
+                            obscureText: true,
+                            decoration: InputDecoration(
+                              hintText: 'Contraseña',
+                              enabledBorder: OutlineInputBorder(
+                                borderSide:
+                                    const BorderSide(color: Colors.white),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide:
+                                    const BorderSide(color: Colors.blue),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              fillColor: Colors.grey[200],
+                              filled: true,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: TextFormField(
+                            controller: _confirm_pw_Conroller,
+                            obscureText: true,
+                            decoration: InputDecoration(
+                              hintText: 'Confirmar Contraseña',
+                              enabledBorder: OutlineInputBorder(
+                                borderSide:
+                                    const BorderSide(color: Colors.white),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide:
+                                    const BorderSide(color: Colors.blue),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              fillColor: Colors.grey[200],
+                              filled: true,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 10),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25),
                 child: GestureDetector(
@@ -360,7 +458,6 @@ class _RegisterMState extends State<RegisterM> {
                 ),
               ),
               const SizedBox(height: 20),
-              //  not a member ? register now
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

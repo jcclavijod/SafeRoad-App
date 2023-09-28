@@ -76,6 +76,9 @@ dependencies:
   url_launcher: ^6.1.11
   intl: ^0.18.1
   flutter_rating_bar: ^4.0.1
+  flutter_animation_progress_bar: ^2.3.1
+  modal_bottom_sheet: ^2.1.2
+  flutter_credit_card: ^3.0.7
   
 
 dev_dependencies:
