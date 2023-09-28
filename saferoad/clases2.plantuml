@@ -1,0 +1,424 @@
+@startuml
+set namespaceSeparator ::
+
+class "saferoad::Chat::bloc::chatBlc::chat_blc_bloc.dart::ChatBloc" {
+  +ChatRepository chatRepository
+  -FutureOr<void> _onChatRequestedToState()
+}
+
+"saferoad::Chat::bloc::chatBlc::chat_blc_bloc.dart::ChatBloc" o-- "saferoad::Chat::repository::chatRepository.dart::ChatRepository"
+"bloc::src::bloc.dart::Bloc" <|-- "saferoad::Chat::bloc::chatBlc::chat_blc_bloc.dart::ChatBloc"
+
+abstract class "saferoad::Chat::bloc::chatBlc::chat_blc_bloc.dart::ChatEvent" {
+  +List<Object> props
+}
+
+"equatable::src::equatable.dart::Equatable" <|-- "saferoad::Chat::bloc::chatBlc::chat_blc_bloc.dart::ChatEvent"
+
+class "saferoad::Chat::bloc::chatBlc::chat_blc_bloc.dart::ChatRequested" {
+  +String loginUID
+  +List<Object> props
+}
+
+"saferoad::Chat::bloc::chatBlc::chat_blc_bloc.dart::ChatEvent" <|-- "saferoad::Chat::bloc::chatBlc::chat_blc_bloc.dart::ChatRequested"
+
+abstract class "saferoad::Chat::bloc::chatBlc::chat_blc_bloc.dart::ChatState" {
+  +List<Object> props
+}
+
+"equatable::src::equatable.dart::Equatable" <|-- "saferoad::Chat::bloc::chatBlc::chat_blc_bloc.dart::ChatState"
+
+class "saferoad::Chat::bloc::chatBlc::chat_blc_bloc.dart::ChatInitial" {
+}
+
+"saferoad::Chat::bloc::chatBlc::chat_blc_bloc.dart::ChatState" <|-- "saferoad::Chat::bloc::chatBlc::chat_blc_bloc.dart::ChatInitial"
+
+class "saferoad::Chat::bloc::chatBlc::chat_blc_bloc.dart::ChatLoadInprogress" {
+}
+
+"saferoad::Chat::bloc::chatBlc::chat_blc_bloc.dart::ChatState" <|-- "saferoad::Chat::bloc::chatBlc::chat_blc_bloc.dart::ChatLoadInprogress"
+
+class "saferoad::Chat::bloc::chatBlc::chat_blc_bloc.dart::ChatLoadFailure" {
+  +String message
+  +List<Object> props
+}
+
+"saferoad::Chat::bloc::chatBlc::chat_blc_bloc.dart::ChatState" <|-- "saferoad::Chat::bloc::chatBlc::chat_blc_bloc.dart::ChatLoadFailure"
+
+class "saferoad::Chat::bloc::chatBlc::chat_blc_bloc.dart::ChatLoadSuccess" {
+  +List<Conversation> chats
+  +List<Object> props
+}
+
+"saferoad::Chat::bloc::chatBlc::chat_blc_bloc.dart::ChatState" <|-- "saferoad::Chat::bloc::chatBlc::chat_blc_bloc.dart::ChatLoadSuccess"
+
+class "saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationBloc" {
+  +ConversationRepository conversationRepository
+  -FutureOr<void> _onConversationDetailRequested()
+  -FutureOr<void> _onConversationCreated()
+}
+
+"saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationBloc" o-- "saferoad::Chat::repository::conversationRepository.dart::ConversationRepository"
+"bloc::src::bloc.dart::Bloc" <|-- "saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationBloc"
+
+abstract class "saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationEvent" {
+  +List<Object> props
+}
+
+"equatable::src::equatable.dart::Equatable" <|-- "saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationEvent"
+
+class "saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationDetailRequested" {
+  +UserModel loginUser
+  +UserModel receiver
+}
+
+"saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationDetailRequested" o-- "saferoad::Auth::model::user_model.dart::UserModel"
+"saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationEvent" <|-- "saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationDetailRequested"
+
+class "saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationCreated" {
+  +Conversation conversation
+}
+
+"saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationCreated" o-- "saferoad::Chat::model::conversation.dart::Conversation"
+"saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationEvent" <|-- "saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationCreated"
+
+abstract class "saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationState" {
+  +List<Object> props
+}
+
+"equatable::src::equatable.dart::Equatable" <|-- "saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationState"
+
+class "saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationInitial" {
+}
+
+"saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationState" <|-- "saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationInitial"
+
+class "saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationLoadSuccess" {
+  +Conversation conversation
+}
+
+"saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationLoadSuccess" o-- "saferoad::Chat::model::conversation.dart::Conversation"
+"saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationState" <|-- "saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationLoadSuccess"
+
+class "saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationLoadFailure" {
+  +String message
+}
+
+"saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationState" <|-- "saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationLoadFailure"
+
+class "saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationLoadInprogress" {
+}
+
+"saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationState" <|-- "saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationLoadInprogress"
+
+class "saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationCreationSuccess" {
+  +String conversationId
+}
+
+"saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationState" <|-- "saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationCreationSuccess"
+
+class "saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationCreationInprogress" {
+}
+
+"saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationState" <|-- "saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationCreationInprogress"
+
+class "saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationCreationFailure" {
+  +String message
+}
+
+"saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationState" <|-- "saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationCreationFailure"
+
+class "saferoad::Chat::bloc::messageReceiverBlc::msReceiverBloc.dart::MessageReceiverBloc" {
+  +MessageRepository messageRepository
+  +StreamSubscription<dynamic>? messageStream
+  +Future<void> close()
+  -FutureOr<void> _onMessageRequestedToState()
+  -FutureOr<void> _onMessageReceivedToState()
+}
+
+"saferoad::Chat::bloc::messageReceiverBlc::msReceiverBloc.dart::MessageReceiverBloc" o-- "saferoad::Chat::repository::messageRepository.dart::MessageRepository"
+"saferoad::Chat::bloc::messageReceiverBlc::msReceiverBloc.dart::MessageReceiverBloc" o-- "dart::async::StreamSubscription<dynamic>"
+"bloc::src::bloc.dart::Bloc" <|-- "saferoad::Chat::bloc::messageReceiverBlc::msReceiverBloc.dart::MessageReceiverBloc"
+
+abstract class "saferoad::Chat::bloc::messageReceiverBlc::msReceiverBloc.dart::MessageReceiverEvent" {
+  +List<Object> props
+}
+
+"equatable::src::equatable.dart::Equatable" <|-- "saferoad::Chat::bloc::messageReceiverBlc::msReceiverBloc.dart::MessageReceiverEvent"
+
+class "saferoad::Chat::bloc::messageReceiverBlc::msReceiverBloc.dart::MessageRequested" {
+  +String conversationId
+}
+
+"saferoad::Chat::bloc::messageReceiverBlc::msReceiverBloc.dart::MessageReceiverEvent" <|-- "saferoad::Chat::bloc::messageReceiverBlc::msReceiverBloc.dart::MessageRequested"
+
+class "saferoad::Chat::bloc::messageReceiverBlc::msReceiverBloc.dart::MessageReceived" {
+  +List<Message?> messages
+}
+
+"saferoad::Chat::bloc::messageReceiverBlc::msReceiverBloc.dart::MessageReceiverEvent" <|-- "saferoad::Chat::bloc::messageReceiverBlc::msReceiverBloc.dart::MessageReceived"
+
+abstract class "saferoad::Chat::bloc::messageReceiverBlc::msReceiverBloc.dart::MessageReceiverState" {
+  +List<Object> props
+}
+
+"equatable::src::equatable.dart::Equatable" <|-- "saferoad::Chat::bloc::messageReceiverBlc::msReceiverBloc.dart::MessageReceiverState"
+
+class "saferoad::Chat::bloc::messageReceiverBlc::msReceiverBloc.dart::MessageReceiverInitial" {
+}
+
+"saferoad::Chat::bloc::messageReceiverBlc::msReceiverBloc.dart::MessageReceiverState" <|-- "saferoad::Chat::bloc::messageReceiverBlc::msReceiverBloc.dart::MessageReceiverInitial"
+
+class "saferoad::Chat::bloc::messageReceiverBlc::msReceiverBloc.dart::MessageLoadSuccess" {
+  +List<Message?> messages
+  +List<Object> props
+}
+
+"saferoad::Chat::bloc::messageReceiverBlc::msReceiverBloc.dart::MessageReceiverState" <|-- "saferoad::Chat::bloc::messageReceiverBlc::msReceiverBloc.dart::MessageLoadSuccess"
+
+class "saferoad::Chat::bloc::messageReceiverBlc::msReceiverBloc.dart::MessageLoadInprogress" {
+}
+
+"saferoad::Chat::bloc::messageReceiverBlc::msReceiverBloc.dart::MessageReceiverState" <|-- "saferoad::Chat::bloc::messageReceiverBlc::msReceiverBloc.dart::MessageLoadInprogress"
+
+class "saferoad::Chat::bloc::messageReceiverBlc::msReceiverBloc.dart::MessageLoadFailure" {
+  +String message
+}
+
+"saferoad::Chat::bloc::messageReceiverBlc::msReceiverBloc.dart::MessageReceiverState" <|-- "saferoad::Chat::bloc::messageReceiverBlc::msReceiverBloc.dart::MessageLoadFailure"
+
+class "saferoad::Chat::bloc::messageSenderBlc::msSenderBloc.dart::MessageSenderBloc" {
+  +MessageRepository messageRepository
+  -FutureOr<void> _onMessageSentToState()
+}
+
+"saferoad::Chat::bloc::messageSenderBlc::msSenderBloc.dart::MessageSenderBloc" o-- "saferoad::Chat::repository::messageRepository.dart::MessageRepository"
+"bloc::src::bloc.dart::Bloc" <|-- "saferoad::Chat::bloc::messageSenderBlc::msSenderBloc.dart::MessageSenderBloc"
+
+abstract class "saferoad::Chat::bloc::messageSenderBlc::msSenderBloc.dart::MessageSenderEvent" {
+  +List<Object> props
+}
+
+"equatable::src::equatable.dart::Equatable" <|-- "saferoad::Chat::bloc::messageSenderBlc::msSenderBloc.dart::MessageSenderEvent"
+
+class "saferoad::Chat::bloc::messageSenderBlc::msSenderBloc.dart::MessageSent" {
+  +Message message
+}
+
+"saferoad::Chat::bloc::messageSenderBlc::msSenderBloc.dart::MessageSent" o-- "saferoad::Chat::model::message.dart::Message"
+"saferoad::Chat::bloc::messageSenderBlc::msSenderBloc.dart::MessageSenderEvent" <|-- "saferoad::Chat::bloc::messageSenderBlc::msSenderBloc.dart::MessageSent"
+
+abstract class "saferoad::Chat::bloc::messageSenderBlc::msSenderBloc.dart::MessageSenderState" {
+  +List<Object> props
+}
+
+"equatable::src::equatable.dart::Equatable" <|-- "saferoad::Chat::bloc::messageSenderBlc::msSenderBloc.dart::MessageSenderState"
+
+class "saferoad::Chat::bloc::messageSenderBlc::msSenderBloc.dart::MessageInitial" {
+}
+
+"saferoad::Chat::bloc::messageSenderBlc::msSenderBloc.dart::MessageSenderState" <|-- "saferoad::Chat::bloc::messageSenderBlc::msSenderBloc.dart::MessageInitial"
+
+class "saferoad::Chat::bloc::messageSenderBlc::msSenderBloc.dart::MessageSentSuccess" {
+}
+
+"saferoad::Chat::bloc::messageSenderBlc::msSenderBloc.dart::MessageSenderState" <|-- "saferoad::Chat::bloc::messageSenderBlc::msSenderBloc.dart::MessageSentSuccess"
+
+class "saferoad::Chat::bloc::messageSenderBlc::msSenderBloc.dart::MessageSentFailure" {
+  +String message
+}
+
+"saferoad::Chat::bloc::messageSenderBlc::msSenderBloc.dart::MessageSenderState" <|-- "saferoad::Chat::bloc::messageSenderBlc::msSenderBloc.dart::MessageSentFailure"
+
+class "saferoad::Chat::bloc::messageSenderBlc::msSenderBloc.dart::MessageSentInprogress" {
+}
+
+"saferoad::Chat::bloc::messageSenderBlc::msSenderBloc.dart::MessageSenderState" <|-- "saferoad::Chat::bloc::messageSenderBlc::msSenderBloc.dart::MessageSentInprogress"
+
+class "saferoad::Chat::model::conversation.dart::Conversation" {
+  +String? id
+  +UserModel creator
+  +UserModel receiver
+  +List<String> members
+  +List<Object> props
+  +Conversation copyWith()
+  +Map<String, dynamic> toMap()
+  +String toJson()
+  +String toString()
+}
+
+"saferoad::Chat::model::conversation.dart::Conversation" o-- "saferoad::Auth::model::user_model.dart::UserModel"
+"equatable::src::equatable.dart::Equatable" <|-- "saferoad::Chat::model::conversation.dart::Conversation"
+
+class "saferoad::Chat::model::message.dart::Message" {
+  +String conversationId
+  +String senderUID
+  +String receiverUID
+  +String content
+  +String timeStamp
+  +List<Object> props
+  +Message copyWith()
+  +Map<String, dynamic> toMap()
+  +String toJson()
+  +String toString()
+}
+
+"equatable::src::equatable.dart::Equatable" <|-- "saferoad::Chat::model::message.dart::Message"
+
+class "saferoad::Chat::provider::chatProvider.dart::ChatFirebaseProvider" {
+  +FirebaseFirestore firestore
+  +Future<List<Map<String, dynamic>>> getChats()
+}
+
+"saferoad::Chat::provider::chatProvider.dart::ChatFirebaseProvider" o-- "cloud_firestore::cloud_firestore.dart::FirebaseFirestore"
+
+class "saferoad::Chat::provider::conversationProvider.dart::ConversationFirebaseProvider" {
+  +FirebaseFirestore firestore
+  +Future<Map<String, dynamic>?> getConversationId()
+  +Future<String> createConversation()
+}
+
+"saferoad::Chat::provider::conversationProvider.dart::ConversationFirebaseProvider" o-- "cloud_firestore::cloud_firestore.dart::FirebaseFirestore"
+
+class "saferoad::Chat::provider::messageProvider.dart::MessageProvider" {
+  +FirebaseFirestore firestore
+  +Future<void> addMessage()
+  +Stream<List<Map<String, dynamic>?>> getMessages()
+}
+
+"saferoad::Chat::provider::messageProvider.dart::MessageProvider" o-- "cloud_firestore::cloud_firestore.dart::FirebaseFirestore"
+
+class "saferoad::Chat::repository::chatRepository.dart::ChatRepository" {
+  +ChatFirebaseProvider chatFirebaseProvider
+  +Future<List<Conversation>> getChats()
+}
+
+"saferoad::Chat::repository::chatRepository.dart::ChatRepository" o-- "saferoad::Chat::provider::chatProvider.dart::ChatFirebaseProvider"
+
+class "saferoad::Chat::repository::conversationRepository.dart::ConversationRepository" {
+  +ConversationFirebaseProvider conversationFirebaseProvider
+  +Future<Conversation?> getConversation()
+  +Future<String> createConversation()
+}
+
+"saferoad::Chat::repository::conversationRepository.dart::ConversationRepository" o-- "saferoad::Chat::provider::conversationProvider.dart::ConversationFirebaseProvider"
+
+class "saferoad::Chat::repository::messageRepository.dart::MessageRepository" {
+  +MessageProvider messageFirebaseProvider
+  +Future<void> sendMessage()
+  +Stream<List<Message?>> getMessages()
+}
+
+"saferoad::Chat::repository::messageRepository.dart::MessageRepository" o-- "saferoad::Chat::provider::messageProvider.dart::MessageProvider"
+
+class "saferoad::Chat::ui::views::chat.dart::ConversationMainView" {
+  +UserModel loginUser
+  +UserModel receiver
+  +String conversationId
+  +Widget build()
+}
+
+"saferoad::Chat::ui::views::chat.dart::ConversationMainView" o-- "saferoad::Auth::model::user_model.dart::UserModel"
+
+class "saferoad::Chat::ui::views::chatMessage.dart::ConversationMessageView" {
+  +UserModel loginUser
+  +UserModel receiver
+  +Widget build()
+}
+
+"saferoad::Chat::ui::views::chatMessage.dart::ConversationMessageView" o-- "saferoad::Auth::model::user_model.dart::UserModel"
+
+class "saferoad::Chat::ui::views::chatMessage.dart::_MessageListBuilder" {
+  +String loginUID
+  +List<Message?> messages
+  +Widget build()
+}
+
+class "saferoad::Chat::ui::views::chatMessage.dart::_MessageBody" {
+  +bool isMine
+  +Message? message
+  +Widget build()
+}
+
+"saferoad::Chat::ui::views::chatMessage.dart::_MessageBody" o-- "saferoad::Chat::model::message.dart::Message"
+
+class "saferoad::Chat::ui::views::chatPage.dart::ConversationPage" {
+  +String? converasationId
+  +UserModel sender
+  +UserModel receiver
+  +Widget build()
+}
+
+"saferoad::Chat::ui::views::chatPage.dart::ConversationPage" o-- "saferoad::Auth::model::user_model.dart::UserModel"
+
+class "saferoad::Chat::ui::views::chatPage.dart::ConversationView" {
+  +UserModel loginUser
+  +UserModel receiver
+  +Widget build()
+}
+
+"saferoad::Chat::ui::views::chatPage.dart::ConversationView" o-- "saferoad::Auth::model::user_model.dart::UserModel"
+
+class "saferoad::Chat::ui::views::chatSender.dart::ConversationSenderView" {
+  +String? conversationId
+  +String senderUID
+  +String receiverUID
+  +State<ConversationSenderView> createState()
+}
+
+class "saferoad::Chat::ui::views::chatSender.dart::_ConversationSenderViewState" {
+  +String message
+  +void initState()
+  +void dispose()
+  +Widget build()
+}
+
+class "saferoad::Chat::ui::views::listChats.dart::ChatPage" {
+  +UserModel authenticatedUser
+  +Widget build()
+}
+
+"saferoad::Chat::ui::views::listChats.dart::ChatPage" o-- "saferoad::Auth::model::user_model.dart::UserModel"
+
+class "saferoad::Chat::ui::views::listChats.dart::_ChatView" {
+  +UserModel authenticatedUser
+  +Widget build()
+}
+
+"saferoad::Chat::ui::views::listChats.dart::_ChatView" o-- "saferoad::Auth::model::user_model.dart::UserModel"
+
+class "saferoad::Chat::ui::views::listChats.dart::_ChatList" {
+  +List<Conversation> chats
+  +UserModel authenticatedUser
+  +Widget build()
+}
+
+"saferoad::Chat::ui::views::listChats.dart::_ChatList" o-- "saferoad::Auth::model::user_model.dart::UserModel"
+
+class "saferoad::Chat::ui::widgets::buttonChat.dart::ChatBody" {
+  +UserModel receiver
+  +UserModel authenticatedUser
+  +Widget build()
+}
+
+"saferoad::Chat::ui::widgets::buttonChat.dart::ChatBody" o-- "saferoad::Auth::model::user_model.dart::UserModel"
+
+class "saferoad::Chat::utils::conversationKey.dart::ConversationKey" {
+  {static} +String collectionName
+  {static} +String members
+  {static} +String id
+  {static} +String creator
+  {static} +String receiver
+}
+
+class "saferoad::Chat::utils::messageKeys.dart::MessageKeys" {
+  {static} +String collection
+  {static} +String conversationId
+  {static} +String senderUID
+  {static} +String receiverUID
+  {static} +String timeStamp
+  {static} +String content
+}
+
+
+@enduml

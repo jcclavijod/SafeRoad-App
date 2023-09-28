@@ -1,0 +1,973 @@
+@startuml
+set namespaceSeparator ::
+
+class "saferoad::Auth::app.dart::Home" {
+  +State<Home> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "saferoad::Auth::app.dart::Home"
+
+class "saferoad::Auth::app.dart::_HomeState" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "saferoad::Auth::app.dart::_HomeState"
+
+class "saferoad::Auth::auth.dart::Auth" {
+  -FirebaseAuth _firebaseAuth
+  +User? currentuser
+  +Stream<User?> authStateChanges
+  +Future<void> signInWithEmailAndPassword()
+  +Future<void> createUserWithEmaildAndPassword()
+  +Future<void> sendResetPasswordEmail()
+  +Future<void> signOut()
+}
+
+"saferoad::Auth::auth.dart::Auth" o-- "firebase_auth::firebase_auth.dart::FirebaseAuth"
+"saferoad::Auth::auth.dart::Auth" o-- "firebase_auth::firebase_auth.dart::User"
+"saferoad::Auth::auth.dart::Auth" o-- "dart::async::Stream<User>"
+
+class "saferoad::Auth::bloc::auth_bloc.dart::MyAuth" {
+  +State<MyAuth> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "saferoad::Auth::bloc::auth_bloc.dart::MyAuth"
+
+class "saferoad::Auth::bloc::auth_bloc.dart::_MyAuthState" {
+  +bool showloginPage
+  +void toggleScrean()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "saferoad::Auth::bloc::auth_bloc.dart::_MyAuthState"
+
+class "saferoad::Auth::model::user_model.dart::UserModel" {
+  +String name
+  +String cedula
+  +String local
+  +String email
+  +String bio
+  +String profilePic
+  +String createdAt
+  +String phoneNumber
+  +String uid
+  +Map<String, dynamic> toMap()
+}
+
+class "saferoad::Auth::provider::auth_provider.dart::FirebaseDataSource" {
+  +User currentUser
+  +FirebaseFirestore firestore
+  +FirebaseStorage storage
+  +String newId()
+  +Stream<Iterable<UserModel>> getMyUsers()
+  +Future<void> saveMyUser()
+  +Future<void> deleteMyUser()
+}
+
+"saferoad::Auth::provider::auth_provider.dart::FirebaseDataSource" o-- "firebase_auth::firebase_auth.dart::User"
+"saferoad::Auth::provider::auth_provider.dart::FirebaseDataSource" o-- "cloud_firestore::cloud_firestore.dart::FirebaseFirestore"
+"saferoad::Auth::provider::auth_provider.dart::FirebaseDataSource" o-- "firebase_storage::firebase_storage.dart::FirebaseStorage"
+
+class "saferoad::Auth::Repository::auth_repository.dart::auth_repository" {
+  +String documetId
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "saferoad::Auth::Repository::auth_repository.dart::auth_repository"
+
+class "saferoad::Auth::ui::views::decision.dart::MyView" {
+  +void Function() showRegisterPage
+  +Widget build()
+}
+
+"saferoad::Auth::ui::views::decision.dart::MyView" o-- "dart::ui::void Function()"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "saferoad::Auth::ui::views::decision.dart::MyView"
+
+class "saferoad::Auth::ui::views::Home_screen.dart::Login" {
+  +void Function() showRegisterPage
+  +State<Login> createState()
+}
+
+"saferoad::Auth::ui::views::Home_screen.dart::Login" o-- "dart::ui::void Function()"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "saferoad::Auth::ui::views::Home_screen.dart::Login"
+
+class "saferoad::Auth::ui::views::Home_screen.dart::_LoginState" {
+  -TextEditingController _emailConroller
+  -TextEditingController _passwordConroller
+  +Future<dynamic> signin()
+  +void dispose()
+  +Widget build()
+}
+
+"saferoad::Auth::ui::views::Home_screen.dart::_LoginState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::widgets::framework.dart::State" <|-- "saferoad::Auth::ui::views::Home_screen.dart::_LoginState"
+
+class "saferoad::Auth::ui::views::password_reset.dart::PasswordResetPage" {
+  +State<PasswordResetPage> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "saferoad::Auth::ui::views::password_reset.dart::PasswordResetPage"
+
+class "saferoad::Auth::ui::views::password_reset.dart::_PasswordResetPageState" {
+  -TextEditingController _emailConroller
+  +void dispose()
+  +Future<dynamic> passwordReset()
+  +Widget build()
+}
+
+"saferoad::Auth::ui::views::password_reset.dart::_PasswordResetPageState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::widgets::framework.dart::State" <|-- "saferoad::Auth::ui::views::password_reset.dart::_PasswordResetPageState"
+
+class "saferoad::Auth::ui::views::registerM.dart::RegisterM" {
+  +void Function() showlogingPage
+  +State<RegisterM> createState()
+}
+
+"saferoad::Auth::ui::views::registerM.dart::RegisterM" o-- "dart::ui::void Function()"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "saferoad::Auth::ui::views::registerM.dart::RegisterM"
+
+class "saferoad::Auth::ui::views::registerM.dart::_RegisterMState" {
+  -String? _uid
+  -TextEditingController _emailConroller
+  -TextEditingController _passwordConroller
+  -TextEditingController _confirm_pw_Conroller
+  -TextEditingController _firstNameConroller
+  -TextEditingController _LastNameConroller
+  -TextEditingController _cedulaConroller
+  +File? profilePic
+  -TextEditingController _phoneConroller
+  -TextEditingController _LocalConroller
+  -FirebaseAuth _firebaseAuth
+  +String uid
+  +void dispose()
+  -void _pickImage()
+  +void checkConfirmPW()
+  +Future<void> sinUp()
+  +Future<dynamic> addUserDetails()
+  +Future<String> storeFileToStorage()
+  +Widget build()
+}
+
+"saferoad::Auth::ui::views::registerM.dart::_RegisterMState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"saferoad::Auth::ui::views::registerM.dart::_RegisterMState" o-- "dart::io::File"
+"saferoad::Auth::ui::views::registerM.dart::_RegisterMState" o-- "firebase_auth::firebase_auth.dart::FirebaseAuth"
+"flutter::src::widgets::framework.dart::State" <|-- "saferoad::Auth::ui::views::registerM.dart::_RegisterMState"
+
+class "saferoad::Auth::ui::views::registerpage.dart::RegisterPage" {
+  +void Function() showlogingPage
+  +State<RegisterPage> createState()
+}
+
+"saferoad::Auth::ui::views::registerpage.dart::RegisterPage" o-- "dart::ui::void Function()"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "saferoad::Auth::ui::views::registerpage.dart::RegisterPage"
+
+class "saferoad::Auth::ui::views::registerpage.dart::_RegisterPageState" {
+  -String? _uid
+  -TextEditingController _emailConroller
+  -TextEditingController _passwordConroller
+  -TextEditingController _confirm_pw_Conroller
+  -TextEditingController _firstNameConroller
+  -TextEditingController _LastNameConroller
+  -TextEditingController _cedulaConroller
+  +File? profilePic
+  -TextEditingController _phoneConroller
+  -FirebaseAuth _firebaseAuth
+  +String uid
+  +void dispose()
+  -void _pickImage()
+  +void checkConfirmPW()
+  +Future<void> sinUp()
+  +Future<dynamic> addUserDetails()
+  +Future<String> storeFileToStorage()
+  +Widget build()
+}
+
+"saferoad::Auth::ui::views::registerpage.dart::_RegisterPageState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"saferoad::Auth::ui::views::registerpage.dart::_RegisterPageState" o-- "dart::io::File"
+"saferoad::Auth::ui::views::registerpage.dart::_RegisterPageState" o-- "firebase_auth::firebase_auth.dart::FirebaseAuth"
+"flutter::src::widgets::framework.dart::State" <|-- "saferoad::Auth::ui::views::registerpage.dart::_RegisterPageState"
+
+class "saferoad::Auth::ui::views::update.dart::MyUpdate" {
+  +State<MyUpdate> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "saferoad::Auth::ui::views::update.dart::MyUpdate"
+
+class "saferoad::Auth::ui::views::update.dart::_MyUpdateState" {
+  +String? userEmail
+  +CollectionReference<Object?> user
+  -TextEditingController _firstNameConroller
+  -TextEditingController _lastNameConroller
+  -TextEditingController _cedulaConrroller
+  +List<String> docIDs
+  +Future<dynamic> update()
+  +Widget build()
+}
+
+"saferoad::Auth::ui::views::update.dart::_MyUpdateState" o-- "cloud_firestore::cloud_firestore.dart::CollectionReference<Object>"
+"saferoad::Auth::ui::views::update.dart::_MyUpdateState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::widgets::framework.dart::State" <|-- "saferoad::Auth::ui::views::update.dart::_MyUpdateState"
+
+class "saferoad::Auth::ui::widgets::custom_button.dart::CustomButton" {
+  +String text
+  +void Function() onPressed
+  +Widget build()
+}
+
+"saferoad::Auth::ui::widgets::custom_button.dart::CustomButton" o-- "dart::ui::void Function()"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "saferoad::Auth::ui::widgets::custom_button.dart::CustomButton"
+
+class "saferoad::Auth::ui::widgets::custom_image.dart::CustomImage" {
+  +File? imageFile
+  +String? imageUrl
+  +BoxFit boxFit
+  +Widget build()
+}
+
+"saferoad::Auth::ui::widgets::custom_image.dart::CustomImage" o-- "dart::io::File"
+"saferoad::Auth::ui::widgets::custom_image.dart::CustomImage" o-- "flutter::src::painting::box_fit.dart::BoxFit"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "saferoad::Auth::ui::widgets::custom_image.dart::CustomImage"
+
+class "saferoad::Chat::bloc::chatBlc::chat_blc_bloc.dart::ChatBloc" {
+  +ChatRepository chatRepository
+  -FutureOr<void> _onChatRequestedToState()
+}
+
+"saferoad::Chat::bloc::chatBlc::chat_blc_bloc.dart::ChatBloc" o-- "saferoad::Chat::repository::chatRepository.dart::ChatRepository"
+"bloc::src::bloc.dart::Bloc" <|-- "saferoad::Chat::bloc::chatBlc::chat_blc_bloc.dart::ChatBloc"
+
+abstract class "saferoad::Chat::bloc::chatBlc::chat_blc_bloc.dart::ChatEvent" {
+  +List<Object> props
+}
+
+"equatable::src::equatable.dart::Equatable" <|-- "saferoad::Chat::bloc::chatBlc::chat_blc_bloc.dart::ChatEvent"
+
+class "saferoad::Chat::bloc::chatBlc::chat_blc_bloc.dart::ChatRequested" {
+  +String loginUID
+  +List<Object> props
+}
+
+"saferoad::Chat::bloc::chatBlc::chat_blc_bloc.dart::ChatEvent" <|-- "saferoad::Chat::bloc::chatBlc::chat_blc_bloc.dart::ChatRequested"
+
+abstract class "saferoad::Chat::bloc::chatBlc::chat_blc_bloc.dart::ChatState" {
+  +List<Object> props
+}
+
+"equatable::src::equatable.dart::Equatable" <|-- "saferoad::Chat::bloc::chatBlc::chat_blc_bloc.dart::ChatState"
+
+class "saferoad::Chat::bloc::chatBlc::chat_blc_bloc.dart::ChatInitial" {
+}
+
+"saferoad::Chat::bloc::chatBlc::chat_blc_bloc.dart::ChatState" <|-- "saferoad::Chat::bloc::chatBlc::chat_blc_bloc.dart::ChatInitial"
+
+class "saferoad::Chat::bloc::chatBlc::chat_blc_bloc.dart::ChatLoadInprogress" {
+}
+
+"saferoad::Chat::bloc::chatBlc::chat_blc_bloc.dart::ChatState" <|-- "saferoad::Chat::bloc::chatBlc::chat_blc_bloc.dart::ChatLoadInprogress"
+
+class "saferoad::Chat::bloc::chatBlc::chat_blc_bloc.dart::ChatLoadFailure" {
+  +String message
+  +List<Object> props
+}
+
+"saferoad::Chat::bloc::chatBlc::chat_blc_bloc.dart::ChatState" <|-- "saferoad::Chat::bloc::chatBlc::chat_blc_bloc.dart::ChatLoadFailure"
+
+class "saferoad::Chat::bloc::chatBlc::chat_blc_bloc.dart::ChatLoadSuccess" {
+  +List<Conversation> chats
+  +List<Object> props
+}
+
+"saferoad::Chat::bloc::chatBlc::chat_blc_bloc.dart::ChatState" <|-- "saferoad::Chat::bloc::chatBlc::chat_blc_bloc.dart::ChatLoadSuccess"
+
+class "saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationBloc" {
+  +ConversationRepository conversationRepository
+  -FutureOr<void> _onConversationDetailRequested()
+  -FutureOr<void> _onConversationCreated()
+}
+
+"saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationBloc" o-- "saferoad::Chat::repository::conversationRepository.dart::ConversationRepository"
+"bloc::src::bloc.dart::Bloc" <|-- "saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationBloc"
+
+abstract class "saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationEvent" {
+  +List<Object> props
+}
+
+"equatable::src::equatable.dart::Equatable" <|-- "saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationEvent"
+
+class "saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationDetailRequested" {
+  +UserModel loginUser
+  +UserModel receiver
+}
+
+"saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationDetailRequested" o-- "saferoad::Auth::model::user_model.dart::UserModel"
+"saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationEvent" <|-- "saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationDetailRequested"
+
+class "saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationCreated" {
+  +Conversation conversation
+}
+
+"saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationCreated" o-- "saferoad::Chat::model::conversation.dart::Conversation"
+"saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationEvent" <|-- "saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationCreated"
+
+abstract class "saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationState" {
+  +List<Object> props
+}
+
+"equatable::src::equatable.dart::Equatable" <|-- "saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationState"
+
+class "saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationInitial" {
+}
+
+"saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationState" <|-- "saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationInitial"
+
+class "saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationLoadSuccess" {
+  +Conversation conversation
+}
+
+"saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationLoadSuccess" o-- "saferoad::Chat::model::conversation.dart::Conversation"
+"saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationState" <|-- "saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationLoadSuccess"
+
+class "saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationLoadFailure" {
+  +String message
+}
+
+"saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationState" <|-- "saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationLoadFailure"
+
+class "saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationLoadInprogress" {
+}
+
+"saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationState" <|-- "saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationLoadInprogress"
+
+class "saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationCreationSuccess" {
+  +String conversationId
+}
+
+"saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationState" <|-- "saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationCreationSuccess"
+
+class "saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationCreationInprogress" {
+}
+
+"saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationState" <|-- "saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationCreationInprogress"
+
+class "saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationCreationFailure" {
+  +String message
+}
+
+"saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationState" <|-- "saferoad::Chat::bloc::conversationBlc::conversationBloc.dart::ConversationCreationFailure"
+
+class "saferoad::Chat::bloc::messageReceiverBlc::msReceiverBloc.dart::MessageReceiverBloc" {
+  +MessageRepository messageRepository
+  +StreamSubscription<dynamic>? messageStream
+  +Future<void> close()
+  -FutureOr<void> _onMessageRequestedToState()
+  -FutureOr<void> _onMessageReceivedToState()
+}
+
+"saferoad::Chat::bloc::messageReceiverBlc::msReceiverBloc.dart::MessageReceiverBloc" o-- "saferoad::Chat::repository::messageRepository.dart::MessageRepository"
+"saferoad::Chat::bloc::messageReceiverBlc::msReceiverBloc.dart::MessageReceiverBloc" o-- "dart::async::StreamSubscription<dynamic>"
+"bloc::src::bloc.dart::Bloc" <|-- "saferoad::Chat::bloc::messageReceiverBlc::msReceiverBloc.dart::MessageReceiverBloc"
+
+abstract class "saferoad::Chat::bloc::messageReceiverBlc::msReceiverBloc.dart::MessageReceiverEvent" {
+  +List<Object> props
+}
+
+"equatable::src::equatable.dart::Equatable" <|-- "saferoad::Chat::bloc::messageReceiverBlc::msReceiverBloc.dart::MessageReceiverEvent"
+
+class "saferoad::Chat::bloc::messageReceiverBlc::msReceiverBloc.dart::MessageRequested" {
+  +String conversationId
+}
+
+"saferoad::Chat::bloc::messageReceiverBlc::msReceiverBloc.dart::MessageReceiverEvent" <|-- "saferoad::Chat::bloc::messageReceiverBlc::msReceiverBloc.dart::MessageRequested"
+
+class "saferoad::Chat::bloc::messageReceiverBlc::msReceiverBloc.dart::MessageReceived" {
+  +List<Message?> messages
+}
+
+"saferoad::Chat::bloc::messageReceiverBlc::msReceiverBloc.dart::MessageReceiverEvent" <|-- "saferoad::Chat::bloc::messageReceiverBlc::msReceiverBloc.dart::MessageReceived"
+
+abstract class "saferoad::Chat::bloc::messageReceiverBlc::msReceiverBloc.dart::MessageReceiverState" {
+  +List<Object> props
+}
+
+"equatable::src::equatable.dart::Equatable" <|-- "saferoad::Chat::bloc::messageReceiverBlc::msReceiverBloc.dart::MessageReceiverState"
+
+class "saferoad::Chat::bloc::messageReceiverBlc::msReceiverBloc.dart::MessageReceiverInitial" {
+}
+
+"saferoad::Chat::bloc::messageReceiverBlc::msReceiverBloc.dart::MessageReceiverState" <|-- "saferoad::Chat::bloc::messageReceiverBlc::msReceiverBloc.dart::MessageReceiverInitial"
+
+class "saferoad::Chat::bloc::messageReceiverBlc::msReceiverBloc.dart::MessageLoadSuccess" {
+  +List<Message?> messages
+  +List<Object> props
+}
+
+"saferoad::Chat::bloc::messageReceiverBlc::msReceiverBloc.dart::MessageReceiverState" <|-- "saferoad::Chat::bloc::messageReceiverBlc::msReceiverBloc.dart::MessageLoadSuccess"
+
+class "saferoad::Chat::bloc::messageReceiverBlc::msReceiverBloc.dart::MessageLoadInprogress" {
+}
+
+"saferoad::Chat::bloc::messageReceiverBlc::msReceiverBloc.dart::MessageReceiverState" <|-- "saferoad::Chat::bloc::messageReceiverBlc::msReceiverBloc.dart::MessageLoadInprogress"
+
+class "saferoad::Chat::bloc::messageReceiverBlc::msReceiverBloc.dart::MessageLoadFailure" {
+  +String message
+}
+
+"saferoad::Chat::bloc::messageReceiverBlc::msReceiverBloc.dart::MessageReceiverState" <|-- "saferoad::Chat::bloc::messageReceiverBlc::msReceiverBloc.dart::MessageLoadFailure"
+
+class "saferoad::Chat::bloc::messageSenderBlc::msSenderBloc.dart::MessageSenderBloc" {
+  +MessageRepository messageRepository
+  -FutureOr<void> _onMessageSentToState()
+}
+
+"saferoad::Chat::bloc::messageSenderBlc::msSenderBloc.dart::MessageSenderBloc" o-- "saferoad::Chat::repository::messageRepository.dart::MessageRepository"
+"bloc::src::bloc.dart::Bloc" <|-- "saferoad::Chat::bloc::messageSenderBlc::msSenderBloc.dart::MessageSenderBloc"
+
+abstract class "saferoad::Chat::bloc::messageSenderBlc::msSenderBloc.dart::MessageSenderEvent" {
+  +List<Object> props
+}
+
+"equatable::src::equatable.dart::Equatable" <|-- "saferoad::Chat::bloc::messageSenderBlc::msSenderBloc.dart::MessageSenderEvent"
+
+class "saferoad::Chat::bloc::messageSenderBlc::msSenderBloc.dart::MessageSent" {
+  +Message message
+}
+
+"saferoad::Chat::bloc::messageSenderBlc::msSenderBloc.dart::MessageSent" o-- "saferoad::Chat::model::message.dart::Message"
+"saferoad::Chat::bloc::messageSenderBlc::msSenderBloc.dart::MessageSenderEvent" <|-- "saferoad::Chat::bloc::messageSenderBlc::msSenderBloc.dart::MessageSent"
+
+abstract class "saferoad::Chat::bloc::messageSenderBlc::msSenderBloc.dart::MessageSenderState" {
+  +List<Object> props
+}
+
+"equatable::src::equatable.dart::Equatable" <|-- "saferoad::Chat::bloc::messageSenderBlc::msSenderBloc.dart::MessageSenderState"
+
+class "saferoad::Chat::bloc::messageSenderBlc::msSenderBloc.dart::MessageInitial" {
+}
+
+"saferoad::Chat::bloc::messageSenderBlc::msSenderBloc.dart::MessageSenderState" <|-- "saferoad::Chat::bloc::messageSenderBlc::msSenderBloc.dart::MessageInitial"
+
+class "saferoad::Chat::bloc::messageSenderBlc::msSenderBloc.dart::MessageSentSuccess" {
+}
+
+"saferoad::Chat::bloc::messageSenderBlc::msSenderBloc.dart::MessageSenderState" <|-- "saferoad::Chat::bloc::messageSenderBlc::msSenderBloc.dart::MessageSentSuccess"
+
+class "saferoad::Chat::bloc::messageSenderBlc::msSenderBloc.dart::MessageSentFailure" {
+  +String message
+}
+
+"saferoad::Chat::bloc::messageSenderBlc::msSenderBloc.dart::MessageSenderState" <|-- "saferoad::Chat::bloc::messageSenderBlc::msSenderBloc.dart::MessageSentFailure"
+
+class "saferoad::Chat::bloc::messageSenderBlc::msSenderBloc.dart::MessageSentInprogress" {
+}
+
+"saferoad::Chat::bloc::messageSenderBlc::msSenderBloc.dart::MessageSenderState" <|-- "saferoad::Chat::bloc::messageSenderBlc::msSenderBloc.dart::MessageSentInprogress"
+
+class "saferoad::Chat::model::conversation.dart::Conversation" {
+  +String? id
+  +UserModel creator
+  +UserModel receiver
+  +List<String> members
+  +List<Object> props
+  +Conversation copyWith()
+  +Map<String, dynamic> toMap()
+  +String toJson()
+  +String toString()
+}
+
+"saferoad::Chat::model::conversation.dart::Conversation" o-- "saferoad::Auth::model::user_model.dart::UserModel"
+"equatable::src::equatable.dart::Equatable" <|-- "saferoad::Chat::model::conversation.dart::Conversation"
+
+class "saferoad::Chat::model::message.dart::Message" {
+  +String conversationId
+  +String senderUID
+  +String receiverUID
+  +String content
+  +String timeStamp
+  +List<Object> props
+  +Message copyWith()
+  +Map<String, dynamic> toMap()
+  +String toJson()
+  +String toString()
+}
+
+"equatable::src::equatable.dart::Equatable" <|-- "saferoad::Chat::model::message.dart::Message"
+
+class "saferoad::Chat::provider::chatProvider.dart::ChatFirebaseProvider" {
+  +FirebaseFirestore firestore
+  +Future<List<Map<String, dynamic>>> getChats()
+}
+
+"saferoad::Chat::provider::chatProvider.dart::ChatFirebaseProvider" o-- "cloud_firestore::cloud_firestore.dart::FirebaseFirestore"
+
+class "saferoad::Chat::provider::conversationProvider.dart::ConversationFirebaseProvider" {
+  +FirebaseFirestore firestore
+  +Future<Map<String, dynamic>?> getConversationId()
+  +Future<String> createConversation()
+}
+
+"saferoad::Chat::provider::conversationProvider.dart::ConversationFirebaseProvider" o-- "cloud_firestore::cloud_firestore.dart::FirebaseFirestore"
+
+class "saferoad::Chat::provider::messageProvider.dart::MessageProvider" {
+  +FirebaseFirestore firestore
+  +Future<void> addMessage()
+  +Stream<List<Map<String, dynamic>?>> getMessages()
+}
+
+"saferoad::Chat::provider::messageProvider.dart::MessageProvider" o-- "cloud_firestore::cloud_firestore.dart::FirebaseFirestore"
+
+class "saferoad::Chat::repository::chatRepository.dart::ChatRepository" {
+  +ChatFirebaseProvider chatFirebaseProvider
+  +Future<List<Conversation>> getChats()
+}
+
+"saferoad::Chat::repository::chatRepository.dart::ChatRepository" o-- "saferoad::Chat::provider::chatProvider.dart::ChatFirebaseProvider"
+
+class "saferoad::Chat::repository::conversationRepository.dart::ConversationRepository" {
+  +ConversationFirebaseProvider conversationFirebaseProvider
+  +Future<Conversation?> getConversation()
+  +Future<String> createConversation()
+}
+
+"saferoad::Chat::repository::conversationRepository.dart::ConversationRepository" o-- "saferoad::Chat::provider::conversationProvider.dart::ConversationFirebaseProvider"
+
+class "saferoad::Chat::repository::messageRepository.dart::MessageRepository" {
+  +MessageProvider messageFirebaseProvider
+  +Future<void> sendMessage()
+  +Stream<List<Message?>> getMessages()
+}
+
+"saferoad::Chat::repository::messageRepository.dart::MessageRepository" o-- "saferoad::Chat::provider::messageProvider.dart::MessageProvider"
+
+class "saferoad::Chat::ui::views::chat.dart::ConversationMainView" {
+  +UserModel loginUser
+  +UserModel receiver
+  +String conversationId
+  +Widget build()
+}
+
+"saferoad::Chat::ui::views::chat.dart::ConversationMainView" o-- "saferoad::Auth::model::user_model.dart::UserModel"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "saferoad::Chat::ui::views::chat.dart::ConversationMainView"
+
+class "saferoad::Chat::ui::views::chatMessage.dart::ConversationMessageView" {
+  +UserModel loginUser
+  +UserModel receiver
+  +Widget build()
+}
+
+"saferoad::Chat::ui::views::chatMessage.dart::ConversationMessageView" o-- "saferoad::Auth::model::user_model.dart::UserModel"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "saferoad::Chat::ui::views::chatMessage.dart::ConversationMessageView"
+
+class "saferoad::Chat::ui::views::chatMessage.dart::_MessageListBuilder" {
+  +String loginUID
+  +List<Message?> messages
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "saferoad::Chat::ui::views::chatMessage.dart::_MessageListBuilder"
+
+class "saferoad::Chat::ui::views::chatMessage.dart::_MessageBody" {
+  +bool isMine
+  +Message? message
+  +Widget build()
+}
+
+"saferoad::Chat::ui::views::chatMessage.dart::_MessageBody" o-- "saferoad::Chat::model::message.dart::Message"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "saferoad::Chat::ui::views::chatMessage.dart::_MessageBody"
+
+class "saferoad::Chat::ui::views::chatPage.dart::ConversationPage" {
+  +String? converasationId
+  +UserModel sender
+  +UserModel receiver
+  +Widget build()
+}
+
+"saferoad::Chat::ui::views::chatPage.dart::ConversationPage" o-- "saferoad::Auth::model::user_model.dart::UserModel"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "saferoad::Chat::ui::views::chatPage.dart::ConversationPage"
+
+class "saferoad::Chat::ui::views::chatPage.dart::ConversationView" {
+  +UserModel loginUser
+  +UserModel receiver
+  +Widget build()
+}
+
+"saferoad::Chat::ui::views::chatPage.dart::ConversationView" o-- "saferoad::Auth::model::user_model.dart::UserModel"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "saferoad::Chat::ui::views::chatPage.dart::ConversationView"
+
+class "saferoad::Chat::ui::views::chatSender.dart::ConversationSenderView" {
+  +String? conversationId
+  +String senderUID
+  +String receiverUID
+  +State<ConversationSenderView> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "saferoad::Chat::ui::views::chatSender.dart::ConversationSenderView"
+
+class "saferoad::Chat::ui::views::chatSender.dart::_ConversationSenderViewState" {
+  +TextEditingController messageTextContorller
+  +String message
+  +void initState()
+  +void dispose()
+  +Widget build()
+}
+
+"saferoad::Chat::ui::views::chatSender.dart::_ConversationSenderViewState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::widgets::framework.dart::State" <|-- "saferoad::Chat::ui::views::chatSender.dart::_ConversationSenderViewState"
+
+class "saferoad::Chat::ui::views::listChats.dart::ChatPage" {
+  +UserModel authenticatedUser
+  +Widget build()
+}
+
+"saferoad::Chat::ui::views::listChats.dart::ChatPage" o-- "saferoad::Auth::model::user_model.dart::UserModel"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "saferoad::Chat::ui::views::listChats.dart::ChatPage"
+
+class "saferoad::Chat::ui::views::listChats.dart::_ChatView" {
+  +UserModel authenticatedUser
+  +Widget build()
+}
+
+"saferoad::Chat::ui::views::listChats.dart::_ChatView" o-- "saferoad::Auth::model::user_model.dart::UserModel"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "saferoad::Chat::ui::views::listChats.dart::_ChatView"
+
+class "saferoad::Chat::ui::views::listChats.dart::_ChatList" {
+  +List<Conversation> chats
+  +UserModel authenticatedUser
+  +Widget build()
+}
+
+"saferoad::Chat::ui::views::listChats.dart::_ChatList" o-- "saferoad::Auth::model::user_model.dart::UserModel"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "saferoad::Chat::ui::views::listChats.dart::_ChatList"
+
+class "saferoad::Chat::ui::widgets::buttonChat.dart::ChatBody" {
+  +UserModel receiver
+  +UserModel authenticatedUser
+  +Widget build()
+}
+
+"saferoad::Chat::ui::widgets::buttonChat.dart::ChatBody" o-- "saferoad::Auth::model::user_model.dart::UserModel"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "saferoad::Chat::ui::widgets::buttonChat.dart::ChatBody"
+
+class "saferoad::Chat::utils::conversationKey.dart::ConversationKey" {
+  {static} +String collectionName
+  {static} +String members
+  {static} +String id
+  {static} +String creator
+  {static} +String receiver
+}
+
+class "saferoad::Chat::utils::messageKeys.dart::MessageKeys" {
+  {static} +String collection
+  {static} +String conversationId
+  {static} +String senderUID
+  {static} +String receiverUID
+  {static} +String timeStamp
+  {static} +String content
+}
+
+class "saferoad::firebase_options.dart::DefaultFirebaseOptions" {
+  {static} +FirebaseOptions web
+  {static} +FirebaseOptions android
+  {static} +FirebaseOptions ios
+  {static} +FirebaseOptions macos
+  {static} +FirebaseOptions currentPlatform
+}
+
+"saferoad::firebase_options.dart::DefaultFirebaseOptions" o-- "firebase_core_platform_interface::firebase_core_platform_interface.dart::FirebaseOptions"
+
+class "saferoad::Home::ui::views::perfil.dart::Perfil" {
+  +State<Perfil> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "saferoad::Home::ui::views::perfil.dart::Perfil"
+
+class "saferoad::Home::ui::views::perfil.dart::_PerfilState" {
+  +User? user
+  +UserModel userM
+  +String fullName
+  +String email
+  +String cedula
+  +String phoneNumber
+  +String photoURL
+  -bool _isExpanded
+  +void initState()
+  +void getUserData()
+  +Widget build()
+}
+
+"saferoad::Home::ui::views::perfil.dart::_PerfilState" o-- "firebase_auth::firebase_auth.dart::User"
+"saferoad::Home::ui::views::perfil.dart::_PerfilState" o-- "saferoad::Auth::model::user_model.dart::UserModel"
+"flutter::src::widgets::framework.dart::State" <|-- "saferoad::Home::ui::views::perfil.dart::_PerfilState"
+
+class "saferoad::Home::ui::views::userpage.dart::UserPage" {
+  +State<UserPage> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "saferoad::Home::ui::views::userpage.dart::UserPage"
+
+class "saferoad::Home::ui::views::userpage.dart::_UserPageState" {
+  +User? user
+  +UserModel userM
+  +List<String> docIDs
+  +Future<List<String>> getDocIds()
+  +Future<dynamic> getDataFromFirestore()
+  +Widget build()
+}
+
+"saferoad::Home::ui::views::userpage.dart::_UserPageState" o-- "firebase_auth::firebase_auth.dart::User"
+"saferoad::Home::ui::views::userpage.dart::_UserPageState" o-- "saferoad::Auth::model::user_model.dart::UserModel"
+"flutter::src::widgets::framework.dart::State" <|-- "saferoad::Home::ui::views::userpage.dart::_UserPageState"
+
+class "saferoad::Home::ui::widgets::SideMenuWidget.dart::SideMenuWidget" {
+  +UserModel userM
+  +Widget build()
+}
+
+"saferoad::Home::ui::widgets::SideMenuWidget.dart::SideMenuWidget" o-- "saferoad::Auth::model::user_model.dart::UserModel"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "saferoad::Home::ui::widgets::SideMenuWidget.dart::SideMenuWidget"
+
+class "saferoad::main.dart::MyApp" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "saferoad::main.dart::MyApp"
+
+class "saferoad::Map::bloc::gps::gps_bloc.dart::GpsBloc" {
+  +StreamSubscription<dynamic>? gpsServiceSubscription
+  -Future<void> _init()
+  -Future<bool> _isPermissionGranted()
+  -Future<bool> _checkGpsStatus()
+  +Future<void> askGpsAccess()
+  +Future<void> close()
+}
+
+"saferoad::Map::bloc::gps::gps_bloc.dart::GpsBloc" o-- "dart::async::StreamSubscription<dynamic>"
+"bloc::src::bloc.dart::Bloc" <|-- "saferoad::Map::bloc::gps::gps_bloc.dart::GpsBloc"
+
+abstract class "saferoad::Map::bloc::gps::gps_bloc.dart::GpsEvent" {
+  +List<Object> props
+}
+
+"equatable::src::equatable.dart::Equatable" <|-- "saferoad::Map::bloc::gps::gps_bloc.dart::GpsEvent"
+
+class "saferoad::Map::bloc::gps::gps_bloc.dart::GpsAndPermissionEvent" {
+  +bool isGpsEnable
+  +bool isGpsPermissionGranted
+}
+
+"saferoad::Map::bloc::gps::gps_bloc.dart::GpsEvent" <|-- "saferoad::Map::bloc::gps::gps_bloc.dart::GpsAndPermissionEvent"
+
+class "saferoad::Map::bloc::gps::gps_bloc.dart::GpsState" {
+  +bool isGpsEnable
+  +bool isGpsPermissionGranted
+  +bool isAllReady
+  +List<Object> props
+  +GpsState copyWith()
+}
+
+"equatable::src::equatable.dart::Equatable" <|-- "saferoad::Map::bloc::gps::gps_bloc.dart::GpsState"
+
+class "saferoad::Map::bloc::location::my_location_bloc.dart::MyLocationBloc" {
+  +SearchRepository searchRepository
+  -StreamSubscription<Position>? _positionSubscription
+  +List<LatLng> puntosCercanos
+  +Future<void> close()
+  +void startTracking()
+  +List<LatLng> getPuntosCercanos()
+}
+
+"saferoad::Map::bloc::location::my_location_bloc.dart::MyLocationBloc" o-- "saferoad::Map::repository::SearchRepository.dart::SearchRepository"
+"saferoad::Map::bloc::location::my_location_bloc.dart::MyLocationBloc" o-- "dart::async::StreamSubscription<Position>"
+"bloc::src::bloc.dart::Bloc" <|-- "saferoad::Map::bloc::location::my_location_bloc.dart::MyLocationBloc"
+
+abstract class "saferoad::Map::bloc::location::my_location_bloc.dart::MyLocationEvent" {
+  +List<Object> props
+}
+
+"equatable::src::equatable.dart::Equatable" <|-- "saferoad::Map::bloc::location::my_location_bloc.dart::MyLocationEvent"
+
+class "saferoad::Map::bloc::location::my_location_bloc.dart::OnLocationChange" {
+  +LatLng location
+}
+
+"saferoad::Map::bloc::location::my_location_bloc.dart::OnLocationChange" o-- "google_maps_flutter_platform_interface::src::types::location.dart::LatLng"
+"saferoad::Map::bloc::location::my_location_bloc.dart::MyLocationEvent" <|-- "saferoad::Map::bloc::location::my_location_bloc.dart::OnLocationChange"
+
+class "saferoad::Map::bloc::location::my_location_bloc.dart::MyLocationState" {
+  +bool following
+  +bool existsLocation
+  +LatLng location
+  +List<Object> props
+  +MyLocationState copyWith()
+}
+
+"saferoad::Map::bloc::location::my_location_bloc.dart::MyLocationState" o-- "google_maps_flutter_platform_interface::src::types::location.dart::LatLng"
+"equatable::src::equatable.dart::Equatable" <|-- "saferoad::Map::bloc::location::my_location_bloc.dart::MyLocationState"
+
+class "saferoad::Map::bloc::map::map_bloc.dart::MapBloc" {
+  -GoogleMapController _mapController
+  +List<LatLng> puntosCercanos
+  +SearchRepository searchRepository
+  +void initMap()
+  +void location()
+  +void moveCamera()
+  +void searchNearbyPlaces()
+  +void statusNearbyPlaces()
+  +Circle circle()
+}
+
+"saferoad::Map::bloc::map::map_bloc.dart::MapBloc" o-- "google_maps_flutter::google_maps_flutter.dart::GoogleMapController"
+"saferoad::Map::bloc::map::map_bloc.dart::MapBloc" o-- "saferoad::Map::repository::SearchRepository.dart::SearchRepository"
+"bloc::src::bloc.dart::Bloc" <|-- "saferoad::Map::bloc::map::map_bloc.dart::MapBloc"
+
+abstract class "saferoad::Map::bloc::map::map_bloc.dart::MapEvent" {
+  +List<Object> props
+}
+
+"equatable::src::equatable.dart::Equatable" <|-- "saferoad::Map::bloc::map::map_bloc.dart::MapEvent"
+
+class "saferoad::Map::bloc::map::map_bloc.dart::OnMapDone" {
+}
+
+"saferoad::Map::bloc::map::map_bloc.dart::MapEvent" <|-- "saferoad::Map::bloc::map::map_bloc.dart::OnMapDone"
+
+class "saferoad::Map::bloc::map::map_bloc.dart::UpdateRange" {
+  +double range
+}
+
+"saferoad::Map::bloc::map::map_bloc.dart::MapEvent" <|-- "saferoad::Map::bloc::map::map_bloc.dart::UpdateRange"
+
+class "saferoad::Map::bloc::map::map_bloc.dart::SaveShowDialog" {
+  +bool showDialog
+  +bool showDialogLoading
+}
+
+"saferoad::Map::bloc::map::map_bloc.dart::MapEvent" <|-- "saferoad::Map::bloc::map::map_bloc.dart::SaveShowDialog"
+
+class "saferoad::Map::bloc::map::map_bloc.dart::SaveNearbyPlaces" {
+  +List<LatLng> nearbyPlaces
+}
+
+"saferoad::Map::bloc::map::map_bloc.dart::MapEvent" <|-- "saferoad::Map::bloc::map::map_bloc.dart::SaveNearbyPlaces"
+
+class "saferoad::Map::bloc::map::map_bloc.dart::OnLocation" {
+  +LatLng location
+}
+
+"saferoad::Map::bloc::map::map_bloc.dart::OnLocation" o-- "google_maps_flutter_platform_interface::src::types::location.dart::LatLng"
+"saferoad::Map::bloc::map::map_bloc.dart::MapEvent" <|-- "saferoad::Map::bloc::map::map_bloc.dart::OnLocation"
+
+class "saferoad::Map::bloc::map::map_bloc.dart::OnMovedMapa" {
+  +LatLng centerMap
+}
+
+"saferoad::Map::bloc::map::map_bloc.dart::OnMovedMapa" o-- "google_maps_flutter_platform_interface::src::types::location.dart::LatLng"
+"saferoad::Map::bloc::map::map_bloc.dart::MapEvent" <|-- "saferoad::Map::bloc::map::map_bloc.dart::OnMovedMapa"
+
+class "saferoad::Map::bloc::map::map_bloc.dart::OnNewLocation" {
+  +LatLng location
+}
+
+"saferoad::Map::bloc::map::map_bloc.dart::OnNewLocation" o-- "google_maps_flutter_platform_interface::src::types::location.dart::LatLng"
+"saferoad::Map::bloc::map::map_bloc.dart::MapEvent" <|-- "saferoad::Map::bloc::map::map_bloc.dart::OnNewLocation"
+
+class "saferoad::Map::bloc::map::map_bloc.dart::MapState" {
+  +bool mapReady
+  +double range
+  +bool showDialog
+  +bool showDialogLoading
+  +LatLng location
+  +List<LatLng> nearbyPlaces
+  +List<Object> props
+  +MapState copyWith()
+}
+
+"saferoad::Map::bloc::map::map_bloc.dart::MapState" o-- "google_maps_flutter_platform_interface::src::types::location.dart::LatLng"
+"equatable::src::equatable.dart::Equatable" <|-- "saferoad::Map::bloc::map::map_bloc.dart::MapState"
+
+class "saferoad::Map::model::mechanicLocation.dart::Mechanic" {
+  +String nombre
+  +double latitude
+  +double longitude
+  +PolyGeofence geocerca
+}
+
+"saferoad::Map::model::mechanicLocation.dart::Mechanic" o-- "poly_geofence_service::models::poly_geofence.dart::PolyGeofence"
+
+class "saferoad::Map::Repository::SearchRepository.dart::SearchRepository" {
+  -StreamSubscription<Position>? _positionSubscription
+  -PolyGeofenceService _polyGeofenceService
+  +void hol()
+  +List<LatLng> searchMechanicNearby()
+  +List<LatLng> nearbyPointsFunc()
+}
+
+"saferoad::Map::Repository::SearchRepository.dart::SearchRepository" o-- "dart::async::StreamSubscription<Position>"
+"saferoad::Map::Repository::SearchRepository.dart::SearchRepository" o-- "poly_geofence_service::poly_geofence_service.dart::PolyGeofenceService"
+
+class "saferoad::Map::ui::views::gpsAccess.dart::GpsAccess" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "saferoad::Map::ui::views::gpsAccess.dart::GpsAccess"
+
+class "saferoad::Map::ui::views::gpsAccess.dart::AccessButton" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "saferoad::Map::ui::views::gpsAccess.dart::AccessButton"
+
+class "saferoad::Map::ui::views::gpsAccess.dart::EnableGps" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "saferoad::Map::ui::views::gpsAccess.dart::EnableGps"
+
+class "saferoad::Map::ui::views::loading.dart::Loading" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "saferoad::Map::ui::views::loading.dart::Loading"
+
+class "saferoad::Map::ui::views::mapView.dart::MapView" {
+  +State<MapView> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "saferoad::Map::ui::views::mapView.dart::MapView"
+
+class "saferoad::Map::ui::views::mapView.dart::_MapViewState" {
+  +User? user
+  +UserModel userM
+  +void initState()
+  +Widget build()
+  +Widget createMap()
+}
+
+"saferoad::Map::ui::views::mapView.dart::_MapViewState" o-- "firebase_auth::firebase_auth.dart::User"
+"saferoad::Map::ui::views::mapView.dart::_MapViewState" o-- "saferoad::Auth::model::user_model.dart::UserModel"
+"flutter::src::widgets::framework.dart::State" <|-- "saferoad::Map::ui::views::mapView.dart::_MapViewState"
+
+class "saferoad::Map::ui::widgets::btn_location.dart::BtnLocation" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "saferoad::Map::ui::widgets::btn_location.dart::BtnLocation"
+
+class "saferoad::Map::ui::widgets::loading_dialog.dart::LoadingDialog" {
+  +String message
+  +int duration
+  +_LoadingDialogState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "saferoad::Map::ui::widgets::loading_dialog.dart::LoadingDialog"
+
+class "saferoad::Map::ui::widgets::loading_dialog.dart::_LoadingDialogState" {
+  -bool _isLoading
+  +void initState()
+  +Widget build()
+  -void _startTimer()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "saferoad::Map::ui::widgets::loading_dialog.dart::_LoadingDialogState"
+
+
+@enduml
