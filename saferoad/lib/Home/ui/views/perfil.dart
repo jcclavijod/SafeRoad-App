@@ -9,73 +9,25 @@ import 'package:saferoad/Auth/ui/views/update.dart';
 import 'package:saferoad/Home/ui/widgets/SideMenuWidget.dart';
 
 class Perfil extends StatefulWidget {
-  const Perfil({Key? key}) : super(key: key);
+  final UserModel? authenticatedUser;
+  const Perfil({Key? key, required this.authenticatedUser,}) : super(key: key);
 
   @override
   State<Perfil> createState() => _PerfilState();
 }
 
 class _PerfilState extends State<Perfil> {
-  final user = FirebaseAuth.instance.currentUser;
-  UserModel userM = UserModel.complete();
-  late String fullName = '';
-  late String email = '';
-  late String cedula = '';
-  late String phoneNumber = '';
-  late String photoURL = '';
   bool _isExpanded = false;
 
   @override
   void initState() {
     super.initState();
-    getUserData();
-  }
-
-  void getUserData() async {
-    final user = FirebaseAuth.instance.currentUser!;
-    final userDoc = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(user.uid)
-        .get();
-    final mechanicDoc = await FirebaseFirestore.instance
-        .collection('mecanicos')
-        .doc(user.uid)
-        .get();
-    final userData = userDoc.exists ? userDoc.data() : null;
-    final mechanicData = mechanicDoc.exists ? mechanicDoc.data() : null;
-
-    if (userData != null) {
-      setState(() {
-        fullName = '${userData['first name']} ${userData['last name']}';
-        email = userData['email'] ?? '';
-        cedula = userData['cedula'].toString();
-        phoneNumber = userData['phoneNumber'].toString();
-        photoURL = userData['profilePic'] ?? '';
-        // ignore: avoid_print
-        print('Eres un usuario');
-      });
-    } else if (mechanicData != null) {
-      setState(() {
-        fullName = '${mechanicData['first name']} ${mechanicData['last name']}';
-        email = mechanicData['email'] ?? '';
-        cedula = mechanicData['cedula'].toString();
-        phoneNumber = mechanicData['phoneNumber'].toString();
-        photoURL = mechanicData['profilePic'] ?? '';
-        // ignore: avoid_print
-        print('Eres un mecanico');
-      });
-    } else {
-      print('No se encontró el usuario en ninguna colección');
-    }
   }
 
   @override
   Widget build(BuildContext context) {
     // ignore: unnecessary_null_comparison
-    if (fullName == null ||
-        email == null ||
-        cedula == null ||
-        photoURL == null) {
+    if (widget.authenticatedUser == null) {
       return const CircularProgressIndicator();
     } else {
       return Scaffold(
@@ -98,7 +50,7 @@ class _PerfilState extends State<Perfil> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(30),
                   child: Image.network(
-                    photoURL,
+                    widget.authenticatedUser!.profilePic,
                     height: _isExpanded ? 400 : 300,
                     width: 200,
                     fit: BoxFit.cover,
@@ -125,7 +77,7 @@ class _PerfilState extends State<Perfil> {
               ),
               const SizedBox(height: 16),
               Text(
-                fullName,
+               "${widget.authenticatedUser!.name} ${widget.authenticatedUser!.lastname}" ,
                 style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -133,7 +85,7 @@ class _PerfilState extends State<Perfil> {
               ),
               const SizedBox(height: 8),
               Text(
-                email,
+                widget.authenticatedUser!.mail,
                 style: const TextStyle(
                   fontSize: 18,
                   color: Colors.grey,
@@ -141,7 +93,7 @@ class _PerfilState extends State<Perfil> {
               ),
               const SizedBox(height: 8),
               Text(
-                cedula,
+                widget.authenticatedUser!.identification,
                 style: const TextStyle(
                   fontSize: 18,
                   color: Colors.grey,
@@ -149,7 +101,7 @@ class _PerfilState extends State<Perfil> {
               ),
               const SizedBox(height: 8),
               Text(
-                phoneNumber,
+                widget.authenticatedUser!.phoneNumber,
                 style: const TextStyle(
                   fontSize: 18,
                   color: Colors.grey,

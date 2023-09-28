@@ -153,7 +153,7 @@ class UserProfileSection extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        "Taller ${authenticatedUser.local}",
+                        "Taller ${authenticatedUser.name}",
                         style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -289,7 +289,7 @@ class FinishButtonSection extends StatelessWidget {
             onPressed: () {
               final usersInRoadBloc = BlocProvider.of<UsersInRoadBloc>(context);
               usersInRoadBloc.finishRequest(
-                  requestId, receiver!.local, receiver!.profilePic);
+                  requestId, receiver!.name, receiver!.profilePic);
               Navigator.push(
                 context,
                 MaterialPageRoute(

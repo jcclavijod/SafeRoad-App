@@ -120,7 +120,7 @@ class UsersInRoadBloc extends Bloc<UsersInRoadEvent, UsersInRoadState> {
       'type': "finishedRequest",
       'mechanicUid': state.authenticatedUser.uid,
       'mechanicPic': state.authenticatedUser.profilePic,
-      'mechanicLocal': state.authenticatedUser.local,
+      'mechanicLocal': state.authenticatedUser.name,
     };
     notification.sendNotificationToDriver(
         state.receiver.token, notificationMap, dataMap);

@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:saferoad/Auth/app.dart';
+import 'package:saferoad/Home/ui/views/userpage.dart';
 import 'package:saferoad/Map/bloc/availability/availability_bloc.dart';
 import 'package:saferoad/Map/bloc/gps/gps_bloc.dart';
 import 'Map/bloc/location/my_location_bloc.dart';
@@ -43,7 +44,13 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const Home(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const Home(), // Página de inicio
+        '/UserPage': (context) =>
+            const UserPage(), // Otras rutas de tu aplicación
+        // ...
+      },
     );
   }
 }

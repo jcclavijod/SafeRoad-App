@@ -19,12 +19,14 @@ class LoginMecanicoRepository {
         email: mail,
         password: password,
       );
+      /*
       User? user = _firebaseAuth.currentUser;
       if (user != null) {
         await _updateUserActiveStatus(user.uid, true);
         await _firebaseAuth.signOut();
         print('El mecanico ${user.email} ha salido.');
       }
+      */
     } catch (e) {
       if (e is FirebaseAuthException) {
         if (e.code == 'user-not-found') {

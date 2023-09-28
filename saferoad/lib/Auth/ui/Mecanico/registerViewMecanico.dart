@@ -7,7 +7,8 @@ import 'package:geoflutterfire2/geoflutterfire2.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:saferoad/Auth/bloc/mecanico/bloc/mecanico_bloc.dart';
 import 'package:saferoad/Auth/model/mecanico_model.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart' as ma;
+import 'package:saferoad/Auth/ui/Mecanico/LoginViewMecanico.dart';
+
 
 class RegisterMechanicView extends StatefulWidget {
   @override
@@ -58,12 +59,42 @@ class _RegisterMechanicViewState extends State<RegisterMechanicView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
+              ElevatedButton(
+                onPressed: () async {
+                  final XFile? image =
+                      await _picker.pickImage(source: ImageSource.gallery);
+                  if (image != null) {
+                    setState(() {
+                      _imageFile = image;
+                      _hasSelectedImage = true;
+                    });
+                    print('Imagen Seleccionada');
+                  } else {
+                    print('No se seleccionó ninguna imagen.');
+                  }
+                },
+                child: const Text('Seleccionar imagen de perfil'),
+              ),
+              if (_hasSelectedImage)
+                Center(
+                  child: Image.file(
+                    File(_imageFile!.path),
+                    height: 150,
+                    width: 150,
+                  ),
+                ),
               TextFormField(
                 decoration: const InputDecoration(labelText: 'Nombre'),
                 onChanged: (value) {
                   setState(() {
                     name = value;
                   });
+                },
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Por favor, ingresa tu nombre.';
+                  }
+                  return null;
                 },
               ),
               TextFormField(
@@ -73,6 +104,12 @@ class _RegisterMechanicViewState extends State<RegisterMechanicView> {
                     lastname = value;
                   });
                 },
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Por favor, ingresa tu apellido.';
+                  }
+                  return null;
+                },
               ),
               TextFormField(
                 decoration: const InputDecoration(labelText: 'Correo'),
@@ -80,6 +117,12 @@ class _RegisterMechanicViewState extends State<RegisterMechanicView> {
                   setState(() {
                     mail = value;
                   });
+                },
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Por favor, ingresa tu correo.';
+                  }
+                  return null;
                 },
               ),
               TextFormField(
@@ -90,6 +133,12 @@ class _RegisterMechanicViewState extends State<RegisterMechanicView> {
                   });
                 },
                 obscureText: true,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Por favor, ingresa una contraseña.';
+                  }
+                  return null;
+                },
               ),
               TextFormField(
                 decoration: const InputDecoration(labelText: 'Cédula'),
@@ -99,6 +148,12 @@ class _RegisterMechanicViewState extends State<RegisterMechanicView> {
                   });
                 },
                 keyboardType: TextInputType.number,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Por favor, ingresa tu cédula.';
+                  }
+                  return null;
+                },
               ),
               DropdownButtonFormField<String>(
                 decoration: const InputDecoration(labelText: 'Género'),
@@ -118,6 +173,12 @@ class _RegisterMechanicViewState extends State<RegisterMechanicView> {
                     child: Text('Femenino'),
                   ),
                 ],
+                validator: (value) {
+                  if (value == null) {
+                    return 'Por favor, selecciona tu género.';
+                  }
+                  return null;
+                },
               ),
               TextFormField(
                 decoration: const InputDecoration(labelText: 'Local'),
@@ -125,6 +186,12 @@ class _RegisterMechanicViewState extends State<RegisterMechanicView> {
                   setState(() {
                     local = value;
                   });
+                },
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Por favor, ingresa el nombre de tu local.';
+                  }
+                  return null;
                 },
               ),
               TextFormField(
@@ -134,6 +201,12 @@ class _RegisterMechanicViewState extends State<RegisterMechanicView> {
                   setState(() {
                     address = value;
                   });
+                },
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Por favor, ingresa la dirección de tu local.';
+                  }
+                  return null;
                 },
               ),
               TextFormField(
@@ -145,6 +218,12 @@ class _RegisterMechanicViewState extends State<RegisterMechanicView> {
                   });
                 },
                 keyboardType: TextInputType.phone,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Por favor, ingresa tu número de teléfono.';
+                  }
+                  return null;
+                },
               ),
               InkWell(
                 onTap: () async {
@@ -171,22 +250,6 @@ class _RegisterMechanicViewState extends State<RegisterMechanicView> {
                     style: const TextStyle(fontSize: 16),
                   ),
                 ),
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  final XFile? image =
-                      await _picker.pickImage(source: ImageSource.gallery);
-                  if (image != null) {
-                    setState(() {
-                      _imageFile = image;
-                      _hasSelectedImage = true;
-                    });
-                    print('Imagen Seleccionada');
-                  } else {
-                    print('No se seleccionó ninguna imagen.');
-                  }
-                },
-                child: const Text('Seleccionar imagen de perfil'),
               ),
               ElevatedButton(
                 onPressed: () async {
@@ -220,10 +283,31 @@ class _RegisterMechanicViewState extends State<RegisterMechanicView> {
                 },
                 child: const Text('Registrarse como Mecánico'),
               ),
+              const SizedBox(height: 16),
+              TextButton(
+                onPressed: () => _navigateToMecanico(context),
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.white),
+                ),
+                child: const Text(
+                  '¿Ya tienes cuenta? Inicia sesión!',
+                  style: TextStyle(
+                    color: Colors.blue,
+                  ),
+                ),
+              ),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  void _navigateToMecanico(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => LoginMecanico()),
     );
   }
 

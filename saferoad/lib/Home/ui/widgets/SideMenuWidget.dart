@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:saferoad/Auth/model/usuario_model.dart';
+import 'package:saferoad/Auth/ui/Cliente/widgets.dart';
 import 'package:saferoad/Chat/ui/views/listChats.dart';
 import 'package:saferoad/Home/ui/views/perfil.dart';
 import 'package:saferoad/Membresia/ui/views/membershipPage.dart';
@@ -88,16 +89,22 @@ class SideMenuWidget extends StatelessWidget {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const Perfil()),
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              Perfil(authenticatedUser: userM)),
                     );
                   },
                 ),
+                //LogoutButton(),
                 ListTile(
                   leading: const Icon(Icons.logout),
                   title: const Text('Salir'),
                   onTap: () {
                     FirebaseAuth.instance.signOut();
-                    Navigator.pop(context);
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                      '/',
+                      (route) => false,
+                    );
                   },
                 ),
               ],

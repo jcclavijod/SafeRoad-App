@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:saferoad/Auth/bloc/cliente/cliente_bloc.dart';
+import 'package:saferoad/Auth/ui/Cliente/LoginViewCliente.dart';
 
 class RegisterView extends StatefulWidget {
   @override
@@ -30,56 +31,131 @@ class _RegisterViewState extends State<RegisterView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Registro'),
+        title: const Text('Registro'),
       ),
-      body: Form(
-        key: _formKey,
-        child: SingleChildScrollView(
-          padding: EdgeInsets.all(16.0),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () async {
+                  final XFile? image =
+                      await _picker.pickImage(source: ImageSource.gallery);
+                  if (image != null) {
+                    setState(() {
+                      _imageFile = image;
+                      _hasSelectedImage = true;
+                    });
+                    print('Imagen Seleccionada');
+                  } else {
+                    print('No se seleccionó ninguna imagen.');
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                  padding: const EdgeInsets.all(16.0),
+                ),
+                child: Column(
+                  children: const [
+                    Icon(
+                      Icons.camera_alt,
+                      size: 36,
+                      color: Colors.white,
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      'Seleccionar imagen de perfil',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              if (_hasSelectedImage)
+                Center(
+                  child: Image.file(
+                    File(_imageFile!.path),
+                    height: 150,
+                    width: 150,
+                  ),
+                ),
               TextFormField(
-                decoration: InputDecoration(labelText: 'Nombre'),
+                decoration: const InputDecoration(labelText: 'Nombre'),
                 onChanged: (value) {
                   setState(() {
                     name = value;
                   });
                 },
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Por favor, ingresa tu nombre.';
+                  }
+                  return null;
+                },
               ),
               TextFormField(
-                decoration: InputDecoration(labelText: 'Apellido'),
+                decoration: const InputDecoration(labelText: 'Apellido'),
                 onChanged: (value) {
                   setState(() {
                     lastname = value;
                   });
                 },
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Por favor, ingresa tu apellido.';
+                  }
+                  return null;
+                },
               ),
               TextFormField(
-                decoration: InputDecoration(labelText: 'Correo'),
+                decoration: const InputDecoration(labelText: 'Correo'),
                 onChanged: (value) {
                   setState(() {
                     mail = value;
                   });
                 },
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Por favor, ingresa tu correo.';
+                  }
+                  return null;
+                },
               ),
               TextFormField(
-                decoration: InputDecoration(labelText: 'Contraseña'),
+                decoration: const InputDecoration(labelText: 'Contraseña'),
                 onChanged: (value) {
                   setState(() {
                     password = value;
                   });
                 },
                 obscureText: true,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Por favor, ingresa tu contraseña.';
+                  }
+                  return null;
+                },
               ),
               TextFormField(
-                decoration: InputDecoration(labelText: 'Cédula'),
+                decoration: const InputDecoration(labelText: 'Cédula'),
                 onChanged: (value) {
                   setState(() {
                     identification = value;
                   });
                 },
                 keyboardType: TextInputType.number,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Por favor, ingresa tu número de cédula.';
+                  }
+                  return null;
+                },
               ),
               DropdownButtonFormField<String>(
                 decoration: const InputDecoration(labelText: 'Género'),
@@ -99,15 +175,28 @@ class _RegisterViewState extends State<RegisterView> {
                     child: Text('Femenino'),
                   ),
                 ],
+                validator: (value) {
+                  if (value == null) {
+                    return 'Por favor, selecciona tu género.';
+                  }
+                  return null;
+                },
               ),
               TextFormField(
-                decoration: InputDecoration(labelText: 'Número de teléfono'),
+                decoration:
+                    const InputDecoration(labelText: 'Número de teléfono'),
                 onChanged: (value) {
                   setState(() {
                     phoneNumber = value;
                   });
                 },
                 keyboardType: TextInputType.phone,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Por favor, ingresa tu número de teléfono.';
+                  }
+                  return null;
+                },
               ),
               InkWell(
                 onTap: () async {
@@ -124,34 +213,18 @@ class _RegisterViewState extends State<RegisterView> {
                   }
                 },
                 child: InputDecorator(
-                  decoration: InputDecoration(
-                    labelText: 'Cumpleaños',
+                  decoration: const InputDecoration(
+                    labelText: 'Fecha de nacimiento',
                   ),
                   child: Text(
                     birthday != null
                         ? "${birthday!.toLocal()}".split(' ')[0]
                         : 'Selecciona una fecha',
-                    style: TextStyle(fontSize: 16),
+                    style: const TextStyle(fontSize: 16),
                   ),
                 ),
               ),
-              ElevatedButton(
-                onPressed: () async {
-                  final XFile? image =
-                      await _picker.pickImage(source: ImageSource.gallery);
-                  if (image != null) {
-                    setState(() {
-                      _imageFile = image;
-                      _hasSelectedImage = true;
-                    });
-                    print('Imagen Seleccionada');
-                  } else {
-                    print('No se seleccionó ninguna imagen.');
-                  }
-                },
-                child: Text('Seleccionar imagen de perfil'),
-              ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () {
                   if (_hasSelectedImage) {
@@ -176,12 +249,37 @@ class _RegisterViewState extends State<RegisterView> {
                     print('Por favor, selecciona una imagen de perfil.');
                   }
                 },
-                child: Text('Registrarse'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                  padding: const EdgeInsets.all(16.0),
+                ),
+                child: const Text('Registrarse'),
+              ),
+              const SizedBox(height: 16),
+              TextButton(
+                onPressed: () => _navigateToCliente(context),
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.white),
+                ),
+                child: const Text(
+                  '¿Ya tienes cuenta? Inicia sesión!',
+                  style: TextStyle(
+                    color: Colors.blue,
+                  ),
+                ),
               ),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  void _navigateToCliente(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => LoginView()),
     );
   }
 }
