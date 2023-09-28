@@ -8,6 +8,7 @@ class UserModel {
   final String createdAt;
   final String phoneNumber;
   final String uid;
+  final String token;
   //bool estado;
 
   const UserModel(
@@ -19,7 +20,8 @@ class UserModel {
       required this.profilePic,
       required this.createdAt,
       required this.phoneNumber,
-      required this.uid});
+      required this.uid,
+      required this.token});
 
   UserModel copyWith({
     String? name,
@@ -31,6 +33,7 @@ class UserModel {
     String? createdAt,
     String? phoneNumber,
     String? uid,
+    String? token,
   }) {
     return UserModel(
       name: name ?? this.name,
@@ -42,6 +45,7 @@ class UserModel {
       createdAt: createdAt ?? this.createdAt,
       phoneNumber: phoneNumber ?? this.phoneNumber,
       uid: uid ?? this.uid,
+      token: token ?? this.token,
     );
   }
 
@@ -55,6 +59,7 @@ class UserModel {
     String createdAt = '',
     String phoneNumber = '',
     String uid = '',
+    String token = '',
     // Otros campos aquí...
   }) {
     return UserModel(
@@ -67,6 +72,7 @@ class UserModel {
       createdAt: createdAt,
       phoneNumber: phoneNumber,
       uid: uid,
+      token: token,
     );
   }
 
@@ -82,6 +88,7 @@ class UserModel {
       createdAt: map['createdAt'] ?? '',
       phoneNumber: map['phoneNumber'] ?? '',
       uid: map['uid'] ?? '',
+      token: map['token'] ?? '',
       //estado: map['estado'] ?? '',
     );
   }
@@ -98,6 +105,7 @@ class UserModel {
       "createdAt": createdAt,
       "phoneNumber": phoneNumber,
       "uid": uid,
+      "token": token,
     };
   }
 }

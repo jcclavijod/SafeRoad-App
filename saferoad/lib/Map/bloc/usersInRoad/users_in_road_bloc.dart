@@ -5,7 +5,9 @@ import 'package:equatable/equatable.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../Auth/model/user_model.dart';
 import '../../../Request/model/Request.dart';
+import '../../../helpers/notificationHelper.dart';
 import '../../Repository/mapRepository.dart';
 import '../../repository/SearchRepository.dart';
 
@@ -20,10 +22,13 @@ class UsersInRoadBloc extends Bloc<UsersInRoadEvent, UsersInRoadState> {
         emit(state.copyWith(icon: event.icon, icon2: event.icon2)));
     on<SaveTypeUser>(
         (event, emit) => emit(state.copyWith(userType: event.userType)));
+    on<SaveUsers>((event, emit) => emit(state.copyWith(
+        authenticatedUser: event.authenticatedUser, receiver: event.receiver)));
   }
 
   MapRepository mapRepository = MapRepository();
   SearchRepository searchRepository = SearchRepository();
+  NotificationHelper notification = NotificationHelper();
   late StreamSubscription<LatLng> _locationSubscription;
 
   void locations(LatLng position, LatLng position2) {
@@ -41,6 +46,7 @@ class UsersInRoadBloc extends Bloc<UsersInRoadEvent, UsersInRoadState> {
     BitmapDescriptor icon2 =
         await mapRepository.getMarkerIcon("assets/marcador.png", 208);
     if (state.userType == "mecanico") {
+      print("ICONOOOOOOO ICONOOOOOOO ICONOOOOOOO ICONOOOOOO");
       add(SaveIcons(icon1, icon2));
     } else {
       add(SaveIcons(icon2, icon1));
@@ -67,7 +73,7 @@ class UsersInRoadBloc extends Bloc<UsersInRoadEvent, UsersInRoadState> {
   }
 
   void openPhoneApp(String url) async {
-    final uri  = Uri(scheme: 'tel', path: url);
+    final uri = Uri(scheme: 'tel', path: url);
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri); // Abre la aplicación de teléfono
     } else {
@@ -76,9 +82,57 @@ class UsersInRoadBloc extends Bloc<UsersInRoadEvent, UsersInRoadState> {
     }
   }
 
+  void saveUsers(UserModel authenticatedUser, UserModel receiver) {
+    print("TTTTTTTTTTTTTTTTTTTTTTT");
+    print(receiver.token);
+    print(authenticatedUser.token);
+    add(SaveUsers(authenticatedUser, receiver));
+  }
+
+  void cancelRequest(String? requestId) async {
+    Map notificationMap = {
+      'body': "Se ha cancelado la solicitud de viaje",
+      'title': "Solicitud cancelada",
+    };
+
+    Map dataMap = {
+      'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+      'id': '1',
+      'status': 'done',
+      'request_id': requestId,
+      'type': "cancelRequest",
+    };
+    notification.sendNotificationToDriver(
+        state.receiver.token, notificationMap, dataMap);
+    searchRepository.changeStatusRequest(requestId!, "canceled");
+  }
+
+  void finishRequest(final String? requestId, String? mechanicPic,
+      String? mechanicLocal) async {
+    Map notificationMap = {
+      'body': "El viaje de atención mecánica ha finalizado",
+      'title': "Solicitud Finalizada",
+    };
+    Map dataMap = {
+      'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+      'id': '1',
+      'status': 'done',
+      'request_id': requestId,
+      'type': "finishedRequest",
+      'mechanicUid': state.authenticatedUser.uid,
+      'mechanicPic': state.authenticatedUser.profilePic,
+      'mechanicLocal': state.authenticatedUser.local,
+    };
+    notification.sendNotificationToDriver(
+        state.receiver.token, notificationMap, dataMap);
+    searchRepository.changeStatusRequest(requestId!, "finished");
+  }
+
   @override
   Future<void> close() {
-    _locationSubscription.cancel();
+    if (!_locationSubscription.isPaused) {
+      _locationSubscription.cancel();
+    }
     return super.close();
   }
 }

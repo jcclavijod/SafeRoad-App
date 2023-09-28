@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geolocator/geolocator.dart';
@@ -6,7 +8,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../Auth/model/user_model.dart';
 import 'package:intl/intl.dart';
-
+import 'package:http/http.dart' as http;
 import '../model/Request.dart';
 
 class RequestRepository {
@@ -15,7 +17,7 @@ class RequestRepository {
 
   //final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
-  Future<bool> createRequest() async {
+  Future<String> createRequest(String problem) async {
     try {
       final requestRef = _firestoreBd.collection('requests').doc();
       final user = _authUser.currentUser;
@@ -28,9 +30,8 @@ class RequestRepository {
       await requestRef.set({
         'userId': user?.uid,
         'userLocation': userLocation,
-        'requestDetails': "Necesito un mecanico en mi ubicación urgente...",
+        'requestDetails': problem,
         'status': 'pending',
-        'mecanicoId': 'BEdPsCRFCAegeUUMlZtO1Vw9Unk1',
         'createdAt': {
           'date': formattedDate,
           'time': formattedTime,
@@ -39,9 +40,9 @@ class RequestRepository {
 
       await requestRef.update({'id': requestRef.id});
 
-      return true;
+      return requestRef.id;
     } catch (e) {
-      return false;
+      return "No se pudo crear la request";
     }
   }
 
@@ -69,6 +70,7 @@ class RequestRepository {
     final user = FirebaseAuth.instance.currentUser;
     final location = await Geolocator.getCurrentPosition();
     final userLocation = GeoPoint(location.latitude, location.longitude);
+    print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection('requests')
         .where('mecanicoId', isEqualTo: user?.uid)
@@ -113,18 +115,10 @@ class RequestRepository {
     }
   }
 
-  Future<LatLng> locationUser() async {
-    final user = FirebaseAuth.instance.currentUser!;
-    String usuario = await getTypeUser(user.uid);
-    DocumentSnapshot? requestDocument;
+  Future<LatLng> locationUser(Request request) async {
     LatLng locUser = const LatLng(0, 0);
-    if (usuario == "mecanico") {
-      requestDocument = await _getRequestUidByField("mecanicoId", user.uid);
-    } else if (usuario == "usuario") {
-      requestDocument = await _getRequestUidByField("userId", user.uid);
-    }
-    if (requestDocument != null) {
-      GeoPoint? location = requestDocument.get('userLocation') as GeoPoint?;
+    if (request.userLocation != null) {
+      GeoPoint? location = request.userLocation;
       locUser = convertGeoPointToLatLng(location);
       print("UBICACION PARA EL MECANICO...........");
       print(locUser);
@@ -155,25 +149,23 @@ class RequestRepository {
     final user = FirebaseAuth.instance.currentUser!;
     String usuario = await getTypeUser(user.uid);
     if (usuario == "mecanico") {
-      return mapUser("mecanicos", user.uid);
+      return await mapUser("mecanicos", user.uid);
     } else if (usuario == "usuario") {
-      return mapUser("users", user.uid);
+      return await mapUser("users", user.uid);
     } else {
       return UserModel.complete();
     }
   }
 
-  Future<UserModel> getClient() async {
+  Future<UserModel> getClient(Request request) async {
     final user = FirebaseAuth.instance.currentUser!;
     String usuario = await getTypeUser(user.uid);
     if (usuario == "mecanico") {
-      DocumentSnapshot requestDocument =
-          await _getRequestUidByField("mecanicoId", user.uid);
-      return mapUser('mecanicos', requestDocument.get('mecanicoId'));
+      return await mapUser('users', request.userId);
     } else if (usuario == "usuario") {
-      DocumentSnapshot requestDocument =
-          await _getRequestUidByField("userId", user.uid);
-      return mapUser('users', requestDocument.get('userId'));
+      print("VERIFICANDO LOS NUEVOS DATOS DEL MECANICO :: GET CLIENTE");
+      print(request.mechanicId);
+      return await mapUser('mecanicos', request.mechanicId);
     } else {
       return UserModel.complete();
     }
@@ -195,29 +187,10 @@ class RequestRepository {
     }
   }
 
-  Future<Request> getRequest() async {
-    final user = FirebaseAuth.instance.currentUser!;
-    String usuario = await getTypeUser(user.uid);
-    if (usuario == "usuario") {
-      final querySnapshot = await FirebaseFirestore.instance
-          .collection('requests')
-          .where('userId', isEqualTo: user.uid)
-          .where('status', isEqualTo: 'pending')
-          .limit(1)
-          .get();
-      Map<String, dynamic> requestData = querySnapshot.docs.first.data();
-      return Request.fromMap(requestData);
-    } else if (usuario == "mecanico") {
-      final querySnapshot = await FirebaseFirestore.instance
-          .collection('requests')
-          .where('mecanicoId', isEqualTo: user.uid)
-          .where('status', isEqualTo: 'pending')
-          .limit(1)
-          .get();
-      Map<String, dynamic> requestData = querySnapshot.docs.first.data();
-      return Request.fromMap(requestData);
-    }
-    return Request.complete();
+  Future<DocumentReference> getRequest(Request request) async {
+    final docReference =
+        FirebaseFirestore.instance.collection('requests').doc(request.id);
+    return docReference;
   }
 
   Future<String> getTypeUser(String uid) async {
@@ -247,5 +220,82 @@ class RequestRepository {
         await FirebaseFirestore.instance.collection(coleccion).doc(doc).get();
     Map<String, dynamic> userData = usuario.data() ?? {};
     return UserModel.fromMap(userData);
+  }
+
+  Future<Request> getRequestNotification(String uidRequest) async {
+    DocumentSnapshot documentSnapshot =
+        await _firestoreBd.collection('requests').doc(uidRequest).get();
+
+    if (documentSnapshot.exists) {
+      // El documento existe, obtenemos los datos y los asignamos al modelo.
+      Map<String, dynamic> data =
+          documentSnapshot.data() as Map<String, dynamic>;
+      return Request.fromMap(data);
+    } else {
+      return Request.complete();
+    }
+  }
+
+  Future<String> getAddress(location) async {
+    List<Placemark> placemarks =
+        await placemarkFromCoordinates(location!.latitude, location.longitude);
+    Placemark placemark = placemarks.first;
+
+    String address =
+        '${placemark.street}, ${placemark.subLocality}, ${placemark.locality}';
+    return address;
+  }
+
+  Future<void> updateRequestStatusMessaging(
+      String newStatus, String request) async {
+    final location = await Geolocator.getCurrentPosition();
+    final userLocation = GeoPoint(location.latitude, location.longitude);
+    print("ulala ulala ulala ulala ulala ulala ualala");
+    print(request);
+    DocumentSnapshot querySnapshot =
+        await _firestoreBd.collection('requests').doc(request).get();
+    if (newStatus == "inProcess") {
+      await FirebaseFirestore.instance
+          .collection('requests')
+          .doc(request)
+          .update({
+        'status': newStatus,
+        'mechanicLocation': userLocation,
+        'mechanicId': _authUser.currentUser!.uid
+      });
+    }
+  }
+
+  String serverToken =
+      'key=AAAA6e_msQo:APA91bHbH6T_3gSc_e7xt-mzenG0M7XGeagDSlzc4XqkUWx-ve8wG0ibmav1PTWl55mGT2XnQByOi3lWW7ojk6JWDL2rOn0SYr2hk8Lv5gd9F28IbjyVdrRTTfqie73Fl2iX2UcFjwFH';
+
+  void sendNotificationToDriver(
+      String token, String requestId, String problem) async {
+    Map<String, String> headerMap = {
+      'Content-Type': 'application/json',
+      'Authorization': serverToken,
+    };
+    Map notificationMap = {
+      'body': problem,
+      'title': 'Nuevo Servicio',
+    };
+    Map dataMap = {
+      'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+      'id': '1',
+      'status': 'done',
+      'request_id': requestId,
+      'type': "request",
+    };
+    Map sendNotificationMap = {
+      'notification': notificationMap,
+      'data': dataMap,
+      'priority': 'high',
+      'to': token,
+    };
+    await http.post(
+      Uri.parse('https://fcm.googleapis.com/fcm/send'),
+      headers: headerMap,
+      body: jsonEncode(sendNotificationMap),
+    );
   }
 }

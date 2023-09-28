@@ -4,11 +4,14 @@ import 'package:equatable/equatable.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../../../helpers/notificationHelper.dart';
+
 part 'gps_event.dart';
 part 'gps_state.dart';
 
 class GpsBloc extends Bloc<GpsEvent, GpsState> {
   StreamSubscription? gpsServiceSubscription;
+  NotificationHelper notification = NotificationHelper();
 
   GpsBloc()
       : super(
@@ -19,9 +22,8 @@ class GpsBloc extends Bloc<GpsEvent, GpsState> {
 
     _init();
   }
-  
+
   Future<void> _init() async {
-    
     final gpsInitStatus = await Future.wait([
       _checkGpsStatus(),
       _isPermissionGranted(),
@@ -30,6 +32,8 @@ class GpsBloc extends Bloc<GpsEvent, GpsState> {
     add(GpsAndPermissionEvent(
         isGpsEnable: gpsInitStatus[0],
         isGpsPermissionGranted: gpsInitStatus[1]));
+
+    notification.getToken();
   }
 
   Future<bool> _isPermissionGranted() async {

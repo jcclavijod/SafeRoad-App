@@ -24,3 +24,9 @@ class SaveTypeUser extends UsersInRoadEvent {
   final String userType;
   const SaveTypeUser(this.userType);
 }
+
+class SaveUsers extends UsersInRoadEvent {
+  final UserModel authenticatedUser;
+  final UserModel receiver;
+  const SaveUsers(this.authenticatedUser,this.receiver);
+}

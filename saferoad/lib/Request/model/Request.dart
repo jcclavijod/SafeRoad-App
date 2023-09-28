@@ -3,16 +3,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Request {
   final String? id;
   final DateTimeObject createdAt;
-  final String mecanicoId;
+  final String mechanicId;
   final String requestDetails;
   final String status;
   final String userId;
   final GeoPoint userLocation;
 
+  
+
   const Request({
     this.id,
     required this.createdAt,
-    required this.mecanicoId,
+    required this.mechanicId,
     required this.requestDetails,
     required this.status,
     required this.userId,
@@ -21,7 +23,7 @@ class Request {
 
   factory Request.complete({
    DateTimeObject createdAt = const DateTimeObject(date:'',time: ''),
-   String mecanicoId = '',
+   String mechanicId = '',
    String requestDetails = '', 
    String status = '',
    String userId = '',
@@ -30,7 +32,7 @@ class Request {
   }) {
     return Request(
       createdAt: createdAt,
-      mecanicoId: mecanicoId,
+      mechanicId: mechanicId,
       status: status,
       userId: userId,
       userLocation: userLocation,
@@ -45,7 +47,7 @@ class Request {
         date: map['createdAt']['date']?.toString() ?? '',
         time: map['createdAt']['time']?.toString() ?? '',
       ),
-      mecanicoId: map['mecanicoId']?.toString() ?? '',
+      mechanicId: map['mechanicId']?.toString() ?? '',
       requestDetails: map['requestDetails']?.toString() ?? '',
       status: map['status']?.toString() ?? '',
       userId: map['userId']?.toString() ?? '',
@@ -61,7 +63,7 @@ class Request {
         "date": createdAt.date,
         "time": createdAt.time,
       },
-      "mecanicoId": mecanicoId,
+      "mechanicId": mechanicId,
       "requestDetails": requestDetails,
       "status": status,
       "userId": userId,

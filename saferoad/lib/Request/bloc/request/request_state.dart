@@ -9,9 +9,12 @@ class RequestState extends Equatable {
   final UserModel authenticatedUser;
   final UserModel receiver;
   final Request request;
+  final TextEditingController problemController;
 
   const RequestState(
-      {this.requestCreated = false,
+      {
+      required this.problemController,
+      this.requestCreated = false,
       this.finishedRequests = const [],
       this.authenticatedUser = const UserModel(
         name: "",
@@ -23,6 +26,7 @@ class RequestState extends Equatable {
         createdAt: "",
         phoneNumber: "",
         uid: "",
+        token: ""
       ),
       this.receiver = const UserModel(
         name: "",
@@ -34,13 +38,14 @@ class RequestState extends Equatable {
         createdAt: "",
         phoneNumber: "",
         uid: "",
+        token: "" 
       ),
       this.location = const LatLng(0, 0),
       this.location2 = const LatLng(0, 0),
       this.address = "",
       this.request = const Request(
           createdAt:  DateTimeObject(date:'',time: ''),
-          mecanicoId: "",
+          mechanicId: "",
           requestDetails: "",
           status: "",
           userId: "",
@@ -55,6 +60,7 @@ class RequestState extends Equatable {
     UserModel? authenticatedUser,
     UserModel? receiver,
     Request? request,
+    TextEditingController? problemController
   }) =>
       RequestState(
         requestCreated: requestCreated ?? this.requestCreated,
@@ -65,6 +71,7 @@ class RequestState extends Equatable {
         authenticatedUser: authenticatedUser ?? this.authenticatedUser,
         receiver: receiver ?? this.receiver,
         request: request ?? this.request,
+        problemController: problemController ?? this.problemController,
       );
 
   @override
@@ -76,6 +83,7 @@ class RequestState extends Equatable {
         location2,
         authenticatedUser,
         receiver,
-        request
+        request,
+        problemController
       ];
 }

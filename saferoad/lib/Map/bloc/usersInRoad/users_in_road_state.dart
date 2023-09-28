@@ -6,6 +6,8 @@ class UsersInRoadState extends Equatable {
   final BitmapDescriptor icon;
   final BitmapDescriptor icon2;
   final String userType;
+  final UserModel authenticatedUser;
+  final UserModel receiver;
 
 
   const UsersInRoadState({
@@ -14,6 +16,30 @@ class UsersInRoadState extends Equatable {
     this.userType = "",
     this.icon = BitmapDescriptor.defaultMarker,
     this.icon2 = BitmapDescriptor.defaultMarker,
+    this.authenticatedUser = const UserModel(
+        name: "",
+        cedula: "",
+        local: "",
+        email: "",
+        bio: "",
+        profilePic: "",
+        createdAt: "",
+        phoneNumber: "",
+        uid: "",
+        token: ""
+      ),
+      this.receiver = const UserModel(
+        name: "",
+        cedula: "",
+        local: "",
+        email: "",
+        bio: "",
+        profilePic: "",
+        createdAt: "",
+        phoneNumber: "",
+        uid: "",
+        token: ""
+      ),
   });
 
   UsersInRoadState copyWith({
@@ -22,6 +48,8 @@ class UsersInRoadState extends Equatable {
     BitmapDescriptor? icon,
     BitmapDescriptor? icon2,
     String? userType,
+    UserModel? authenticatedUser,
+    UserModel? receiver,
   }) =>
       UsersInRoadState(
           userType: userType ?? this.userType,
@@ -29,6 +57,8 @@ class UsersInRoadState extends Equatable {
           location2: location2 ?? this.location2,
           icon: icon ?? this.icon,
           icon2: icon2 ?? this.icon2,
+          authenticatedUser: authenticatedUser ?? this.authenticatedUser,
+          receiver: receiver ?? this.receiver,
           );
   @override
   List<Object> get props => [
@@ -36,6 +66,8 @@ class UsersInRoadState extends Equatable {
         location2,
         icon,
         icon2,
-        userType
+        userType,
+        authenticatedUser,
+        receiver,
       ];
 }

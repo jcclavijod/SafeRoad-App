@@ -1,21 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:saferoad/Request/model/Request.dart';
 //import 'package:http/http.dart';
 import '../../../Auth/model/user_model.dart';
 import '../../../Map/ui/views/mapAux.dart';
 import '../../Repository/requestRepository.dart';
 import '../../bloc/request/request_bloc.dart';
 
-class RequestPopup extends StatefulWidget {
-  const RequestPopup({Key? key}) : super(key: key);
+class RequestPopup2 extends StatefulWidget {
+  final Request? request;
+  final String address;
+  const RequestPopup2({
+    Key? key,
+    required this.request,
+    required this.address,
+  }) : super(key: key);
 
   @override
-  RequestPopupState createState() => RequestPopupState();
+  RequestPopup2State createState() => RequestPopup2State();
 }
 
-class RequestPopupState extends State<RequestPopup> {
-  String? address;
+class RequestPopup2State extends State<RequestPopup2> {
+  late LatLng location;
   late UserModel? authenticatedUser;
   late UserModel? receiver;
   final repository = RequestRepository();
@@ -25,15 +32,15 @@ class RequestPopupState extends State<RequestPopup> {
     super.initState();
 
     final requestBloc = BlocProvider.of<RequestBloc>(context);
+    requestBloc.loadRequest(widget.request!);
     requestBloc.loadRequestData();
     //_setUserAuth();
     //_setClient();
-
-    repository.getAddressFromCoordinates().then((result) {
+    /*repository.locationUser().then((result) {
       setState(() {
-        address = result;
+        location = result;
       });
-    });
+    });*/
   }
 
 /*
@@ -118,7 +125,7 @@ class RequestPopupState extends State<RequestPopup> {
               horizontal: 16.0,
             ),
             child: Text(
-              address ?? '',
+              widget.address,
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -133,9 +140,9 @@ class RequestPopupState extends State<RequestPopup> {
               color: Colors.teal.withOpacity(0.1),
               borderRadius: BorderRadius.circular(8.0),
             ),
-            child: const Text(
-              'Necesito un mecánico en mi ubicación urgente...',
-              style: TextStyle(
+            child: Text(
+              widget.request!.requestDetails,
+              style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
                 color: Colors.teal,
@@ -166,6 +173,7 @@ class RequestPopupState extends State<RequestPopup> {
                 ),
                 onPressed: () {
                   repository.updateRequestStatus('rejected');
+                  Navigator.of(context).pop();
                 },
               ),
               const SizedBox(width: 8),
@@ -179,7 +187,7 @@ class RequestPopupState extends State<RequestPopup> {
                 onPressed: () {
                   BlocProvider.of<RequestBloc>(context)
                       .changeRequestMessaging();
-
+                  
                   Navigator.push(
                     context,
                     MaterialPageRoute(

@@ -79,6 +79,7 @@ class _MapViewState extends State<MapViewAux> {
     usersInRoadBloc.changeIcon();
     usersInRoadBloc.locationMechanic(widget.request);
     usersInRoadBloc.newLocationMechanic(widget.request);
+    usersInRoadBloc.saveUsers(widget.authenticatedUser!, widget.receiver!);
 
     return BlocBuilder<UsersInRoadBloc, UsersInRoadState>(
       builder: (context, state) {
@@ -105,7 +106,8 @@ class _MapViewState extends State<MapViewAux> {
             BottomSheetContent(
               receiver: widget.receiver,
               authenticatedUser: widget.authenticatedUser,
-              userType:state.userType,
+              userType: state.userType,
+              request: widget.request,
             ),
           ]),
         );

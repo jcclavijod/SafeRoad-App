@@ -30,8 +30,7 @@ class ConnectingDialogState extends State<ConnectingDialog> {
   void initState() {
     super.initState();
     final requestBloc = BlocProvider.of<RequestBloc>(context);
-    requestBloc.loadRequestData();
-    
+
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         elapsedTimeInSeconds++;
@@ -41,7 +40,6 @@ class ConnectingDialogState extends State<ConnectingDialog> {
       }
     });
   }
-
 
   @override
   void dispose() {
@@ -155,6 +153,8 @@ class ConnectingDialogState extends State<ConnectingDialog> {
               if (userId == FirebaseAuth.instance.currentUser!.uid &&
                   status == 'inProcess') {
                 requestBloc.loadMechanic();
+                requestBloc.listenRequestChanges();
+                requestBloc.loadRequestData();
                 //final location =
                 //snapshot.data!.docs.first.get('mechanicLocation');
                 return MapViewAux(
