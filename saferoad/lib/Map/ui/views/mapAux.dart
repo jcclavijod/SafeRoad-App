@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:saferoad/Auth/model/user_model.dart';
+import 'package:saferoad/Auth/model/usuario_model.dart';
 import 'package:saferoad/Home/ui/widgets/SideMenuWidget.dart';
 
 import '../../../Auth/provider/auth_provider.dart';
@@ -79,6 +79,7 @@ class _MapViewState extends State<MapViewAux> {
     usersInRoadBloc.changeIcon();
     usersInRoadBloc.locationMechanic(widget.request);
     usersInRoadBloc.newLocationMechanic(widget.request);
+    usersInRoadBloc.saveUsers(widget.authenticatedUser!, widget.receiver!);
 
     return BlocBuilder<UsersInRoadBloc, UsersInRoadState>(
       builder: (context, state) {
@@ -105,7 +106,8 @@ class _MapViewState extends State<MapViewAux> {
             BottomSheetContent(
               receiver: widget.receiver,
               authenticatedUser: widget.authenticatedUser,
-              userType:state.userType,
+              userType: state.userType,
+              request: widget.request,
             ),
           ]),
         );

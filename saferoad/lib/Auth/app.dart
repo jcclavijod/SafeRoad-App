@@ -1,7 +1,7 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:saferoad/Auth/bloc/auth_bloc.dart';
+import 'package:saferoad/Auth/ui/views/Decision.dart';
 import 'package:saferoad/Home/ui/views/userpage.dart';
 
 class Home extends StatefulWidget {
@@ -21,7 +21,7 @@ class _HomeState extends State<Home> {
           if (snapshot.hasData) {
             return const UserPage();
           }
-          return const MyAuth();
+          return DecisionPage();
         }),
       ),
     );

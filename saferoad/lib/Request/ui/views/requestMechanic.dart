@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-//import 'package:http/http.dart';
-import '../../../Auth/model/user_model.dart';
+import 'package:saferoad/Auth/model/usuario_model.dart';
 import '../../../Map/ui/views/mapAux.dart';
 import '../../Repository/requestRepository.dart';
 import '../../bloc/request/request_bloc.dart';
@@ -16,7 +15,6 @@ class RequestPopup extends StatefulWidget {
 
 class RequestPopupState extends State<RequestPopup> {
   String? address;
-  late LatLng location;
   late UserModel? authenticatedUser;
   late UserModel? receiver;
   final repository = RequestRepository();
@@ -29,11 +27,6 @@ class RequestPopupState extends State<RequestPopup> {
     requestBloc.loadRequestData();
     //_setUserAuth();
     //_setClient();
-    repository.locationUser().then((result) {
-      setState(() {
-        location = result;
-      });
-    });
     repository.getAddressFromCoordinates().then((result) {
       setState(() {
         address = result;
@@ -182,7 +175,8 @@ class RequestPopupState extends State<RequestPopup> {
                   ),
                 ),
                 onPressed: () {
-                  BlocProvider.of<RequestBloc>(context).changeRequest();
+                  BlocProvider.of<RequestBloc>(context)
+                      .changeRequestMessaging();
 
                   Navigator.push(
                     context,

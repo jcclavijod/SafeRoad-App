@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:saferoad/Request/ui/views/progressDialog.dart';
@@ -5,14 +6,18 @@ import 'package:saferoad/Request/ui/views/progressDialog.dart';
 import '../../bloc/request/request_bloc.dart';
 
 class CreateRequest extends StatelessWidget {
-  const CreateRequest({Key? key}) : super(key: key);
+  CreateRequest({
+    Key? key,
+    required this.nearbyPlaces,
+  }) : super(key: key);
+
+  List<DocumentSnapshot> nearbyPlaces;
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<RequestBloc, RequestState>(
       builder: (context, state) {
         return Container(
-          height: 100.0,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: const BorderRadius.only(
@@ -29,57 +34,65 @@ class CreateRequest extends StatelessWidget {
             ],
           ),
           child: Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+            padding: const EdgeInsets.all(16.0),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Expanded(
-                  child: Center(
-                    child: SizedBox(
-                      height: 50.0,
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          BlocProvider.of<RequestBloc>(context).createRequest();
-                          print("YA SE CCREO LA REQUEST DEL TODO??????");
-                          print(state.requestCreated);
-                          if (state.requestCreated) {
-                            showDialog(
-                              barrierDismissible: false,
-                              context: context,
-                              builder: (BuildContext context) {
-                                return const ConnectingDialog();
-                              },
-                            );
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Error al crear la solicitud.'),
-                              ),
-                            );
-                          }
+                ElevatedButton(
+                  onPressed: () {
+                    if (BlocProvider.of<RequestBloc>(context)
+                        .state
+                        .problemController
+                        .text
+                        .isEmpty) {
+                      const snackBar = SnackBar(
+                        content: Text(
+                            'Por favor, describe tu problema antes de continuar.'),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    } else {
+                      BlocProvider.of<RequestBloc>(context)
+                          .createRequest(nearbyPlaces);
+
+                      showDialog(
+                        barrierDismissible: false,
+                        context: context,
+                        builder: (BuildContext context) {
+                          return const ConnectingDialog();
                         },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30.0),
-                          ),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 40.0,
-                            vertical: 15.0,
-                          ),
-                        ),
-                        child: const Text(
-                          'Conectar con mecánico cercano',
-                          style: TextStyle(fontSize: 20.0),
-                        ),
-                      ),
+                      );
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30.0),
                     ),
+                    padding: const EdgeInsets.all(16.0),
+                  ),
+                  child: const Text(
+                    'Conectar con mecánico cercano',
+                    style: TextStyle(fontSize: 20.0),
                   ),
                 ),
                 const SizedBox(height: 16.0),
+                TextFormField(
+                  controller: BlocProvider.of<RequestBloc>(context)
+                      .state
+                      .problemController,
+                  onChanged: (value) {
+                    BlocProvider.of<RequestBloc>(context).add(
+                        ProblemTextChangedEvent(
+                            TextEditingController(text: value)));
+                  },
+                  maxLines: null,
+                  keyboardType: TextInputType.multiline,
+                  textDirection: TextDirection.ltr,
+                  decoration: const InputDecoration(
+                    labelText: 'Describe tu problema',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
               ],
             ),
           ),

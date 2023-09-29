@@ -12,15 +12,6 @@ class SearchRepository {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   final user = FirebaseAuth.instance.currentUser!;
 
-  Future<void> saveGeoHash(ma.LatLng location) async {
-    GeoFirePoint myLocation =
-        geo.point(latitude: 3.467705, longitude: -76.524467);
-    await firestore
-        .collection('mecanicos')
-        .doc("BEdPsCRFCAegeUUMlZtO1Vw9Unk1")
-        .update({'position': myLocation.data});
-  }
-
   List<LatLng> nearbyPointsFunc(
       List<LatLng> points, double distanceInMetersMax, LatLng location) {
     List<LatLng> nearbyPoints = [];
@@ -109,5 +100,14 @@ class SearchRepository {
       return "mecanico";
     }
     return "";
+  }
+
+  void changeStatusRequest(String requestId, String newStatus) async {
+    await FirebaseFirestore.instance
+        .collection('requests')
+        .doc(requestId)
+        .update({
+      'status': newStatus,
+    });
   }
 }

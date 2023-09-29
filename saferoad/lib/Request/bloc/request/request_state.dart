@@ -9,57 +9,61 @@ class RequestState extends Equatable {
   final UserModel authenticatedUser;
   final UserModel receiver;
   final Request request;
+  final TextEditingController problemController;
 
   const RequestState(
-      {this.requestCreated = false,
+      {required this.problemController,
+      this.requestCreated = false,
       this.finishedRequests = const [],
       this.authenticatedUser = const UserModel(
         name: "",
-        cedula: "",
-        local: "",
-        email: "",
-        genero: "",
-        ubicacion: "",
-        bio: "",
-        profilePic: "",
-        createdAt: "",
+        lastname: "",
+        mail: "",
+        password: "",
+        identification: "",
+        gender: "",
         phoneNumber: "",
+        birthday: "",
         uid: "",
+        profilePic: "",
+        isAviable: false,
+        token: "",
       ),
       this.receiver = const UserModel(
         name: "",
-        cedula: "",
-        local: "",
-        email: "",
-        genero: "",
-        ubicacion: "",
-        bio: "",
-        profilePic: "",
-        createdAt: "",
+        lastname: "",
+        mail: "",
+        password: "",
+        identification: "",
+        gender: "",
         phoneNumber: "",
+        birthday: "",
         uid: "",
+        profilePic: "",
+        isAviable: false,
+        token: "",
       ),
       this.location = const LatLng(0, 0),
       this.location2 = const LatLng(0, 0),
       this.address = "",
       this.request = const Request(
           createdAt: DateTimeObject(date: '', time: ''),
-          mecanicoId: "",
+          mechanicId: "",
           requestDetails: "",
           status: "",
           userId: "",
           userLocation: GeoPoint(0, 0))});
 
-  RequestState copyWith({
-    bool? requestCreated,
-    List<DocumentSnapshot>? finishedRequests,
-    String? address,
-    LatLng? location,
-    LatLng? location2,
-    UserModel? authenticatedUser,
-    UserModel? receiver,
-    Request? request,
-  }) =>
+  RequestState copyWith(
+          {bool? requestCreated,
+          List<DocumentSnapshot>? finishedRequests,
+          String? address,
+          LatLng? location,
+          LatLng? location2,
+          UserModel? authenticatedUser,
+          UserModel? receiver,
+          Request? request,
+          TextEditingController? problemController}) =>
       RequestState(
         requestCreated: requestCreated ?? this.requestCreated,
         finishedRequests: finishedRequests ?? this.finishedRequests,
@@ -69,6 +73,7 @@ class RequestState extends Equatable {
         authenticatedUser: authenticatedUser ?? this.authenticatedUser,
         receiver: receiver ?? this.receiver,
         request: request ?? this.request,
+        problemController: problemController ?? this.problemController,
       );
 
   @override
@@ -80,6 +85,7 @@ class RequestState extends Equatable {
         location2,
         authenticatedUser,
         receiver,
-        request
+        request,
+        problemController
       ];
 }

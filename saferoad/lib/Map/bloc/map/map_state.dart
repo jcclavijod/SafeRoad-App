@@ -10,13 +10,12 @@ class MapState extends Equatable {
   final BitmapDescriptor icon;
   final bool mechanicState;
 
-
   const MapState({
     this.mapReady = false,
     this.showDialog = false,
     this.mechanicState = false,
     this.showDialogLoading = true,
-    this.range = 1.6,
+    this.range = 1.8,
     this.location = const LatLng(0, 0),
     this.nearbyPlaces = const [],
     this.icon = BitmapDescriptor.defaultMarker,
@@ -34,15 +33,15 @@ class MapState extends Equatable {
     List<DocumentSnapshot>? nearbyPlaces,
   }) =>
       MapState(
-          mapReady: mapReady ?? this.mapReady,
-          range: range ?? this.range,
-          mechanicState: mechanicState ?? this.mechanicState,
-          showDialog: showDialog ?? this.showDialog,
-          showDialogLoading: showDialogLoading ?? this.showDialogLoading,
-          location: location ?? this.location,
-          nearbyPlaces: nearbyPlaces ?? this.nearbyPlaces,
-          icon: icon ?? this.icon,
-          );
+        mapReady: mapReady ?? this.mapReady,
+        range: range ?? this.range,
+        mechanicState: mechanicState ?? this.mechanicState,
+        showDialog: showDialog ?? this.showDialog,
+        showDialogLoading: showDialogLoading ?? this.showDialogLoading,
+        location: location ?? this.location,
+        nearbyPlaces: nearbyPlaces ?? this.nearbyPlaces,
+        icon: icon ?? this.icon,
+      );
 
   @override
   List<Object> get props => [
@@ -56,3 +55,5 @@ class MapState extends Equatable {
         icon,
       ];
 }
+
+class LoadingState extends MapState {}

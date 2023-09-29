@@ -4,7 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import '../../../Auth/model/user_model.dart';
+import 'package:saferoad/Auth/model/usuario_model.dart';
+
 import '../../../Map/ui/views/mapAux.dart';
 import '../../Repository/requestRepository.dart';
 import '../../bloc/request/request_bloc.dart';
@@ -30,8 +31,6 @@ class ConnectingDialogState extends State<ConnectingDialog> {
   void initState() {
     super.initState();
     final requestBloc = BlocProvider.of<RequestBloc>(context);
-    requestBloc.loadRequestData();
-    
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         elapsedTimeInSeconds++;
@@ -41,7 +40,6 @@ class ConnectingDialogState extends State<ConnectingDialog> {
       }
     });
   }
-
 
   @override
   void dispose() {
@@ -155,6 +153,8 @@ class ConnectingDialogState extends State<ConnectingDialog> {
               if (userId == FirebaseAuth.instance.currentUser!.uid &&
                   status == 'inProcess') {
                 requestBloc.loadMechanic();
+                requestBloc.listenRequestChanges();
+                requestBloc.loadRequestData();
                 //final location =
                 //snapshot.data!.docs.first.get('mechanicLocation');
                 return MapViewAux(

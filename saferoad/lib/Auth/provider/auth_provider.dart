@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:saferoad/Auth/model/user_model.dart';
+import 'package:saferoad/Auth/model/usuario_model.dart';
 
 class FirebaseDataSource {
   User get currentUser {
@@ -37,8 +37,6 @@ class FirebaseDataSource {
       return UserModel.complete();
     }
   }
-
-  
 
   Future<String> getUserType() async {
     String userType = "";

@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:saferoad/Auth/model/usuario_model.dart';
 import 'package:saferoad/Home/ui/widgets/SideMenuWidget.dart';
 
-import '../../../Auth/model/user_model.dart';
+
 import '../../bloc/chatBlc/chat_blc_bloc.dart';
 import '../../model/conversation.dart';
 import '../../provider/chatProvider.dart';

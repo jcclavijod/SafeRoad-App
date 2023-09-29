@@ -4,12 +4,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:saferoad/Auth/model/user_model.dart';
 import 'package:saferoad/Home/ui/widgets/SideMenuWidget.dart';
 import 'package:saferoad/Request/ui/views/ListRequests.dart';
 import '../../../Auth/provider/auth_provider.dart';
 import '../../../Request/ui/views/createRequest.dart';
 import '../../../Request/ui/views/requestMechanic.dart';
+import '../../../helpers/notificationHelper.dart';
 import '../../bloc/location/my_location_bloc.dart';
 import '../../bloc/map/map_bloc.dart';
 import '../widgets/loading_dialog.dart';
@@ -28,6 +28,7 @@ class _MapViewState extends State<MapView> {
   String userType = "";
   @override
   void initState() {
+    NotificationHelper.initialize(context);
     final myLocationBloc = BlocProvider.of<MyLocationBloc>(context);
     myLocationBloc.startTracking();
     super.initState();
@@ -41,23 +42,20 @@ class _MapViewState extends State<MapView> {
     });
   }
 
-/*
   @override
   void dispose() {
-    final myLocationBloc = BlocProvider.of<MyLocationBloc>(context);
-    myLocationBloc.close();
+    NotificationHelper.cancelAllNotifications();
     super.dispose();
   }
-*/
 
   @override
   Widget build(BuildContext context) {
     if (userType == "user") {
+      final mapBloc = BlocProvider.of<MapBloc>(context);
       return Scaffold(
         drawer: const SideMenuWidget(),
         body: BlocBuilder<MyLocationBloc, MyLocationState>(
             builder: (context, state) => createMap(state)),
-        bottomNavigationBar: const CreateRequest(),
       );
     } else if (userType == "mecanico") {
       return Stack(children: [
@@ -77,6 +75,8 @@ class _MapViewState extends State<MapView> {
               // ignore: prefer_const_constructors
               return Center(child: Text('Error verifying membership'));
             } else {
+              return Container();
+              /*
               return StreamBuilder<QuerySnapshot>(
                 stream: FirebaseFirestore.instance
                     .collection('requests')
@@ -96,11 +96,11 @@ class _MapViewState extends State<MapView> {
                     }
                   }
                   return Visibility(
-                    visible: false, 
+                    visible: false,
                     child: Container(),
                   );
                 },
-              );
+              );*/
             }
           },
         ),
@@ -121,7 +121,6 @@ class _MapViewState extends State<MapView> {
     //final locationBloc = BlocProvider.of<MyLocationBloc>(context);
 
     LatLng location = state.location;
-    mapBloc.location(location);
     final CameraPosition cameraPosition = CameraPosition(
       target: location,
       zoom: 15,
@@ -160,6 +159,12 @@ class _MapViewState extends State<MapView> {
               );
             })),
           ),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: CreateRequest(nearbyPlaces: mapBloc.state.nearbyPlaces),
+          ),
         ]);
       },
     );
@@ -171,8 +176,6 @@ class _MapViewState extends State<MapView> {
     final mapBloc = BlocProvider.of<MapBloc>(context);
 
     LatLng location = state.location;
-    mapBloc.location(location);
-
     final CameraPosition cameraPosition = CameraPosition(
       target: location,
       zoom: 15,

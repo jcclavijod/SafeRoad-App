@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
@@ -17,15 +16,21 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   MapBloc() : super(const MapState()) {
     on<OnLocation>(
         (event, emit) => emit(state.copyWith(location: event.location)));
+
     on<OnMapDone>((event, emit) => emit(state.copyWith(mapReady: true)));
+
     on<UpdateRange>((event, emit) => emit(state.copyWith(range: event.range)));
+
     on<UpdateMechanicState>((event, emit) =>
         emit(state.copyWith(mechanicState: event.mechanicState)));
+
     on<SaveShowDialog>((event, emit) => emit(state.copyWith(
         showDialog: event.showDialog,
         showDialogLoading: event.showDialogLoading)));
+
     on<SaveNearbyPlaces>((event, emit) =>
         emit(state.copyWith(nearbyPlaces: event.nearbyPlaces)));
+
     on<SaveIcon>((event, emit) => emit(state.copyWith(icon: event.icon)));
   }
 
@@ -41,11 +46,6 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       /* _mapController.setMapStyle( jsonEncode(uberMapTheme) );*/
       add(OnMapDone());
     }
-  }
-
-  void location(LatLng position) {
-    add(OnLocation(position));
-    //searchRepository.saveGeoHash(position);
   }
 
   void updateMechanicState(bool mechanicState) {
@@ -73,7 +73,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   void statusNearbyPlaces() {
     if (state.nearbyPlaces.isEmpty) {
       add(const SaveShowDialog(true, false));
-      add(const UpdateRange(30));
+      add(const UpdateRange(2.6));
       searchNearbyPlaces(state.location);
     } else {
       add(const SaveShowDialog(false, false));
@@ -95,7 +95,6 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     BitmapDescriptor icon = await mapRepository.getMarkerIcon(assetName, 150);
     add(SaveIcon(icon));
   }
-
 
   @override
   Future<void> close() {

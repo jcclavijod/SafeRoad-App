@@ -1,50 +1,27 @@
-//import 'package:firebase_messaging/firebase_messaging.dart';
+// ignore_for_file: unused_import
+
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:saferoad/Auth/app.dart';
+import 'package:saferoad/Home/ui/views/userpage.dart';
 import 'package:saferoad/Map/bloc/availability/availability_bloc.dart';
 import 'package:saferoad/Map/bloc/gps/gps_bloc.dart';
 import 'Map/bloc/location/my_location_bloc.dart';
 import 'Map/bloc/map/map_bloc.dart';
 //import 'package:dcdg/dcdg.dart';
+import 'Map/bloc/qualification/qualification_bloc.dart';
 import 'Map/bloc/usersInRoad/users_in_road_bloc.dart';
 import 'Request/bloc/request/request_bloc.dart';
+//import 'helpers/notificationHelper.dart';
+import '../firebase_options.dart';
 import 'helpers/notificationHelper.dart';
 
-Future<void> main() async {
+Future<void> main(context) async {
   WidgetsFlutterBinding.ensureInitialized();
-  await NotificationHelper.setupFirebase();
-  await NotificationHelper.initializeNotification();
-
-  /*
-   final FirebaseMessaging _fireMessage = FirebaseMessaging.instance;
-
-   _fireMessage.configure(
-    onMessage: (Map<String, dynamic> message) async {
-      print('Mensaje de notificación recibido: $message');
-
-      final requestId = message['data']['requestId'];
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (_) => RequestDetailsPage(requestId: requestId),
-        ),
-      );
-    },
-    onResume: (Map<String, dynamic> message) async {
-      print('La aplicación estaba en segundo plano: $message');
-    },
-    onLaunch: (Map<String, dynamic> message) async {
-      print('La aplicación estaba cerrada: $message');
-
-      final requestId = message['data']['requestId'];
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (_) => RequestDetailsPage(requestId: requestId),
-        ),
-      );
-    },
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
   );
-*/
   runApp(MultiBlocProvider(
     providers: [
       BlocProvider(create: (context) => GpsBloc()),
@@ -52,7 +29,8 @@ Future<void> main() async {
       BlocProvider(create: (context) => MapBloc()),
       BlocProvider(create: (context) => RequestBloc()),
       BlocProvider(create: (context) => AvailabilityBloc()),
-      BlocProvider(create: (context) => UsersInRoadBloc())
+      BlocProvider(create: (context) => UsersInRoadBloc()),
+      BlocProvider(create: (context) => QualificationBloc()),
     ],
     child: const MyApp(),
   ));
@@ -68,7 +46,13 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const Home(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const Home(), // Página de inicio
+        '/UserPage': (context) =>
+            const UserPage(), // Otras rutas de tu aplicación
+        // ...
+      },
     );
   }
 }

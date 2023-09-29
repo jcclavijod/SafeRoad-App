@@ -1,8 +1,7 @@
 import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
-
-import '../../Auth/model/user_model.dart';
+import 'package:saferoad/Auth/model/usuario_model.dart';
 import '../utils/conversationKey.dart';
 
 class Conversation extends Equatable {

@@ -1,6 +1,10 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:saferoad/Auth/model/user_model.dart';
+import 'package:saferoad/Auth/model/usuario_model.dart';
+import 'package:saferoad/Auth/ui/Cliente/widgets.dart';
 import 'package:saferoad/Chat/ui/views/listChats.dart';
 import 'package:saferoad/Home/ui/views/perfil.dart';
 import 'package:saferoad/Membresia/ui/views/membershipPage.dart';
@@ -22,18 +26,15 @@ class SideMenuWidget extends StatelessWidget {
       builder: (BuildContext context, AsyncSnapshot<UserModel> snapshot) {
         Widget wid;
         if (snapshot.connectionState == ConnectionState.waiting) {
-          // si la función todavía no ha devuelto los datos, puedes mostrar un indicador de progreso
           wid = const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasData) {
-          // si la función ha devuelto los datos, puedes asignarlos a la variable usuario
           userM = snapshot.data;
-
           wid = Drawer(
             child: ListView(
               children: [
                 UserAccountsDrawerHeader(
                   accountName: Text(userM!.name),
-                  accountEmail: Text(userM!.email),
+                  accountEmail: Text(userM!.mail),
                   currentAccountPicture: CircleAvatar(
                     backgroundImage: NetworkImage(userM!.profilePic),
                   ),
@@ -88,18 +89,39 @@ class SideMenuWidget extends StatelessWidget {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const Perfil()),
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              Perfil(authenticatedUser: userM)),
                     );
                   },
                 ),
+                //LogoutButton(),
                 ListTile(
                   leading: const Icon(Icons.logout),
                   title: const Text('Salir'),
-                  onTap: () {
+                  onTap: () async {
+                    CollectionReference users =
+                        FirebaseFirestore.instance.collection('users');
+                    CollectionReference mechanics =
+                        FirebaseFirestore.instance.collection('mecanicos');
+                    DocumentReference currentUser =
+                        users.doc(FirebaseAuth.instance.currentUser!.uid);
+                    DocumentSnapshot userSnapshot = await currentUser.get();
+                    if (userSnapshot.exists) {
+                      currentUser.update({'isAviable': false});
+                    } else {
+                      DocumentReference currentMechanic =
+                          mechanics.doc(FirebaseAuth.instance.currentUser!.uid);
+                      currentMechanic.update({'isAviable': false});
+                      print(currentMechanic.update({'isAviable': false}));
+                    }
                     FirebaseAuth.instance.signOut();
-                    Navigator.pop(context);
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                      '/',
+                      (route) => false,
+                    );
                   },
-                ),
+                )
               ],
             ),
           );

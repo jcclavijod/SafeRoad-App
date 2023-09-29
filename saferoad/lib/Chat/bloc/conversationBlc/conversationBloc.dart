@@ -3,8 +3,9 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:saferoad/Auth/model/usuario_model.dart';
 
-import '../../../Auth/model/user_model.dart';
+
 import '../../model/conversation.dart';
 import '../../repository/conversationRepository.dart';
 

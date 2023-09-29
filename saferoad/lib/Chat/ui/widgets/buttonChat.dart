@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../../../Auth/model/user_model.dart';
-
+import 'package:saferoad/Auth/model/usuario_model.dart';
 import '../views/chatPage.dart';
 
 class ChatBody extends StatelessWidget {
@@ -21,7 +19,7 @@ class ChatBody extends StatelessWidget {
         backgroundImage: NetworkImage(receiver!.profilePic),
       ),
       title: Text(receiver!.name),
-      subtitle: Text(receiver!.email),
+      subtitle: Text(receiver!.mail),
       trailing: IconButton(
         icon: const Icon(Icons.arrow_forward_ios_rounded),
         onPressed: () {

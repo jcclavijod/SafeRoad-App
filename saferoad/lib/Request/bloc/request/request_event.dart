@@ -32,3 +32,15 @@ class LoadLocation2 extends RequestEvent {
   final LatLng location2;
   const LoadLocation2(this.location2);
 }
+
+
+
+class FirstRequestLoaded extends RequestEvent {
+  final Request request;
+  const FirstRequestLoaded(this.request);
+}
+
+class ProblemTextChangedEvent extends RequestEvent {
+  final TextEditingController problemController;
+  const ProblemTextChangedEvent(this.problemController);
+}
