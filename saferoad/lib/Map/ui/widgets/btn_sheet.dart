@@ -32,10 +32,17 @@ class BottomSheetContentState extends State<BottomSheetContent> {
   @override
   Widget build(BuildContext context) {
     final usersInRoadBloc = BlocProvider.of<UsersInRoadBloc>(context);
-    if (usersInRoadBloc.state.userType == "mecanico") {
-      return buildCommonAnimatedContainer(isExpanded, true);
+
+    if (widget.receiver?.profilePic == null) {
+      return const CircularProgressIndicator.adaptive(
+        backgroundColor: Colors.blue,
+      );
     } else {
-      return buildCommonAnimatedContainer(isExpanded, false);
+      if (usersInRoadBloc.state.userType == "mecanico") {
+        return buildCommonAnimatedContainer(isExpanded, true);
+      } else {
+        return buildCommonAnimatedContainer(isExpanded, false);
+      }
     }
   }
 
@@ -163,7 +170,7 @@ class UserProfileSection extends StatelessWidget {
                     const SizedBox(width: 16.0),
                     CircleAvatar(
                       backgroundImage:
-                          NetworkImage(authenticatedUser!.profilePic),
+                          NetworkImage(authenticatedUser.profilePic),
                       radius: 35,
                     ),
                   ],
@@ -290,11 +297,10 @@ class FinishButtonSection extends StatelessWidget {
               final usersInRoadBloc = BlocProvider.of<UsersInRoadBloc>(context);
               usersInRoadBloc.finishRequest(
                   requestId, receiver!.name, receiver!.profilePic);
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const UserPage(),
-                ),
+            
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                '/',
+                (route) => false,
               );
             },
             style: ElevatedButton.styleFrom(
@@ -367,8 +373,9 @@ class CancelButtonSection extends StatelessWidget {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Confirmar cancelación'),
-          content: Text('¿Está seguro de que desea cancelar el servicio?'),
+          title: const Text('Confirmar cancelación'),
+          content:
+              const Text('¿Está seguro de que desea cancelar el servicio?'),
           actions: [
             TextButton(
               onPressed: () {
@@ -377,7 +384,7 @@ class CancelButtonSection extends StatelessWidget {
               style: TextButton.styleFrom(
                 primary: Colors.grey, // Cambia el color del texto a gris
                 backgroundColor: Colors.white, // Fondo blanco
-                padding: EdgeInsets.symmetric(
+                padding: const EdgeInsets.symmetric(
                     horizontal: 20.0, vertical: 12.0), // Ajusta el padding
                 shape: RoundedRectangleBorder(
                   borderRadius:
@@ -386,7 +393,7 @@ class CancelButtonSection extends StatelessWidget {
                       BorderSide(color: Colors.grey, width: 1.0), // Borde gris
                 ),
               ),
-              child: Text('Cancelar'),
+              child: const Text('Cancelar'),
             ),
             TextButton(
               onPressed: () {
@@ -394,25 +401,19 @@ class CancelButtonSection extends StatelessWidget {
                 final usersInRoadBloc =
                     BlocProvider.of<UsersInRoadBloc>(context);
                 usersInRoadBloc.cancelRequest(request!.id);
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        const UserPage(), // Reemplaza con tu widget de inicio
-                  ),
-                );
+                Navigator.of(context).pushReplacementNamed('/');
               },
               style: TextButton.styleFrom(
                 primary: Colors.white, // Cambia el color del texto a blanco
                 backgroundColor: Colors.red, // Fondo rojo
-                padding: EdgeInsets.symmetric(
+                padding: const EdgeInsets.symmetric(
                     horizontal: 20.0, vertical: 12.0), // Ajusta el padding
                 shape: RoundedRectangleBorder(
                   borderRadius:
                       BorderRadius.circular(32.0), // Bordes redondeados
                 ),
               ),
-              child: Text('Confirmar'),
+              child: const Text('Confirmar'),
             ),
           ],
           elevation: 4, // Sombra

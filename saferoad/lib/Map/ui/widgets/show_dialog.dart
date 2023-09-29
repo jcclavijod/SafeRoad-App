@@ -59,10 +59,9 @@ class CancelationAlertDialog extends StatelessWidget {
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                    builder: (context) => const UserPage(),
-                  ),
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  '/',
+                  (route) => false,
                 );
               },
               style: ButtonStyle(

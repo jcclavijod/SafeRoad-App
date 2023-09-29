@@ -95,7 +95,7 @@ class AvailabilityOverlayWidget extends StatelessWidget {
                   ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
-                    children: [
+                    children: const [
                       Icon(
                         Icons.location_off,
                         color: Colors.red,

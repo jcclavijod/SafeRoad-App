@@ -10,7 +10,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:saferoad/Auth/model/usuario_model.dart';
 
-
 import '../../Repository/requestRepository.dart';
 import '../../model/Request.dart';
 
@@ -43,6 +42,7 @@ class RequestBloc extends Bloc<RequestEvent, RequestState> {
   }
 
   Future<void> createRequest(puntosCercanos) async {
+    int count = 0;
     String requestId =
         await _requestRepository.createRequest(state.problemController.text);
     Request request =
@@ -51,11 +51,13 @@ class RequestBloc extends Bloc<RequestEvent, RequestState> {
     puntosCercanos.forEach((DocumentSnapshot punto) {
       if (punto.data() != null) {
         // Verifica si el DocumentSnapshot contiene datos
+        count += 1;
         var token = punto.get("token");
-        var nombre = punto.get("email");
+        var nombre = punto.get("mail");
         if (token != null) {
           print("Token: $token");
           print("Nombre: $nombre");
+          print("CANTIDAD DE VECES QUE SE ENVIA EL MENSAJE: $count");
           _requestRepository.sendNotificationToDriver(
               token, requestId, request.requestDetails);
         } else {

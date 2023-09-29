@@ -188,7 +188,7 @@ class RequestPopup2State extends State<RequestPopup2> {
                 onPressed: () {
                   BlocProvider.of<RequestBloc>(context)
                       .changeRequestMessaging();
-                  
+
                   Navigator.push(
                     context,
                     MaterialPageRoute(

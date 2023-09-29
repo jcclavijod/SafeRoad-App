@@ -152,11 +152,12 @@ class ConnectingDialogState extends State<ConnectingDialog> {
 
               if (userId == FirebaseAuth.instance.currentUser!.uid &&
                   status == 'inProcess') {
-                requestBloc.loadMechanic();
+                //requestBloc.loadMechanic();
                 requestBloc.listenRequestChanges();
                 requestBloc.loadRequestData();
                 //final location =
                 //snapshot.data!.docs.first.get('mechanicLocation');
+
                 return MapViewAux(
                   location: state.location2,
                   authenticatedUser: state.authenticatedUser,

@@ -77,13 +77,10 @@ class CreateRequest extends StatelessWidget {
                 ),
                 const SizedBox(height: 16.0),
                 TextFormField(
-                  controller: BlocProvider.of<RequestBloc>(context)
-                      .state
-                      .problemController,
+                  controller: state.problemController,
                   onChanged: (value) {
-                    BlocProvider.of<RequestBloc>(context).add(
-                        ProblemTextChangedEvent(
-                            TextEditingController(text: value)));
+                    BlocProvider.of<RequestBloc>(context)
+                        .add(ProblemTextChangedEvent(state.problemController));
                   },
                   maxLines: null,
                   keyboardType: TextInputType.multiline,
