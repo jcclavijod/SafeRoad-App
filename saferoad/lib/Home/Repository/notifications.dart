@@ -81,6 +81,11 @@ class Notifications {
             );
           });
         } else if (message.data["type"] == "finishedRequest") {
+          Navigator.of(context).pushNamedAndRemoveUntil(
+            '/',
+            (route) => false,
+          );
+
           notificationManager.sendNotification(message.data);
           //modelRatingDialog(message.data, context);
         } else if (message.data["type"] == "chat") {}

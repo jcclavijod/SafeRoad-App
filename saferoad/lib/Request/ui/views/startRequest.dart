@@ -105,12 +105,7 @@ class _StartRequestState extends State<StartRequest> {
                 );
               });
             } else if (status == 'finished' && activateWiew) {
-              Future.delayed(const Duration(milliseconds: 100), () {
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                  '/',
-                  (route) => false,
-                );
-              });
+              
             } else {
               return MapViewAux(
                 location: widget.location,

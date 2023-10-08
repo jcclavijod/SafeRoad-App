@@ -97,6 +97,7 @@ class BottomSheetContentState extends State<BottomSheetContent> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
                       child: UserProfileSection(
+                        request: widget.request!,
                         receiver: widget.receiver!,
                         authenticatedUser: widget.authenticatedUser!,
                       ),
@@ -140,15 +141,18 @@ class BottomSheetContentState extends State<BottomSheetContent> {
 class UserProfileSection extends StatelessWidget {
   const UserProfileSection({
     Key? key,
+    required this.request,
     required this.authenticatedUser,
     required this.receiver,
   }) : super(key: key);
 
   final UserModel authenticatedUser;
   final UserModel receiver;
+  final Request request;
 
   @override
   Widget build(BuildContext context) {
+    bool activateWiew = authenticatedUser.uid == request.userId;
     return _buildWidgetContainer(
       const Icon(Icons.message),
       Column(
@@ -159,21 +163,38 @@ class UserProfileSection extends StatelessWidget {
               Expanded(
                 child: Row(
                   children: [
-                    Expanded(
-                      child: Text(
-                        "Taller ${authenticatedUser.name}",
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
+                    if (activateWiew)
+                      Expanded(
+                        child: Text(
+                          "Taller de ${receiver.name}",
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                    ),
                     const SizedBox(width: 16.0),
-                    CircleAvatar(
-                      backgroundImage:
-                          NetworkImage(authenticatedUser.profilePic),
-                      radius: 35,
-                    ),
+                    if (activateWiew)
+                      CircleAvatar(
+                        backgroundImage: NetworkImage(receiver.profilePic),
+                        radius: 35,
+                      ),
+                    if (!activateWiew)
+                      Expanded(
+                        child: Text(
+                          "Usuario ${receiver.name}",
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    const SizedBox(width: 16.0),
+                    if (!activateWiew)
+                      CircleAvatar(
+                        backgroundImage: NetworkImage(receiver.profilePic),
+                        radius: 35,
+                      ),
                   ],
                 ),
               ),

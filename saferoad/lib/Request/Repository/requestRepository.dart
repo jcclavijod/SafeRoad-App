@@ -325,7 +325,7 @@ class RequestRepository {
       'id': '1',
       'status': 'done',
       'request_id': requestId,
-      'address': requestId,
+      'address': address,
       'type': "request",
     };
     Map sendNotificationMap = {
