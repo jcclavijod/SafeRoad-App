@@ -140,7 +140,8 @@ class _RatingDialogState extends State<RatingDialog> {
                     TextButton(
                       onPressed: () {
                         // Tu lógica para omitir la calificación aquí
-                        Navigator.of(context).pop(); // Cierra el diálogo
+                        Navigator.of(context).pushReplacementNamed(
+                            '/');  // Cierra el diálogo
                       },
                       style: TextButton.styleFrom(
                         primary: Colors.grey, // Color del texto

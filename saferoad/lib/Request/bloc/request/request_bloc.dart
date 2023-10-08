@@ -104,6 +104,7 @@ class RequestBloc extends Bloc<RequestEvent, RequestState> {
   }
 
   void loadListRequest() async {
+    //add(FinishedRequestsLoaded(_requestRepository.getUserRequests()));
     add(FinishedRequestsLoaded(_requestRepository.getMechanicRequests()));
     createSubscription();
   }

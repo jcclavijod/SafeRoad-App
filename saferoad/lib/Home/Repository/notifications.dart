@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:saferoad/Home/Repository/notificationsManager.dart';
+import 'package:saferoad/Map/ui/views/mapView.dart';
 import 'package:saferoad/Map/ui/views/ratingDialog.dart';
 import 'package:saferoad/Map/ui/widgets/show_dialog.dart';
 import 'package:saferoad/Request/Repository/requestRepository.dart';
@@ -81,12 +82,7 @@ class Notifications {
             );
           });
         } else if (message.data["type"] == "finishedRequest") {
-          Navigator.of(context).pushNamedAndRemoveUntil(
-            '/',
-            (route) => false,
-          );
-
-          notificationManager.sendNotification(message.data);
+          //notificationManager.sendNotification(message.data);
           //modelRatingDialog(message.data, context);
         } else if (message.data["type"] == "chat") {}
       }

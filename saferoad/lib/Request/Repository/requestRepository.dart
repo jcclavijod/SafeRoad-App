@@ -210,23 +210,35 @@ class RequestRepository {
     }
   }
 
-  Future<List<DocumentSnapshot>> getUserRequests() async {
+
+  Stream<List<Request>> getUserRequests() {
     final user = FirebaseAuth.instance.currentUser!;
     try {
-      QuerySnapshot querySnapshot = await _firestoreBd
+      return _firestoreBd
           .collection('requests')
           .where('userId', isEqualTo: user.uid)
           .where('status', whereNotIn: ['pending', 'rejected'])
           .orderBy('status')
           .orderBy('createdAt', descending: true)
-          .get();
-
-      return querySnapshot.docs;
+          .snapshots()
+          .map((querySnapshot) {
+            List<Request> requests = [];
+            for (DocumentSnapshot doc in querySnapshot.docs) {
+              // Convierte cada documento en un objeto Request
+              Request request =
+                  Request.fromMap(doc.data() as Map<String, dynamic>);
+              print(request.status);
+              requests.add(request);
+            }
+            return requests;
+          })
+          .distinct(); // Filtra eventos duplicados
     } catch (e) {
       print("Error: No se pudieron traer las requests finalizadas: $e");
-      return [];
+      return Stream.error(e);
     }
   }
+
 
   Future<DocumentReference> getRequest(Request request) async {
     final docReference =

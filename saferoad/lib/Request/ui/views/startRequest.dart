@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:saferoad/Auth/model/usuario_model.dart';
 import 'package:saferoad/Map/ui/views/mapAux.dart';
+import 'package:saferoad/Map/ui/views/ratingDialog.dart';
 import 'package:saferoad/Request/bloc/request/request_bloc.dart';
 import 'package:saferoad/Request/model/Request.dart';
 import 'package:saferoad/ServiceRegister/ui/views/causeFailureSelection.dart';
@@ -105,7 +106,30 @@ class _StartRequestState extends State<StartRequest> {
                 );
               });
             } else if (status == 'finished' && activateWiew) {
-              
+              Future.delayed(Duration.zero, () {
+                Navigator.of(context, rootNavigator: true).pop();
+              });
+
+              Future.delayed(Duration.zero, () {
+                Navigator.of(context, rootNavigator: true).pop();
+              });
+
+              Future.delayed(Duration.zero, () {
+                Navigator.of(context, rootNavigator: true).pop();
+              });
+
+              // Abrir el RatingDialog después de que se haya cerrado el diálogo actual
+              Future.delayed(Duration(milliseconds: 1), () {
+                showDialog(
+                  context: context,
+                  builder: (_) => RatingDialog(
+                    requestId: widget.request!.id,
+                    receiverUid: widget.receiver!.uid,
+                    mechanicLocal: widget.receiver!.name,
+                    mechanicPic: widget.receiver!.profilePic,
+                  ),
+                );
+              });
             } else {
               return MapViewAux(
                 location: widget.location,

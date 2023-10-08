@@ -46,7 +46,9 @@ class _ListRequestsState extends State<ListRequests> {
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return requestEmpty(context);
+            return Center(
+              child: requestEmpty(context),
+            );
           } else {
             final requests = snapshot.data;
 
@@ -71,7 +73,7 @@ class _ListRequestsState extends State<ListRequests> {
     Color buttonColor;
     String spanishStatus = "";
     bool shouldNavigate = false;
-    
+
     requestBloc.loadRequest(request);
     switch (request.status) {
       case 'pending':
@@ -183,19 +185,18 @@ class _ListRequestsState extends State<ListRequests> {
               print(state.receiver.uid);
               print(state.location);
               print("??????????????????????????");
-              
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => StartRequest(
-                      location: state.location,
-                      authenticatedUser: state.authenticatedUser,
-                      receiver: state.receiver,
-                      request: request,
-                    ),
+
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => StartRequest(
+                    location: state.location,
+                    authenticatedUser: state.authenticatedUser,
+                    receiver: state.receiver,
+                    request: request,
                   ),
-                );
-              
+                ),
+              );
             },
             style: ElevatedButton.styleFrom(
               primary: buttonColor,
