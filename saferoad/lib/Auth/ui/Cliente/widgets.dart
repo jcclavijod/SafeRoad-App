@@ -44,18 +44,3 @@ class _LoginButtonState extends State<LoginButton> {
   }
 }
 
-class LogoutButton extends StatefulWidget {
-  @override
-  _LogoutButtonState createState() => _LogoutButtonState();
-}
-
-class _LogoutButtonState extends State<LogoutButton> {
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () =>
-          Provider.of<ClienteBloc>(context, listen: false).logoutUser(),
-      child: const Text('Cerrar sesión'),
-    );
-  }
-}

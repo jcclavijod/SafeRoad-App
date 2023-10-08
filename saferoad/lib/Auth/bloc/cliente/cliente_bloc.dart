@@ -12,7 +12,7 @@ part 'cliente_state.dart';
 class ClienteBloc {
   final UserRegisterRepository registerRepository = UserRegisterRepository();
   final LoginRepository loginRepository = LoginRepository();
-  UserModel? currentUser; 
+  UserModel? currentUser;
 
   Future<void> registerUser(
     String name,
@@ -25,22 +25,22 @@ class ClienteBloc {
     String birthday,
     String uid,
     bool isAviable,
+    String token,
     File profilePic,
   ) async {
     currentUser = UserModel(
-      name: name,
-      lastname: lastname,
-      mail: mail,
-      password: password,
-      identification: identification,
-      gender: gender,
-      phoneNumber: phoneNumber,
-      birthday: birthday,
-      uid: '',
-      isAviable: true,
-      profilePic: '',
-      token: ''
-    );
+        name: name,
+        lastname: lastname,
+        mail: mail,
+        password: password,
+        identification: identification,
+        gender: gender,
+        phoneNumber: phoneNumber,
+        birthday: birthday,
+        uid: '',
+        isAviable: true,
+        profilePic: '',
+        token: '');
 
     try {
       await registerRepository.registerUser(currentUser!, profilePic);
@@ -55,7 +55,7 @@ class ClienteBloc {
       await loginRepository.signInWithEmailAndPassword(mail, password);
       print('Usuario ha iniciado sesión exitosamente.');
     } catch (e) {
-      print('Error al iniciar sesión: $e');
+      throw Exception('Error de inicio de sesión: $e');
     }
   }
 

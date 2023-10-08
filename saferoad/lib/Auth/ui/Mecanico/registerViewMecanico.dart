@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print, use_key_in_widget_constructors, library_private_types_in_public_api, avoid_init_to_null, unnecessary_null_comparison
+// ignore_for_file: avoid_print, use_key_in_widget_constructors, library_private_types_in_public_api, avoid_init_to_null, unnecessary_null_comparison, use_build_context_synchronously
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +8,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:saferoad/Auth/bloc/mecanico/bloc/mecanico_bloc.dart';
 import 'package:saferoad/Auth/model/mecanico_model.dart';
 import 'package:saferoad/Auth/ui/Mecanico/LoginViewMecanico.dart';
-
 
 class RegisterMechanicView extends StatefulWidget {
   @override
@@ -45,7 +44,7 @@ class _RegisterMechanicViewState extends State<RegisterMechanicView> {
   Position? defaultPosition;
   double? locationLatitude;
   double? locationLongitude;
-
+  bool _isLoading = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -270,9 +269,21 @@ class _RegisterMechanicViewState extends State<RegisterMechanicView> {
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () async {
+                  print('_isLoading: $_isLoading');
                   if (_hasSelectedImage && _hasSelectedVoucher) {
                     if (_formKey.currentState!.validate()) {
-                      _getCoordinates(); // Llama a _getCoordinates aquí
+                      setState(() {
+                        _isLoading = true;
+                      });
+                      try {
+                        await _getCoordinates();
+                      } catch (e) {
+                        print('Error al obtener coordenadas: $e');
+                      } finally {
+                        setState(() {
+                          _isLoading = false;
+                        });
+                      }
                     } else {
                       print('Por favor, completa el formulario correctamente.');
                     }
@@ -281,7 +292,10 @@ class _RegisterMechanicViewState extends State<RegisterMechanicView> {
                         'Por favor, selecciona una imagen de perfil y un comprobante.');
                   }
                 },
-                child: const Text('Registrarse como Mecánico'),
+                child: _isLoading
+                    ? const CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white))
+                    : const Text('Registrarse como Mecánico'),
               ),
               const SizedBox(height: 16),
               TextButton(
@@ -311,7 +325,7 @@ class _RegisterMechanicViewState extends State<RegisterMechanicView> {
     );
   }
 
-  void _getCoordinates() async {
+  Future<void> _getCoordinates() async {
     try {
       List<Location> locations = await locationFromAddress(address);
       if (locations != null && locations.isNotEmpty) {
@@ -341,6 +355,7 @@ class _RegisterMechanicViewState extends State<RegisterMechanicView> {
           defaultPosition!,
           token,
         );
+        Navigator.of(context).pushReplacementNamed('/');
       }
     } on Exception catch (_) {
       print('No se pudo obtener la ubicación');

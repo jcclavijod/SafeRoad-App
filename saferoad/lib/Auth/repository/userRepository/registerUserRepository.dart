@@ -48,7 +48,8 @@ class UserRegisterRepository {
         'profilePic': profilePicUrl,
         'uid': uid,
         'isAviable': user.isAviable,
-        'createdAt': DateTime.now()
+        'token': user.token,
+        'createdAt': DateTime.now().toString(),
       });
     } catch (e) {
       print(e);

@@ -10,7 +10,10 @@ import 'package:saferoad/Home/ui/widgets/SideMenuWidget.dart';
 
 class Perfil extends StatefulWidget {
   final UserModel? authenticatedUser;
-  const Perfil({Key? key, required this.authenticatedUser,}) : super(key: key);
+  const Perfil({
+    Key? key,
+    required this.authenticatedUser,
+  }) : super(key: key);
 
   @override
   State<Perfil> createState() => _PerfilState();
@@ -77,7 +80,7 @@ class _PerfilState extends State<Perfil> {
               ),
               const SizedBox(height: 16),
               Text(
-               "${widget.authenticatedUser!.name} ${widget.authenticatedUser!.lastname}" ,
+                "${widget.authenticatedUser!.name} ${widget.authenticatedUser!.lastname}",
                 style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -105,23 +108,6 @@ class _PerfilState extends State<Perfil> {
                 style: const TextStyle(
                   fontSize: 18,
                   color: Colors.grey,
-                ),
-              ),
-              const Padding(padding: EdgeInsets.all(20)),
-              ElevatedButton.icon(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      PageTransition(
-                          child: const MyUpdate(),
-                          type: PageTransitionType.rightToLeftWithFade,
-                          duration: const Duration(milliseconds: 250)));
-                },
-                icon: const Icon(Icons.settings),
-                label: const Text('Editar perfil'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
-                  textStyle: const TextStyle(fontSize: 16),
                 ),
               ),
             ],

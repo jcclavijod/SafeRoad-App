@@ -69,7 +69,7 @@ class RegisterRepository {
           'geohash': mecanico.position.geohash,
           'geopoint': mecanico.position.geopoint,
         },
-        'createdAt': DateTime.now()
+        'createdAt': DateTime.now().toString(),
       });
     } catch (e) {
       print(e);

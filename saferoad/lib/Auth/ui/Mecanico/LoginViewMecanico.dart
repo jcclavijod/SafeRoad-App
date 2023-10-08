@@ -1,4 +1,4 @@
-// ignore_for_file: unused_element, non_constant_identifier_names
+// ignore_for_file: unused_element, non_constant_identifier_names, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,7 +16,7 @@ class _LoginMecanicoViewState extends State<LoginMecanico> {
   final MecanicoBloc _mecanicoBloc = MecanicoBloc();
   String email = '';
   String password = '';
-
+  bool _isLoading = false;
   void _RegisterToMecanico(BuildContext context) {
     Navigator.push(
       context,
@@ -37,9 +37,10 @@ class _LoginMecanicoViewState extends State<LoginMecanico> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Lottie.asset(
-                'assets/animation_ln2sain4.json',
-                height: 300,
+              Expanded(
+                child: Lottie.asset(
+                  'assets/animation_ln2sain4.json',
+                ),
               ),
               const SizedBox(height: 16.0),
               TextFormField(
@@ -80,23 +81,38 @@ class _LoginMecanicoViewState extends State<LoginMecanico> {
               ),
               const SizedBox(height: 32.0),
               ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    _mecanicoBloc.loginMecanico(email, password);
+                onPressed: () async {
+                  try {
+                    await _mecanicoBloc.loginMecanico(email, password);
                     Navigator.of(context).pushReplacementNamed('/');
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Error al iniciar sesión: $e'),
+                        duration: const Duration(seconds: 2),
+                      ),
+                    );
+                  } finally {
+                    setState(() {
+                      _isLoading = false;
+                    });
                   }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,
                   padding: const EdgeInsets.all(12.0),
                 ),
-                child: const Text(
-                  'Iniciar Sesión',
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    color: Colors.white,
-                  ),
-                ),
+                child: _isLoading
+                    ? const CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      )
+                    : const Text(
+                        'Iniciar Sesión',
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          color: Colors.white,
+                        ),
+                      ),
               ),
               const SizedBox(height: 16.0),
               TextButton(

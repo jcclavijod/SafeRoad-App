@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,8 +27,9 @@ class _RegisterViewState extends State<RegisterView> {
   String phoneNumber = '';
   DateTime? birthday;
   String uid = '';
+  String token = '';
   bool isAvailable = true;
-
+  bool _isLoading = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -226,22 +229,36 @@ class _RegisterViewState extends State<RegisterView> {
               ),
               const SizedBox(height: 16),
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   if (_hasSelectedImage) {
                     if (_formKey.currentState!.validate()) {
-                      _clienteBloc.registerUser(
-                        name,
-                        lastname,
-                        mail,
-                        password,
-                        identification,
-                        gender!,
-                        phoneNumber,
-                        birthday.toString(),
-                        uid,
-                        isAvailable,
-                        File(_imageFile!.path),
-                      );
+                      setState(() {
+                        _isLoading = true;
+                      });
+
+                      try {
+                        await _clienteBloc.registerUser(
+                          name,
+                          lastname,
+                          mail,
+                          password,
+                          identification,
+                          gender!,
+                          phoneNumber,
+                          birthday.toString(),
+                          uid,
+                          isAvailable,
+                          token,
+                          File(_imageFile!.path),
+                        );
+                        Navigator.of(context).pushReplacementNamed('/');
+                      } catch (e) {
+                        print('Error al registrar usuario: $e');
+                      } finally {
+                        setState(() {
+                          _isLoading = false;
+                        });
+                      }
                     } else {
                       print('Por favor, completa el formulario correctamente.');
                     }
@@ -253,7 +270,10 @@ class _RegisterViewState extends State<RegisterView> {
                   backgroundColor: Colors.blue,
                   padding: const EdgeInsets.all(16.0),
                 ),
-                child: const Text('Registrarse'),
+                child: _isLoading
+                    ? const CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white))
+                    : const Text('Registrarse'),
               ),
               const SizedBox(height: 16),
               TextButton(

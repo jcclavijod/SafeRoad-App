@@ -66,16 +66,7 @@ class MecanicoBloc {
           mail, password);
       print('Usuario ha iniciado sesión exitosamente.');
     } catch (e) {
-      print('Error al iniciar sesión: $e');
-    }
-  }
-
-  Future<void> logoutMecanico() async {
-    try {
-      await loginMeRepository.signOut();
-      print('Usuario ha cerrado sesión exitosamente.');
-    } catch (e) {
-      print('Error al cerrar sesión: $e');
+      throw Exception('Error de inicio de sesión: $e');
     }
   }
 }

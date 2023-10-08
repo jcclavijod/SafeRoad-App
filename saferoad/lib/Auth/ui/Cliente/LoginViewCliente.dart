@@ -1,7 +1,7 @@
-// ignore_for_file: unused_element, non_constant_identifier_names, library_private_types_in_public_api, use_key_in_widget_constructors, unused_import, file_names
+// ignore_for_file: unused_element, non_constant_identifier_names, library_private_types_in_public_api, use_key_in_widget_constructors, unused_import, file_names, use_build_context_synchronously
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lottie/lottie.dart';
 import 'package:saferoad/Auth/bloc/cliente/cliente_bloc.dart';
 import 'package:saferoad/Auth/ui/Cliente/registerViewCliente.dart';
@@ -16,6 +16,12 @@ class _LoginViewState extends State<LoginView> {
   final ClienteBloc _clienteBloc = ClienteBloc();
   String email = '';
   String password = '';
+  bool _isLoading = false;
+
+  bool isEmailValid(String email) {
+    final emailRegex = RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$');
+    return emailRegex.hasMatch(email);
+  }
 
   void _RegisterToCliente(BuildContext context) {
     Navigator.push(
@@ -37,9 +43,10 @@ class _LoginViewState extends State<LoginView> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Lottie.asset(
-                'assets/animation_ln2saq36.json',
-                height: 300,
+              Expanded(
+                child: Lottie.asset(
+                  'assets/animation_ln2saq36.json',
+                ),
               ),
               const SizedBox(height: 16.0),
               TextFormField(
@@ -80,26 +87,36 @@ class _LoginViewState extends State<LoginView> {
               ),
               const SizedBox(height: 32.0),
               ElevatedButton(
-                onPressed: () {
-                  
-                  if (_formKey.currentState!.validate()) {
-                    _clienteBloc.loginUser(email, password);
-                    //Navigator.of(context).pop();
-                    
+                onPressed: () async {
+                  try {
+                    await _clienteBloc.loginUser(email, password);
                     Navigator.of(context).pushReplacementNamed('/');
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Error al iniciar sesión: $e'),
+                        duration: const Duration(seconds: 2),
+                      ),
+                    );
+                  } finally {
+                    setState(() {
+                      _isLoading = false;
+                    });
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.blue,
+                  backgroundColor: Colors.blue,
                   padding: const EdgeInsets.all(12.0),
                 ),
-                child: const Text(
-                  'Iniciar Sesión',
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    color: Colors.white,
-                  ),
-                ),
+                child: _isLoading
+                    ? const CircularProgressIndicator()
+                    : const Text(
+                        'Iniciar Sesión',
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          color: Colors.white,
+                        ),
+                      ),
               ),
               const SizedBox(height: 16.0),
               TextButton(

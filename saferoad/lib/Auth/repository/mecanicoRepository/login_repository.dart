@@ -15,18 +15,16 @@ class LoginMecanicoRepository {
   Future<void> signInWithEmailAndPasswordMecanico(
       String mail, String password) async {
     try {
+      await _firebaseAuth.signOut();
+
       await _firebaseAuth.signInWithEmailAndPassword(
         email: mail,
         password: password,
       );
-      /*
       User? user = _firebaseAuth.currentUser;
       if (user != null) {
         await _updateUserActiveStatus(user.uid, true);
-        await _firebaseAuth.signOut();
-        print('El mecanico ${user.email} ha salido.');
       }
-      */
     } catch (e) {
       if (e is FirebaseAuthException) {
         if (e.code == 'user-not-found') {
@@ -39,19 +37,6 @@ class LoginMecanicoRepository {
     }
   }
 
-  Future<void> signOut() async {
-    try {
-      User? user = _firebaseAuth.currentUser;
-      if (user != null) {
-        await _updateUserActiveStatus(user.uid, false);
-      }
-
-      await _firebaseAuth.signOut();
-    } catch (e) {
-      throw e;
-    }
-  }
-
   User? getCurrentUser() {
     return _firebaseAuth.currentUser;
   }
@@ -60,9 +45,9 @@ class LoginMecanicoRepository {
     return _firebaseAuth.currentUser != null;
   }
 
-  Future<void> _updateUserActiveStatus(String userId, bool isAviable) async {
+  Future<void> _updateUserActiveStatus(String uid, bool isAviable) async {
     try {
-      await _firestore.collection('mecanicos').doc(userId).update({
+      await _firestore.collection('mecanicos').doc(uid).update({
         'isAviable': isAviable,
       });
     } catch (e) {

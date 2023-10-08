@@ -19,13 +19,9 @@ class LoginRepository {
         password: password,
       );
       User? user = _firebaseAuth.currentUser;
-      /*
       if (user != null) {
         await _updateUserActiveStatus(user.uid, true);
-        await _firebaseAuth.signOut();
-        print('El cliente ${user.email} ha salido.');
       }
-      */
     } catch (e) {
       throw e;
     }

@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:saferoad/Auth/model/usuario_model.dart';
@@ -5,7 +7,6 @@ import 'package:saferoad/Auth/ui/Cliente/widgets.dart';
 import 'package:saferoad/Chat/ui/views/listChats.dart';
 import 'package:saferoad/Home/ui/views/perfil.dart';
 import 'package:saferoad/Membresia/ui/views/membershipPage.dart';
-
 import '../../../Auth/provider/auth_provider.dart';
 import '../../../Request/ui/views/ListRequests.dart';
 import '../views/userpage.dart';
@@ -23,12 +24,9 @@ class SideMenuWidget extends StatelessWidget {
       builder: (BuildContext context, AsyncSnapshot<UserModel> snapshot) {
         Widget wid;
         if (snapshot.connectionState == ConnectionState.waiting) {
-          // si la función todavía no ha devuelto los datos, puedes mostrar un indicador de progreso
           wid = const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasData) {
-          // si la función ha devuelto los datos, puedes asignarlos a la variable usuario
           userM = snapshot.data;
-
           wid = Drawer(
             child: ListView(
               children: [
@@ -73,17 +71,6 @@ class SideMenuWidget extends StatelessWidget {
                   },
                 ),
                 ListTile(
-                  leading: const Icon(Icons.credit_card),
-                  title: const Text('Membresia'),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const MembershipPage()),
-                    );
-                  },
-                ),
-                ListTile(
                   leading: const Icon(Icons.settings),
                   title: const Text('Configuracion'),
                   onTap: () {
@@ -99,14 +86,29 @@ class SideMenuWidget extends StatelessWidget {
                 ListTile(
                   leading: const Icon(Icons.logout),
                   title: const Text('Salir'),
-                  onTap: () {
+                  onTap: () async {
+                    CollectionReference users =
+                        FirebaseFirestore.instance.collection('users');
+                    CollectionReference mechanics =
+                        FirebaseFirestore.instance.collection('mecanicos');
+                    DocumentReference currentUser =
+                        users.doc(FirebaseAuth.instance.currentUser!.uid);
+                    DocumentSnapshot userSnapshot = await currentUser.get();
+                    if (userSnapshot.exists) {
+                      currentUser.update({'isAviable': false});
+                    } else {
+                      DocumentReference currentMechanic =
+                          mechanics.doc(FirebaseAuth.instance.currentUser!.uid);
+                      currentMechanic.update({'isAviable': false});
+                      print(currentMechanic.update({'isAviable': false}));
+                    }
                     FirebaseAuth.instance.signOut();
                     Navigator.of(context).pushNamedAndRemoveUntil(
                       '/',
                       (route) => false,
                     );
                   },
-                ),
+                )
               ],
             ),
           );
