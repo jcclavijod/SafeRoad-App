@@ -81,7 +81,8 @@ class Notifications {
             );
           });
         } else if (message.data["type"] == "finishedRequest") {
-          modelRatingDialog(message.data, context);
+          notificationManager.sendNotification(message.data);
+          //modelRatingDialog(message.data, context);
         } else if (message.data["type"] == "chat") {}
       }
     });
