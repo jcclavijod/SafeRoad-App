@@ -82,20 +82,20 @@ class _LoginMecanicoViewState extends State<LoginMecanico> {
               const SizedBox(height: 32.0),
               ElevatedButton(
                 onPressed: () async {
-                  if (_formKey.currentState!.validate()) {
+                  try {
+                    await _mecanicoBloc.loginMecanico(email, password);
+                    Navigator.of(context).pushReplacementNamed('/');
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Error al iniciar sesión: $e'),
+                        duration: const Duration(seconds: 2),
+                      ),
+                    );
+                  } finally {
                     setState(() {
-                      _isLoading = true;
+                      _isLoading = false;
                     });
-                    try {
-                      await _mecanicoBloc.loginMecanico(email, password);
-                      Navigator.of(context).pushReplacementNamed('/');
-                    } catch (e) {
-                      print('Error al iniciar sesión: $e');
-                    } finally {
-                      setState(() {
-                        _isLoading = false;
-                      });
-                    }
                   }
                 },
                 style: ElevatedButton.styleFrom(

@@ -25,3 +25,23 @@ Future<File?> pickImage(BuildContext context) async {
 
   return image;
 }
+
+class CustomLoginErrorPopup extends StatelessWidget {
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Error de inicio de sesión'),
+      content: const Text(
+          'Usuario o contraseña incorrectos. Por favor, inténtalo de nuevo.'),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: const Text('Aceptar'),
+        ),
+      ],
+    );
+  }
+}

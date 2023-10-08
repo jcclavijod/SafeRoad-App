@@ -49,7 +49,7 @@ class UserRegisterRepository {
         'uid': uid,
         'isAviable': user.isAviable,
         'token': user.token,
-        'createdAt': 'createdAt': DateTime.now().toString(),
+        'createdAt': DateTime.now().toString(),
       });
     } catch (e) {
       print(e);

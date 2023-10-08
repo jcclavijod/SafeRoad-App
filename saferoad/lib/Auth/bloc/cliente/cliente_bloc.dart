@@ -55,7 +55,7 @@ class ClienteBloc {
       await loginRepository.signInWithEmailAndPassword(mail, password);
       print('Usuario ha iniciado sesión exitosamente.');
     } catch (e) {
-      print('Error al iniciar sesión: $e');
+      throw Exception('Error de inicio de sesión: $e');
     }
   }
 

@@ -1,5 +1,4 @@
 // ignore_for_file: use_build_context_synchronously
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +7,6 @@ import 'package:saferoad/Auth/ui/Cliente/widgets.dart';
 import 'package:saferoad/Chat/ui/views/listChats.dart';
 import 'package:saferoad/Home/ui/views/perfil.dart';
 import 'package:saferoad/Membresia/ui/views/membershipPage.dart';
-
 import '../../../Auth/provider/auth_provider.dart';
 import '../../../Request/ui/views/ListRequests.dart';
 import '../views/userpage.dart';
@@ -69,17 +67,6 @@ class SideMenuWidget extends StatelessWidget {
                         builder: (context) =>
                             ChatPage(authenticatedUser: userM),
                       ),
-                    );
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.credit_card),
-                  title: const Text('Membresia'),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const MembershipPage()),
                     );
                   },
                 ),
