@@ -2,7 +2,7 @@ part of 'request_bloc.dart';
 
 class RequestState extends Equatable {
   final bool requestCreated;
-  final List<DocumentSnapshot> finishedRequests;
+  final Stream<List<Request>> finishedRequests;
   final String address;
   final LatLng location;
   final LatLng location2;
@@ -10,11 +10,12 @@ class RequestState extends Equatable {
   final UserModel receiver;
   final Request request;
   final TextEditingController problemController;
+  final String spanishStatus;
 
   const RequestState(
       {required this.problemController,
       this.requestCreated = false,
-      this.finishedRequests = const [],
+      this.finishedRequests = const Stream.empty(),
       this.authenticatedUser = const UserModel(
         name: "",
         lastname: "",
@@ -52,12 +53,18 @@ class RequestState extends Equatable {
           requestDetails: "",
           status: "",
           userId: "",
-          userLocation: GeoPoint(0, 0))});
+          userAddress: "",
+          userLocation: GeoPoint(0, 0),
+          mechanicLocation: GeoPoint(0, 0),
+          service:"",
+          selectedCauseId: ""),
+          this.spanishStatus = "",});
 
   RequestState copyWith(
           {bool? requestCreated,
-          List<DocumentSnapshot>? finishedRequests,
+          Stream<List<Request>>? finishedRequests,
           String? address,
+          String? spanishStatus,
           LatLng? location,
           LatLng? location2,
           UserModel? authenticatedUser,
@@ -74,6 +81,7 @@ class RequestState extends Equatable {
         receiver: receiver ?? this.receiver,
         request: request ?? this.request,
         problemController: problemController ?? this.problemController,
+        spanishStatus: spanishStatus ?? this.spanishStatus
       );
 
   @override
@@ -86,6 +94,7 @@ class RequestState extends Equatable {
         authenticatedUser,
         receiver,
         request,
-        problemController
+        problemController,
+        spanishStatus
       ];
 }

@@ -9,6 +9,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:saferoad/Auth/model/usuario_model.dart';
+import 'package:saferoad/helpers/notificationHelper.dart';
 
 import '../../Repository/requestRepository.dart';
 import '../../model/Request.dart';
@@ -19,6 +20,11 @@ part 'request_state.dart';
 class RequestBloc extends Bloc<RequestEvent, RequestState> {
   final _requestRepository = RequestRepository();
   late StreamSubscription<DocumentSnapshot> _requestSubscription;
+  NotificationHelper notification = NotificationHelper();
+  final _requestUpdatesController = StreamController<Request>();
+  Stream<Request> get requestUpdatesStream => _requestUpdatesController.stream;
+
+  StreamSubscription<List<Request>>? subscription;
 
   RequestBloc()
       : super(RequestState(problemController: TextEditingController())) {
@@ -39,6 +45,9 @@ class RequestBloc extends Bloc<RequestEvent, RequestState> {
 
     on<ProblemTextChangedEvent>((event, emit) =>
         emit(state.copyWith(problemController: event.problemController)));
+
+    on<LoadSpanishStatus>((event, emit) =>
+        emit(state.copyWith(spanishStatus: event.spanishStatus)));
   }
 
   Future<void> createRequest(puntosCercanos) async {
@@ -57,9 +66,10 @@ class RequestBloc extends Bloc<RequestEvent, RequestState> {
         if (token != null) {
           print("Token: $token");
           print("Nombre: $nombre");
+          print(request.userAddress);
           print("CANTIDAD DE VECES QUE SE ENVIA EL MENSAJE: $count");
           _requestRepository.sendNotificationToDriver(
-              token, requestId, request.requestDetails);
+              token, requestId, request.requestDetails, request.userAddress);
         } else {
           print("El campo 'token' no existe en este DocumentSnapshot.");
         }
@@ -74,7 +84,7 @@ class RequestBloc extends Bloc<RequestEvent, RequestState> {
     add(CreateRequest(request2));
   }
 
-  void listenRequestChanges() async {
+  Future<void> listenRequestChanges() async {
     DocumentReference request =
         await _requestRepository.getRequest(state.request);
     print("***************VERIFICANDO REQUEST PARA EL LISTENER**********");
@@ -94,16 +104,27 @@ class RequestBloc extends Bloc<RequestEvent, RequestState> {
   }
 
   void loadListRequest() async {
-    add(FinishedRequestsLoaded(await _requestRepository.getFinishedRequests()));
+    add(FinishedRequestsLoaded(_requestRepository.getMechanicRequests()));
+    createSubscription();
   }
 
-  void loadMechanic() async {
+  void createSubscription() {
+    subscription = state.finishedRequests.listen((event) {});
+  }
+
+  void cancelSubscription() {
+    subscription!.cancel();
+  }
+
+  Future<void> loadMechanic() async {
     final location = await _requestRepository.locationMechanic();
     add(LoadLocation2(location));
   }
 
-  void loadRequestData() async {
-    final authenticatedUser = await _requestRepository.getUser();
+  Future<void> loadRequestData() async {
+    print("=======================");
+    print(state.request.id);
+    final authenticatedUser = await _requestRepository.getUser(state.request);
     final receiver = await _requestRepository.getClient(state.request);
     final location = await _requestRepository.locationUser(state.request);
     //final request = await _requestRepository.getRequest(state.request);
@@ -112,6 +133,11 @@ class RequestBloc extends Bloc<RequestEvent, RequestState> {
     print(receiver.uid);
     print(location);
     //print(request);
+    emit(state.copyWith(
+        authenticatedUser: authenticatedUser,
+        receiver: receiver,
+        location: location,
+        request: state.request));
     add(LoadRequestData(
         authenticatedUser, receiver, location, state.address, state.request));
     print("SE ESTAN ENVIANDO LOS DATOS AL MAP FINAL");
@@ -121,12 +147,56 @@ class RequestBloc extends Bloc<RequestEvent, RequestState> {
     await _requestRepository.updateRequestStatus('inProcess');
   }
 
-  void loadRequest(Request request) async {
-    add(FirstRequestLoaded(request));
+  Future<void> loadRequestInitial(Request requestUnic) async {
+    add(FirstRequestLoaded(requestUnic));
+  }
+
+  Future<void> loadRequest(Request requestUnic) async {
+    final authenticatedUser = await _requestRepository.getUser(requestUnic);
+    final receiver = await _requestRepository.getClient(requestUnic);
+    final location = await _requestRepository.locationUser(requestUnic);
+    /*
+    print("camilo hijo puta:");
+    print(requestUnic.id);
+    print("authenticatedUser hijo puta:");
+    print(authenticatedUser.uid);
+    print("receiver hijo puta:");
+    print(receiver.uid);
+    print("location hijo puta $location");
+    */
+
+    emit(state.copyWith(
+        authenticatedUser: authenticatedUser,
+        receiver: receiver,
+        location: location));
+  }
+
+  void changeRequestCreated() async {
+    emit(state.copyWith(requestCreated: true));
   }
 
   void changeRequestMessaging() async {
     await _requestRepository.updateRequestStatusMessaging(
         'inProcess', state.request.id!);
+  }
+
+  void finishRequest(final String? requestId, String? mechanicPic,
+      String? mechanicLocal) async {
+    Map notificationMap = {
+      'body': "El viaje de atención mecánica ha finalizado",
+      'title': "Solicitud Finalizada",
+    };
+    Map dataMap = {
+      'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+      'id': '1',
+      'status': 'done',
+      'request_id': requestId,
+      'type': "finishedRequest",
+      'mechanicUid': state.authenticatedUser.uid,
+      'mechanicPic': state.authenticatedUser.profilePic,
+      'mechanicLocal': state.authenticatedUser.name,
+    };
+    notification.sendNotificationToDriver(
+        state.receiver.token, notificationMap, dataMap);
   }
 }

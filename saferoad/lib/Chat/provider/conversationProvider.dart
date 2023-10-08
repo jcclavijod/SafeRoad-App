@@ -24,8 +24,10 @@ class ConversationFirebaseProvider {
         members.reversed.toList(),
       ],
     ).get();
+
     log(conversationQuerySnap.docs.length.toString());
     if (conversationQuerySnap.docs.isNotEmpty) {
+
       return conversationQuerySnap.docs.first.data();
     }
     return null;

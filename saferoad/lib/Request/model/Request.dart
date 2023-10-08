@@ -7,9 +7,11 @@ class Request {
   final String requestDetails;
   final String status;
   final String userId;
+  final String userAddress;
   final GeoPoint userLocation;
-
-  
+  final GeoPoint mechanicLocation;
+  final String service;
+  final String selectedCauseId;
 
   const Request({
     this.id,
@@ -18,26 +20,37 @@ class Request {
     required this.requestDetails,
     required this.status,
     required this.userId,
+    required this.userAddress,
     required this.userLocation,
+    required this.mechanicLocation,
+    required this.service,
+    required this.selectedCauseId,
   });
 
   factory Request.complete({
-   DateTimeObject createdAt = const DateTimeObject(date:'',time: ''),
-   String mechanicId = '',
-   String requestDetails = '', 
-   String status = '',
-   String userId = '',
-   GeoPoint userLocation = const GeoPoint(0,0),
+    DateTimeObject createdAt = const DateTimeObject(date: '', time: ''),
+    String mechanicId = '',
+    String requestDetails = '',
+    String status = '',
+    String userId = '',
+    String userAddress = '',
+    GeoPoint userLocation = const GeoPoint(0, 0),
+    GeoPoint mechanicLocation = const GeoPoint(0, 0),
+    String service = "",
+    String selectedCauseId = "",
     // Otros campos aquí...
   }) {
     return Request(
-      createdAt: createdAt,
-      mechanicId: mechanicId,
-      status: status,
-      userId: userId,
-      userLocation: userLocation,
-      requestDetails:requestDetails
-    );
+        createdAt: createdAt,
+        mechanicId: mechanicId,
+        status: status,
+        userId: userId,
+        userLocation: userLocation,
+        userAddress: userAddress,
+        requestDetails: requestDetails,
+        mechanicLocation: mechanicLocation,
+        service: service,
+        selectedCauseId: selectedCauseId);
   }
 
   factory Request.fromMap(Map<String, dynamic> map) {
@@ -51,14 +64,20 @@ class Request {
       requestDetails: map['requestDetails']?.toString() ?? '',
       status: map['status']?.toString() ?? '',
       userId: map['userId']?.toString() ?? '',
+      userAddress: map['userAddress']?.toString() ?? '',
       userLocation: map['userLocation'] as GeoPoint,
+      mechanicLocation: map['mechanicLocation'] != null
+          ? map['mechanicLocation'] as GeoPoint
+          : const GeoPoint(0, 0),
+      service: map['service']?.toString() ?? '',
+      selectedCauseId: map['selectedCauseId']?.toString() ?? '',
     );
   }
 
   // Enviando los datos al servidor DB
   Map<String, dynamic> toMap() {
     return {
-      "id":id,
+      "id": id,
       "createdAt": {
         "date": createdAt.date,
         "time": createdAt.time,
@@ -67,6 +86,7 @@ class Request {
       "requestDetails": requestDetails,
       "status": status,
       "userId": userId,
+      "userAddress": userAddress,
       "userLocation": userLocation,
     };
   }

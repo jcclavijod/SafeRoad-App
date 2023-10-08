@@ -21,8 +21,10 @@ class RequestRepository {
     try {
       final requestRef = _firestoreBd.collection('requests').doc();
       final user = _authUser.currentUser;
+
       final location = await Geolocator.getCurrentPosition();
       final userLocation = GeoPoint(location.latitude, location.longitude);
+      final String address = await getAddress(userLocation);
       final DateTime now = DateTime.now();
       final String formattedDate = DateFormat('yyyy-MM-dd').format(now);
       final String formattedTime = DateFormat('HH:mm:ss').format(now);
@@ -32,6 +34,7 @@ class RequestRepository {
         'userLocation': userLocation,
         'requestDetails': problem,
         'status': 'pending',
+        'userAddress': address,
         'createdAt': {
           'date': formattedDate,
           'time': formattedTime,
@@ -116,6 +119,7 @@ class RequestRepository {
   }
 
   Future<LatLng> locationUser(Request request) async {
+    print("333333333333333333333333333333");
     LatLng locUser = const LatLng(0, 0);
     if (request.userLocation != null) {
       GeoPoint? location = request.userLocation;
@@ -145,9 +149,11 @@ class RequestRepository {
     return LatLng(geoPoint!.latitude, geoPoint.longitude);
   }
 
-  Future<UserModel> getUser() async {
+  Future<UserModel> getUser(Request request) async {
+    print("111111111111111111111111111111111");
     final user = FirebaseAuth.instance.currentUser!;
-    String usuario = await getTypeUser(user.uid);
+    bool activateWiew = user.uid == request.userId;
+    String usuario = await getTypeUser(activateWiew);
     if (usuario == "mecanico") {
       return await mapUser("mecanicos", user.uid);
     } else if (usuario == "usuario") {
@@ -158,8 +164,13 @@ class RequestRepository {
   }
 
   Future<UserModel> getClient(Request request) async {
+    print("2222222222222222222222222222222222");
     final user = FirebaseAuth.instance.currentUser!;
-    String usuario = await getTypeUser(user.uid);
+    bool activateWiew = user.uid == request.userId;
+    print(activateWiew);
+    String usuario = await getTypeUser(activateWiew);
+    print(usuario);
+    print(request.userId);
     if (usuario == "mecanico") {
       return await mapUser('users', request.userId);
     } else if (usuario == "usuario") {
@@ -171,15 +182,45 @@ class RequestRepository {
     }
   }
 
-  Future<List<DocumentSnapshot>> getFinishedRequests() async {
+  Stream<List<Request>> getMechanicRequests() {
+    final user = FirebaseAuth.instance.currentUser!;
+    try {
+      return _firestoreBd
+          .collection('requests')
+          .where('mechanicId', isEqualTo: user.uid)
+          .where('status', whereNotIn: ['pending', 'rejected'])
+          .orderBy('status')
+          .orderBy('createdAt', descending: true)
+          .snapshots()
+          .map((querySnapshot) {
+            List<Request> requests = [];
+            for (DocumentSnapshot doc in querySnapshot.docs) {
+              // Convierte cada documento en un objeto Request
+              Request request =
+                  Request.fromMap(doc.data() as Map<String, dynamic>);
+              print(request.status);
+              requests.add(request);
+            }
+            return requests;
+          })
+          .distinct(); // Filtra eventos duplicados
+    } catch (e) {
+      print("Error: No se pudieron traer las requests finalizadas: $e");
+      return Stream.error(e);
+    }
+  }
+
+  Future<List<DocumentSnapshot>> getUserRequests() async {
     final user = FirebaseAuth.instance.currentUser!;
     try {
       QuerySnapshot querySnapshot = await _firestoreBd
           .collection('requests')
-          .where('mecanicoId', isEqualTo: user.uid)
-          .where('status', isEqualTo: 'finished')
+          .where('userId', isEqualTo: user.uid)
+          .where('status', whereNotIn: ['pending', 'rejected'])
+          .orderBy('status')
           .orderBy('createdAt', descending: true)
           .get();
+
       return querySnapshot.docs;
     } catch (e) {
       print("Error: No se pudieron traer las requests finalizadas: $e");
@@ -193,12 +234,12 @@ class RequestRepository {
     return docReference;
   }
 
-  Future<String> getTypeUser(String uid) async {
-    final usuario = await _firestoreBd.collection('users').doc(uid).get();
-    final mecanico = await _firestoreBd.collection('mecanicos').doc(uid).get();
-    if (usuario.exists) {
+  Future<String> getTypeUser(bool uid) async {
+    //final usuario = await _firestoreBd.collection('users').doc(uid).get();
+    //final mecanico = await _firestoreBd.collection('mecanicos').doc(uid).get();
+    if (uid) {
       return "usuario";
-    } else if (mecanico.exists) {
+    } else if (!uid) {
       return "mecanico";
     }
     return "";
@@ -270,7 +311,7 @@ class RequestRepository {
       'key=AAAA6e_msQo:APA91bHbH6T_3gSc_e7xt-mzenG0M7XGeagDSlzc4XqkUWx-ve8wG0ibmav1PTWl55mGT2XnQByOi3lWW7ojk6JWDL2rOn0SYr2hk8Lv5gd9F28IbjyVdrRTTfqie73Fl2iX2UcFjwFH';
 
   void sendNotificationToDriver(
-      String token, String requestId, String problem) async {
+      String token, String requestId, String problem, String address) async {
     Map<String, String> headerMap = {
       'Content-Type': 'application/json',
       'Authorization': serverToken,
@@ -284,6 +325,7 @@ class RequestRepository {
       'id': '1',
       'status': 'done',
       'request_id': requestId,
+      'address': requestId,
       'type': "request",
     };
     Map sendNotificationMap = {

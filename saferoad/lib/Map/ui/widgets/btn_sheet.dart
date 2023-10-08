@@ -5,6 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../Chat/ui/widgets/buttonChat.dart';
 import '../../../Home/ui/views/userpage.dart';
 import '../../../Request/model/Request.dart';
+import '../../../ServiceRegister/ui/views/myBilling.dart';
 import '../../bloc/usersInRoad/users_in_road_bloc.dart';
 import '../views/ratingDialog.dart';
 
@@ -285,7 +286,7 @@ class FinishButtonSection extends StatelessWidget {
       Column(
         children: [
           const Text(
-            'Finalizar recorrido',
+            'Realizar cuenta de pago',
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
@@ -294,13 +295,24 @@ class FinishButtonSection extends StatelessWidget {
           const SizedBox(height: 16.0),
           ElevatedButton(
             onPressed: () {
+              /*
               final usersInRoadBloc = BlocProvider.of<UsersInRoadBloc>(context);
               usersInRoadBloc.finishRequest(
                   requestId, receiver!.name, receiver!.profilePic);
-            
+
               Navigator.of(context).pushNamedAndRemoveUntil(
                 '/',
                 (route) => false,
+              );*/
+
+              final usersInRoadBloc = BlocProvider.of<UsersInRoadBloc>(context);
+              usersInRoadBloc.change(requestId);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => MyBilling(
+                          requestId: requestId!,
+                        )),
               );
             },
             style: ElevatedButton.styleFrom(
@@ -312,7 +324,7 @@ class FinishButtonSection extends StatelessWidget {
               elevation: 2.0,
             ),
             child: const Text(
-              'Finalizar Recorrido',
+              'Calcular cuenta de cobro',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 16.0,
