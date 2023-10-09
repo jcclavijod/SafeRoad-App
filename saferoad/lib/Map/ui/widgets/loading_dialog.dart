@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../bloc/map/map_bloc.dart';
@@ -8,13 +7,11 @@ class LoadingDialog extends StatefulWidget {
   final String message;
   final int duration;
 
-
-  const LoadingDialog(
-      {Key? key,
-      this.message = 'Buscando locales cercanos en 2 KM',
-      this.duration = 9000,
-      })
-      : super(key: key);
+  const LoadingDialog({
+    Key? key,
+    this.message = 'Buscando locales cercanos en 2 KM',
+    this.duration = 9000,
+  }) : super(key: key);
 
   @override
   LoadingDialogState createState() => LoadingDialogState();
@@ -46,13 +43,15 @@ class LoadingDialogState extends State<LoadingDialog> {
 
   void _startTimer() {
     Timer(Duration(milliseconds: widget.duration), () {
-      setState(() {
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
 
-      //context.read<MapBloc>().add(const SaveShowDialog(false, false));
-
-      context.read<MapBloc>().statusNearbyPlaces();
+      if (mounted) {
+        context.read<MapBloc>().statusNearbyPlaces();
+      }
     });
   }
 }

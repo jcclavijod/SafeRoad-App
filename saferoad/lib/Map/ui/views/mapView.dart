@@ -119,6 +119,7 @@ class _MapViewState extends State<MapView> {
     mapBloc.icon('assets/iconoMecanico.png');
     return BlocBuilder<MapBloc, MapState>(
       builder: (context, state) {
+        
         return Stack(children: [
           if (state.showDialogLoading)
             const LoadingDialog(
