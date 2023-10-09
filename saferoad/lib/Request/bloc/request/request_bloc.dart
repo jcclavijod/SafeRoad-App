@@ -61,6 +61,7 @@ class RequestBloc extends Bloc<RequestEvent, RequestState> {
       if (punto.data() != null) {
         // Verifica si el DocumentSnapshot contiene datos
         count += 1;
+        print("////////////////////////////////////////////////");
         var token = punto.get("token");
         var nombre = punto.get("mail");
         if (token != null) {
@@ -70,6 +71,7 @@ class RequestBloc extends Bloc<RequestEvent, RequestState> {
           print("CANTIDAD DE VECES QUE SE ENVIA EL MENSAJE: $count");
           _requestRepository.sendNotificationToDriver(
               token, requestId, request.requestDetails, request.userAddress);
+          print("////////////////////////////////////////////////");
         } else {
           print("El campo 'token' no existe en este DocumentSnapshot.");
         }

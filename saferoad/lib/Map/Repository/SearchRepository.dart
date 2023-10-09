@@ -12,8 +12,6 @@ class SearchRepository {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   final user = FirebaseAuth.instance.currentUser!;
 
-
-
   List<LatLng> nearbyPointsFunc(
       List<LatLng> points, double distanceInMetersMax, LatLng location) {
     List<LatLng> nearbyPoints = [];
@@ -111,5 +109,9 @@ class SearchRepository {
         .update({
       'status': newStatus,
     });
+  }
+
+  Stream<DocumentSnapshot> listenToMechanicChanges(String mechanicId) {
+    return firestore.collection('mecanicos').doc(mechanicId).snapshots();
   }
 }

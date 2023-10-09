@@ -68,10 +68,20 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   void searchNearbyPlaces(LatLng position) async {
     List<DocumentSnapshot> puntosCercanos =
         await searchRepository.mechanicNearby(position, state.range);
-    final rango = state.range;
-    print("Puntos Cercanos: $rango");
-
-    add(SaveNearbyPlaces(puntosCercanos));
+    
+    for (final mechanic in puntosCercanos) {
+      final mechanicId = mechanic.id;
+      final mechanicStream = searchRepository.listenToMechanicChanges(mechanicId);
+      mechanicStream.listen((mechanicSnapshot) {
+        // Actualiza el mecánico en la lista nearbyMechanics cuando cambie
+        final index = puntosCercanos.indexWhere((element) => element.id == mechanicId);
+        if (index >= 0) {
+          puntosCercanos[index] = mechanicSnapshot;
+        }
+        // Puedes emitir un nuevo estado con la lista actualizada aquí si lo deseas
+        add(SaveNearbyPlaces(puntosCercanos));
+      });
+  }
   }
 
   void statusNearbyPlaces() {
