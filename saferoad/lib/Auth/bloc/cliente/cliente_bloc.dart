@@ -44,9 +44,9 @@ class ClienteBloc {
 
     try {
       await registerRepository.registerUser(currentUser!, profilePic);
-      print('Usuario registrado exitosamente.');
+      throw Exception('Usuario registrado exitosamente.');
     } catch (e) {
-      print('Error al registrar usuario: $e');
+      throw Exception('Error al registrar usuario: $e');
     }
   }
 

@@ -285,11 +285,24 @@ class _RegisterMechanicViewState extends State<RegisterMechanicView> {
                         });
                       }
                     } else {
-                      print('Por favor, completa el formulario correctamente.');
+                      // Mostrar una alerta si el formulario no se completa correctamente
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                              'Por favor, completa el formulario correctamente.'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
                     }
                   } else {
-                    print(
-                        'Por favor, selecciona una imagen de perfil y un comprobante.');
+                    // Mostrar una alerta si no se han seleccionado ambas imágenes
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                            'Por favor, selecciona una imagen de perfil y un comprobante.'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
                   }
                 },
                 child: _isLoading
