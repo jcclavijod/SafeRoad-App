@@ -48,6 +48,10 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     }
   }
 
+  void location(LatLng position) {
+    add(OnLocation(position));
+  }
+
   void updateMechanicState(bool mechanicState) {
     print("ESTE ES EL ESTADO original");
     print(state.mechanicState);

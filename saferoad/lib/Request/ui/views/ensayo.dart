@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:saferoad/Auth/model/usuario_model.dart';
 import 'package:saferoad/Request/model/Request.dart';
+import 'package:saferoad/Request/ui/views/startRequest.dart';
 //import 'package:http/http.dart';
 
 import '../../../Map/ui/views/mapAux.dart';
@@ -12,10 +13,12 @@ import '../../bloc/request/request_bloc.dart';
 class RequestPopup2 extends StatefulWidget {
   final Request? request;
   final String address;
+  final VoidCallback? onClose; // Agrega un manejador onClose
   const RequestPopup2({
     Key? key,
     required this.request,
     required this.address,
+    this.onClose, // Recibe el manejador onClose
   }) : super(key: key);
 
   @override
@@ -33,7 +36,7 @@ class RequestPopup2State extends State<RequestPopup2> {
     super.initState();
 
     final requestBloc = BlocProvider.of<RequestBloc>(context);
-    requestBloc.loadRequest(widget.request!);
+    requestBloc.loadRequestInitial(widget.request!);
     requestBloc.loadRequestData();
     //_setUserAuth();
     //_setClient();
@@ -174,7 +177,8 @@ class RequestPopup2State extends State<RequestPopup2> {
                 ),
                 onPressed: () {
                   repository.updateRequestStatus('rejected');
-                  Navigator.of(context).pop();
+                  //Navigator.of(context).pop();
+                  widget.onClose?.call();
                 },
               ),
               const SizedBox(width: 8),
@@ -188,11 +192,11 @@ class RequestPopup2State extends State<RequestPopup2> {
                 onPressed: () {
                   BlocProvider.of<RequestBloc>(context)
                       .changeRequestMessaging();
-                  
+
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => MapViewAux(
+                      builder: (context) => StartRequest(
                         location: state.location,
                         authenticatedUser: state.authenticatedUser,
                         receiver: state.receiver,

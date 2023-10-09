@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:saferoad/Auth/bloc/cliente/cliente_bloc.dart';
 import 'package:saferoad/Auth/ui/Cliente/LoginViewCliente.dart';
+import 'package:saferoad/Auth/ui/views/passwordReset.dart';
 
 class RegisterView extends StatefulWidget {
   @override
@@ -228,6 +229,7 @@ class _RegisterViewState extends State<RegisterView> {
                 ),
               ),
               const SizedBox(height: 16),
+              const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () async {
                   if (_hasSelectedImage) {
@@ -260,10 +262,22 @@ class _RegisterViewState extends State<RegisterView> {
                         });
                       }
                     } else {
-                      print('Por favor, completa el formulario correctamente.');
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                              'Por favor, completa el formulario correctamente.'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
                     }
                   } else {
-                    print('Por favor, selecciona una imagen de perfil.');
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content:
+                            Text('Por favor, selecciona una imagen de perfil.'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
                   }
                 },
                 style: ElevatedButton.styleFrom(

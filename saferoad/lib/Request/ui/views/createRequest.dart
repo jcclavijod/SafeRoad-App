@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:saferoad/Request/ui/views/pendingRequest.dart';
 import 'package:saferoad/Request/ui/views/progressDialog.dart';
 
 import '../../bloc/request/request_bloc.dart';
@@ -39,7 +40,7 @@ class CreateRequest extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async{
                     if (BlocProvider.of<RequestBloc>(context)
                         .state
                         .problemController
@@ -51,14 +52,14 @@ class CreateRequest extends StatelessWidget {
                       );
                       ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     } else {
-                      BlocProvider.of<RequestBloc>(context)
+                      await BlocProvider.of<RequestBloc>(context)
                           .createRequest(nearbyPlaces);
 
                       showDialog(
                         barrierDismissible: false,
                         context: context,
                         builder: (BuildContext context) {
-                          return const ConnectingDialog();
+                          return const PendingRequest();
                         },
                       );
                     }
@@ -77,13 +78,10 @@ class CreateRequest extends StatelessWidget {
                 ),
                 const SizedBox(height: 16.0),
                 TextFormField(
-                  controller: BlocProvider.of<RequestBloc>(context)
-                      .state
-                      .problemController,
+                  controller: state.problemController,
                   onChanged: (value) {
-                    BlocProvider.of<RequestBloc>(context).add(
-                        ProblemTextChangedEvent(
-                            TextEditingController(text: value)));
+                    BlocProvider.of<RequestBloc>(context)
+                        .add(ProblemTextChangedEvent(state.problemController));
                   },
                   maxLines: null,
                   keyboardType: TextInputType.multiline,

@@ -5,6 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../Chat/ui/widgets/buttonChat.dart';
 import '../../../Home/ui/views/userpage.dart';
 import '../../../Request/model/Request.dart';
+import '../../../ServiceRegister/ui/views/myBilling.dart';
 import '../../bloc/usersInRoad/users_in_road_bloc.dart';
 import '../views/ratingDialog.dart';
 
@@ -32,10 +33,17 @@ class BottomSheetContentState extends State<BottomSheetContent> {
   @override
   Widget build(BuildContext context) {
     final usersInRoadBloc = BlocProvider.of<UsersInRoadBloc>(context);
-    if (usersInRoadBloc.state.userType == "mecanico") {
-      return buildCommonAnimatedContainer(isExpanded, true);
+
+    if (widget.receiver?.profilePic == null) {
+      return const CircularProgressIndicator.adaptive(
+        backgroundColor: Colors.blue,
+      );
     } else {
-      return buildCommonAnimatedContainer(isExpanded, false);
+      if (usersInRoadBloc.state.userType == "mecanico") {
+        return buildCommonAnimatedContainer(isExpanded, true);
+      } else {
+        return buildCommonAnimatedContainer(isExpanded, false);
+      }
     }
   }
 
@@ -89,6 +97,7 @@ class BottomSheetContentState extends State<BottomSheetContent> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
                       child: UserProfileSection(
+                        request: widget.request!,
                         receiver: widget.receiver!,
                         authenticatedUser: widget.authenticatedUser!,
                       ),
@@ -132,15 +141,18 @@ class BottomSheetContentState extends State<BottomSheetContent> {
 class UserProfileSection extends StatelessWidget {
   const UserProfileSection({
     Key? key,
+    required this.request,
     required this.authenticatedUser,
     required this.receiver,
   }) : super(key: key);
 
   final UserModel authenticatedUser;
   final UserModel receiver;
+  final Request request;
 
   @override
   Widget build(BuildContext context) {
+    bool activateWiew = authenticatedUser.uid == request.userId;
     return _buildWidgetContainer(
       const Icon(Icons.message),
       Column(
@@ -151,21 +163,38 @@ class UserProfileSection extends StatelessWidget {
               Expanded(
                 child: Row(
                   children: [
-                    Expanded(
-                      child: Text(
-                        "Taller ${authenticatedUser.name}",
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
+                    if (activateWiew)
+                      Expanded(
+                        child: Text(
+                          "Taller de ${receiver.name}",
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                    ),
                     const SizedBox(width: 16.0),
-                    CircleAvatar(
-                      backgroundImage:
-                          NetworkImage(authenticatedUser!.profilePic),
-                      radius: 35,
-                    ),
+                    if (activateWiew)
+                      CircleAvatar(
+                        backgroundImage: NetworkImage(receiver.profilePic),
+                        radius: 35,
+                      ),
+                    if (!activateWiew)
+                      Expanded(
+                        child: Text(
+                          "Usuario ${receiver.name}",
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    const SizedBox(width: 16.0),
+                    if (!activateWiew)
+                      CircleAvatar(
+                        backgroundImage: NetworkImage(receiver.profilePic),
+                        radius: 35,
+                      ),
                   ],
                 ),
               ),
@@ -278,7 +307,7 @@ class FinishButtonSection extends StatelessWidget {
       Column(
         children: [
           const Text(
-            'Finalizar recorrido',
+            'Realizar cuenta de pago',
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
@@ -287,14 +316,24 @@ class FinishButtonSection extends StatelessWidget {
           const SizedBox(height: 16.0),
           ElevatedButton(
             onPressed: () {
+              /*
               final usersInRoadBloc = BlocProvider.of<UsersInRoadBloc>(context);
               usersInRoadBloc.finishRequest(
                   requestId, receiver!.name, receiver!.profilePic);
+
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                '/',
+                (route) => false,
+              );*/
+
+              final usersInRoadBloc = BlocProvider.of<UsersInRoadBloc>(context);
+              usersInRoadBloc.change(requestId);
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const UserPage(),
-                ),
+                    builder: (context) => MyBilling(
+                          requestId: requestId!,
+                        )),
               );
             },
             style: ElevatedButton.styleFrom(
@@ -306,7 +345,7 @@ class FinishButtonSection extends StatelessWidget {
               elevation: 2.0,
             ),
             child: const Text(
-              'Finalizar Recorrido',
+              'Calcular cuenta de cobro',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 16.0,
@@ -367,8 +406,9 @@ class CancelButtonSection extends StatelessWidget {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Confirmar cancelación'),
-          content: Text('¿Está seguro de que desea cancelar el servicio?'),
+          title: const Text('Confirmar cancelación'),
+          content:
+              const Text('¿Está seguro de que desea cancelar el servicio?'),
           actions: [
             TextButton(
               onPressed: () {
@@ -377,7 +417,7 @@ class CancelButtonSection extends StatelessWidget {
               style: TextButton.styleFrom(
                 primary: Colors.grey, // Cambia el color del texto a gris
                 backgroundColor: Colors.white, // Fondo blanco
-                padding: EdgeInsets.symmetric(
+                padding: const EdgeInsets.symmetric(
                     horizontal: 20.0, vertical: 12.0), // Ajusta el padding
                 shape: RoundedRectangleBorder(
                   borderRadius:
@@ -386,7 +426,7 @@ class CancelButtonSection extends StatelessWidget {
                       BorderSide(color: Colors.grey, width: 1.0), // Borde gris
                 ),
               ),
-              child: Text('Cancelar'),
+              child: const Text('Cancelar'),
             ),
             TextButton(
               onPressed: () {
@@ -394,25 +434,19 @@ class CancelButtonSection extends StatelessWidget {
                 final usersInRoadBloc =
                     BlocProvider.of<UsersInRoadBloc>(context);
                 usersInRoadBloc.cancelRequest(request!.id);
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        const UserPage(), // Reemplaza con tu widget de inicio
-                  ),
-                );
+                Navigator.of(context).pushReplacementNamed('/');
               },
               style: TextButton.styleFrom(
                 primary: Colors.white, // Cambia el color del texto a blanco
                 backgroundColor: Colors.red, // Fondo rojo
-                padding: EdgeInsets.symmetric(
+                padding: const EdgeInsets.symmetric(
                     horizontal: 20.0, vertical: 12.0), // Ajusta el padding
                 shape: RoundedRectangleBorder(
                   borderRadius:
                       BorderRadius.circular(32.0), // Bordes redondeados
                 ),
               ),
-              child: Text('Confirmar'),
+              child: const Text('Confirmar'),
             ),
           ],
           elevation: 4, // Sombra

@@ -44,4 +44,3 @@ class _LoginButtonState extends State<LoginButton> {
   }
 }
 
-

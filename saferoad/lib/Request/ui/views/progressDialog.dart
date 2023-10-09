@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:saferoad/Auth/model/usuario_model.dart';
+import 'package:saferoad/Request/ui/views/startRequest.dart';
 
 import '../../../Map/ui/views/mapAux.dart';
 import '../../Repository/requestRepository.dart';
@@ -136,37 +137,6 @@ class ConnectingDialogState extends State<ConnectingDialog> {
           ),
         ),
       ),
-      StreamBuilder<QuerySnapshot>(
-          stream: FirebaseFirestore.instance
-              .collection('requests')
-              .orderBy('createdAt',
-                  descending: true) // Ordenar por fecha de creación descendente
-              .snapshots(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
-              //final requestId = snapshot.data!.docs.first.id;
-              final requestBloc = BlocProvider.of<RequestBloc>(context);
-
-              final userId = snapshot.data!.docs.first.get('userId');
-              final status = snapshot.data!.docs.first.get('status');
-
-              if (userId == FirebaseAuth.instance.currentUser!.uid &&
-                  status == 'inProcess') {
-                requestBloc.loadMechanic();
-                requestBloc.listenRequestChanges();
-                requestBloc.loadRequestData();
-                //final location =
-                //snapshot.data!.docs.first.get('mechanicLocation');
-                return MapViewAux(
-                  location: state.location2,
-                  authenticatedUser: state.authenticatedUser,
-                  receiver: state.receiver,
-                  request: state.request,
-                );
-              }
-            }
-            return Container();
-          })
     ]);
   }
 }

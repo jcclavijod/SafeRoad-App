@@ -127,6 +127,12 @@ class UsersInRoadBloc extends Bloc<UsersInRoadEvent, UsersInRoadState> {
     searchRepository.changeStatusRequest(requestId!, "finished");
   }
 
+  void change(final String? requestId){
+    searchRepository.changeStatusRequest(requestId!, "inBilling");
+  }
+
+
+
   @override
   Future<void> close() {
     if (!_locationSubscription.isPaused) {

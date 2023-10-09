@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lottie/lottie.dart';
 import 'package:saferoad/Auth/bloc/cliente/cliente_bloc.dart';
 import 'package:saferoad/Auth/ui/Cliente/registerViewCliente.dart';
+import 'package:saferoad/Auth/ui/views/passwordReset.dart';
 
 class LoginView extends StatefulWidget {
   @override
@@ -87,23 +88,28 @@ class _LoginViewState extends State<LoginView> {
               ),
               const SizedBox(height: 32.0),
               ElevatedButton(
-                onPressed: () async {
-                  try {
-                    await _clienteBloc.loginUser(email, password);
-                    Navigator.of(context).pushReplacementNamed('/');
-                  } catch (e) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Error al iniciar sesión: $e'),
-                        duration: const Duration(seconds: 2),
-                      ),
-                    );
-                  } finally {
-                    setState(() {
-                      _isLoading = false;
-                    });
-                  }
-                },
+                onPressed: _isLoading
+                    ? null
+                    : () async {
+                        setState(() {
+                          _isLoading = true;
+                        });
+                        try {
+                          await _clienteBloc.loginUser(email, password);
+                          Navigator.of(context).pushReplacementNamed('/');
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Error al iniciar sesión: $e'),
+                              duration: const Duration(seconds: 2),
+                            ),
+                          );
+                        } finally {
+                          setState(() {
+                            _isLoading = false;
+                          });
+                        }
+                      },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,
                   padding: const EdgeInsets.all(12.0),
@@ -127,6 +133,26 @@ class _LoginViewState extends State<LoginView> {
                 ),
                 child: const Text(
                   '¿No tienes cuenta? Crea una ahora!',
+                  style: TextStyle(
+                    color: Colors.blue,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const PasswordResetPage()),
+                  );
+                },
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.white),
+                ),
+                child: const Text(
+                  'Reiniciar contraseña',
                   style: TextStyle(
                     color: Colors.blue,
                   ),

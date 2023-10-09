@@ -26,8 +26,6 @@ class RatingDialog extends StatefulWidget {
 class _RatingDialogState extends State<RatingDialog> {
   @override
   void initState() {
-    final ratingBloc = BlocProvider.of<QualificationBloc>(context);
-
     super.initState();
   }
 
@@ -39,8 +37,10 @@ class _RatingDialogState extends State<RatingDialog> {
       builder: (context, state) {
         final ratingBloc =
             BlocProvider.of<QualificationBloc>(context); // Obtener el bloc
+        /*
         ratingBloc.getDocuments(
             widget.receiverUid!, state.mechanicPic, state.mechanicLocal);
+            */
         return Dialog(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20.0),
@@ -115,13 +115,9 @@ class _RatingDialogState extends State<RatingDialog> {
                             widget.mechanicPic!, widget.mechanicLocal!);
                         ratingBloc.updateState(rating);
                         ratingBloc.setData();
-                        Navigator.of(context).pop(); // Cierra el diálogo
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const UserPage(),
-                          ),
-                        ); // Navega a la página de usuario
+                        //Navigator.of(context).pop(); // Cierra el diálogo
+                        Navigator.of(context).pushReplacementNamed(
+                            '/'); // Navega a la página de usuario
                       },
                       style: ElevatedButton.styleFrom(
                         primary: Colors.orange, // Color de fondo del botón
@@ -144,7 +140,8 @@ class _RatingDialogState extends State<RatingDialog> {
                     TextButton(
                       onPressed: () {
                         // Tu lógica para omitir la calificación aquí
-                        Navigator.of(context).pop(); // Cierra el diálogo
+                        Navigator.of(context).pushReplacementNamed(
+                            '/');  // Cierra el diálogo
                       },
                       style: TextButton.styleFrom(
                         primary: Colors.grey, // Color del texto

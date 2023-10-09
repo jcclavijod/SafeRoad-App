@@ -13,10 +13,18 @@ class CreateRequest extends RequestEvent {
 }
 
 class FinishedRequestsLoaded extends RequestEvent {
-  final List<DocumentSnapshot> finishedRequests;
+  final Stream<List<Request>> finishedRequests;
 
   const FinishedRequestsLoaded(this.finishedRequests);
 }
+
+
+class LoadSpanishStatus extends RequestEvent {
+  final String spanishStatus;
+  const LoadSpanishStatus(this.spanishStatus);
+}
+
+
 
 class LoadRequestData extends RequestEvent {
   final String address;

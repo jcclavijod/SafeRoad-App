@@ -70,6 +70,32 @@ class SideMenuWidget extends StatelessWidget {
                     );
                   },
                 ),
+                FutureBuilder<DocumentSnapshot>(
+                  future: FirebaseFirestore.instance
+                      .collection('users')
+                      .doc(FirebaseAuth.instance.currentUser!.uid)
+                      .get(),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<DocumentSnapshot> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      if (!snapshot.data!.exists) {
+                        return ListTile(
+                          leading: const Icon(Icons.credit_card),
+                          title: const Text('Membresia'),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const MembershipPage(),
+                              ),
+                            );
+                          },
+                        );
+                      }
+                    }
+                    return Container(); // Retorna un contenedor vacío si el usuario es un mecánico
+                  },
+                ),
                 ListTile(
                   leading: const Icon(Icons.settings),
                   title: const Text('Configuracion'),
@@ -82,7 +108,6 @@ class SideMenuWidget extends StatelessWidget {
                     );
                   },
                 ),
-                //LogoutButton(),
                 ListTile(
                   leading: const Icon(Icons.logout),
                   title: const Text('Salir'),

@@ -4,6 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:saferoad/Home/Repository/notifications.dart';
+import 'package:saferoad/Home/ui/views/generalNotifications.dart';
 import 'package:saferoad/Home/ui/widgets/SideMenuWidget.dart';
 import 'package:saferoad/Request/ui/views/ListRequests.dart';
 import '../../../Auth/provider/auth_provider.dart';
@@ -28,7 +30,8 @@ class _MapViewState extends State<MapView> {
   String userType = "";
   @override
   void initState() {
-    NotificationHelper.initialize(context);
+    Notifications.initialize(context);
+    Notifications().setupCloudMessaging();
     final myLocationBloc = BlocProvider.of<MyLocationBloc>(context);
     myLocationBloc.startTracking();
     super.initState();
@@ -44,7 +47,7 @@ class _MapViewState extends State<MapView> {
 
   @override
   void dispose() {
-    NotificationHelper.cancelAllNotifications();
+    //NotificationHelper.cancelAllNotifications();
     super.dispose();
   }
 
@@ -104,6 +107,8 @@ class _MapViewState extends State<MapView> {
             }
           },
         ),
+        
+        GeneralNotifications(),
         AvailabilityOverlayWidget(),
       ]);
     } else {
@@ -121,6 +126,7 @@ class _MapViewState extends State<MapView> {
     //final locationBloc = BlocProvider.of<MyLocationBloc>(context);
 
     LatLng location = state.location;
+    mapBloc.location(location);
     final CameraPosition cameraPosition = CameraPosition(
       target: location,
       zoom: 15,
@@ -176,6 +182,8 @@ class _MapViewState extends State<MapView> {
     final mapBloc = BlocProvider.of<MapBloc>(context);
 
     LatLng location = state.location;
+    mapBloc.location(location);
+
     final CameraPosition cameraPosition = CameraPosition(
       target: location,
       zoom: 15,

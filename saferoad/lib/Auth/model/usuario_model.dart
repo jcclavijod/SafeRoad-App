@@ -106,18 +106,18 @@ class UserModel {
   //Enviando datos al servidor
   Map<String, dynamic> toMap() {
     return {
-      'nombre': name,
-      'apellido': lastname,
-      'correo': mail,
-      'contrasena': password,
-      'cedula': identification,
-      'genero': gender,
-      'telefono': phoneNumber,
-      'fechaNacimiento': birthday,
+      'name': name,
+      'lastname': lastname,
+      'mail': mail,
+      'password': password,
+      'identification': identification,
+      'gender': gender,
+      'phoneNumber': phoneNumber,
+      'birthday': birthday,
       'uid': uid,
-      'fotoPerfil': profilePic,
-      'estado': isAviable,
-      'token': token,
+      'profilePic': profilePic,
+      'isAviable': isAviable,
+      'token': token
     };
   }
 }

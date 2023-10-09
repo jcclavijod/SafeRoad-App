@@ -61,6 +61,7 @@ class NotificationHelper {
         if (message.data["type"] == "request") {
           modelRequestDialog(getRequest(message.data), context);
         } else if (message.data["type"] == "cancelRequest") {
+          
           Future.delayed(const Duration(seconds: 2), () {
             showDialog(
               context: context,

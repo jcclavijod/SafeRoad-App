@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
 import 'package:saferoad/Auth/bloc/mecanico/bloc/mecanico_bloc.dart';
 import 'package:saferoad/Auth/ui/Mecanico/registerViewMecanico.dart';
+import 'package:saferoad/Auth/ui/views/passwordReset.dart';
 
 class LoginMecanico extends StatefulWidget {
   @override
@@ -81,23 +82,28 @@ class _LoginMecanicoViewState extends State<LoginMecanico> {
               ),
               const SizedBox(height: 32.0),
               ElevatedButton(
-                onPressed: () async {
-                  try {
-                    await _mecanicoBloc.loginMecanico(email, password);
-                    Navigator.of(context).pushReplacementNamed('/');
-                  } catch (e) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Error al iniciar sesión: $e'),
-                        duration: const Duration(seconds: 2),
-                      ),
-                    );
-                  } finally {
-                    setState(() {
-                      _isLoading = false;
-                    });
-                  }
-                },
+                onPressed: _isLoading
+                    ? null
+                    : () async {
+                        setState(() {
+                          _isLoading = true;
+                        });
+                        try {
+                          await _mecanicoBloc.loginMecanico(email, password);
+                          Navigator.of(context).pushReplacementNamed('/');
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Error al iniciar sesión: $e'),
+                              duration: const Duration(seconds: 2),
+                            ),
+                          );
+                        } finally {
+                          setState(() {
+                            _isLoading = false;
+                          });
+                        }
+                      },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,
                   padding: const EdgeInsets.all(12.0),
@@ -123,6 +129,26 @@ class _LoginMecanicoViewState extends State<LoginMecanico> {
                 ),
                 child: const Text(
                   '¿No tienes cuenta? Crea una ahora!',
+                  style: TextStyle(
+                    color: Colors.blue,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const PasswordResetPage()),
+                  );
+                },
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.white),
+                ),
+                child: const Text(
+                  'Reiniciar contraseña',
                   style: TextStyle(
                     color: Colors.blue,
                   ),
