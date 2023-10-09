@@ -52,8 +52,6 @@ class RequestDetailsView extends StatelessWidget {
                     children: [
                       _buildTitle('Detalles de la Solicitud'),
                       _buildTable([
-                        //_buildTableRow(
-                        //'Fecha:',  DateFormat('dd-MM-yyyy HH:mm').format(requestData.createdAt)),
                         _buildTableRow('Dirección:', requestData.userAddress),
                       ]),
                       _buildTitle('Detalles del Servicio'),
@@ -71,7 +69,7 @@ class RequestDetailsView extends StatelessWidget {
                           _buildTitle('Labores Realizadas'),
                           SizedBox(
                             height: MediaQuery.of(context).size.height *
-                                0.35, // Ajusta el factor según sea necesario
+                                0.3, // Ajusta el factor según sea necesario
                             child: ListView(
                               shrinkWrap: true,
                               children: state.billItems.map((workPerformed) {
@@ -85,26 +83,26 @@ class RequestDetailsView extends StatelessWidget {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 16.0),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          /*CustomElevatedButton(
-                            label: 'Rechazar',
-                            onPressed: () {},
-                            color: Colors.red,
-                          ),*/
-                          CustomElevatedButton(
-                            label: 'Aceptar',
-                            onPressed: () {
-                              myBillingBloc.updateStatus(requestData.id!);
-                            },
-                            color: Colors.green,
-                          ),
-                        ],
-                      ),
                     ],
                   ),
+                ),
+                const SizedBox(height: 16.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    /*CustomElevatedButton(
+                      label: 'Rechazar',
+                      onPressed: () {},
+                      color: Colors.red,
+                    ),*/
+                    CustomElevatedButton(
+                      label: 'Aceptar',
+                      onPressed: () {
+                        myBillingBloc.updateStatus(requestData.id!);
+                      },
+                      color: Colors.green,
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -146,19 +144,23 @@ class RequestDetailsView extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            label,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
+          Expanded(
+            child: Text(
+              label,
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
             ),
           ),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 18,
-              color: Colors.grey[800],
+          Expanded(
+            child: Text(
+              value,
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.grey[800],
+              ),
             ),
           ),
         ],
