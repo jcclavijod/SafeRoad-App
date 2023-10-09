@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:lottie/lottie.dart' as lot;
 import 'package:saferoad/Home/Repository/notifications.dart';
 import 'package:saferoad/Home/ui/views/generalNotifications.dart';
 import 'package:saferoad/Home/ui/widgets/SideMenuWidget.dart';
@@ -76,44 +77,29 @@ class _MapViewState extends State<MapView> {
               return const Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
               // ignore: prefer_const_constructors
-              return Center(child: Text('Error verifying membership'));
+              return Center(child: Text('Error verificando la membresia'));
             } else {
               return Container();
-              /*
-              return StreamBuilder<QuerySnapshot>(
-                stream: FirebaseFirestore.instance
-                    .collection('requests')
-                    .orderBy('createdAt', descending: true)
-                    .snapshots(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
-                    //final requestId = snapshot.data!.docs.first.id;
-                    final mechanicId =
-                        snapshot.data!.docs.first.get('mecanicoId');
-                    final status = snapshot.data!.docs.first.get('status');
-                    if (mechanicId == FirebaseAuth.instance.currentUser!.uid &&
-                        status == 'pending') {
-                      return const Visibility(
-                          visible: true, // Mostrar el widget RequestPopup
-                          child: RequestPopup());
-                    }
-                  }
-                  return Visibility(
-                    visible: false,
-                    child: Container(),
-                  );
-                },
-              );*/
             }
           },
         ),
-        
         GeneralNotifications(),
         AvailabilityOverlayWidget(),
       ]);
     } else {
-      return const Center(
-        child: Text("Cargando mapa..."),
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            lot.Lottie.asset(
+              'assets/chargeMap.json',
+              fit: BoxFit.contain,
+            ),
+            const SizedBox(
+                height: 16.0), // Espacio entre el texto y el widget Lottie
+            const Text("Cargando mapa..."),
+          ],
+        ),
       );
     }
   }
@@ -123,8 +109,6 @@ class _MapViewState extends State<MapView> {
 
     final mapBloc = BlocProvider.of<MapBloc>(context);
 
-    //final locationBloc = BlocProvider.of<MyLocationBloc>(context);
-
     LatLng location = state.location;
     mapBloc.location(location);
     final CameraPosition cameraPosition = CameraPosition(
@@ -132,9 +116,7 @@ class _MapViewState extends State<MapView> {
       zoom: 15,
     );
     mapBloc.searchNearbyPlaces(location);
-
     mapBloc.icon('assets/iconoMecanico.png');
-    //final List<LatLng> puntos = mapBloc.getNearbyPlaces();
     return BlocBuilder<MapBloc, MapState>(
       builder: (context, state) {
         return Stack(children: [
@@ -189,7 +171,6 @@ class _MapViewState extends State<MapView> {
       zoom: 15,
     );
     mapBloc.searchNearbyPlaces(location);
-    //final List<LatLng> puntos = mapBloc.getNearbyPlaces();
     return BlocBuilder<MapBloc, MapState>(
       builder: (context, state) {
         return Stack(children: [

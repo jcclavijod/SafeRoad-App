@@ -49,11 +49,7 @@ class _MyBillingState extends State<MyBilling> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
-              constraints: BoxConstraints(
-                maxWidth: MediaQuery.of(context).size.width * 0.5,
-                maxHeight: MediaQuery.of(context).size.height * 0.3,
-              ),
+            Expanded(
               child: Lottie.asset(
                 'assets/Billpage.json',
                 fit: BoxFit.contain,

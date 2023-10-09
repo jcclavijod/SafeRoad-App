@@ -40,7 +40,7 @@ class CreateRequest extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 ElevatedButton(
-                  onPressed: () async{
+                  onPressed: () async {
                     if (BlocProvider.of<RequestBloc>(context)
                         .state
                         .problemController
@@ -52,9 +52,6 @@ class CreateRequest extends StatelessWidget {
                       );
                       ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     } else {
-                      await BlocProvider.of<RequestBloc>(context)
-                          .createRequest(nearbyPlaces);
-
                       showDialog(
                         barrierDismissible: false,
                         context: context,
@@ -62,6 +59,9 @@ class CreateRequest extends StatelessWidget {
                           return const PendingRequest();
                         },
                       );
+
+                      await BlocProvider.of<RequestBloc>(context)
+                          .createRequest(nearbyPlaces);
                     }
                   },
                   style: ElevatedButton.styleFrom(

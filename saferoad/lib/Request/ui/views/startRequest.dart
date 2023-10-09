@@ -54,11 +54,7 @@ class _StartRequestState extends State<StartRequest> {
           final requestData = snapshot.data!.data() as Map<String, dynamic>;
           Request newRequest = Request.fromMap(requestData);
           activateWiew =
-              widget.authenticatedUser!.uid == requestData!['userId'];
-          print("COMIDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-          print(activateWiew);
-          print(requestData['service']);
-          print("COMIDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+              widget.authenticatedUser!.uid == requestData['userId'];
           if (requestData != null) {
             final status = requestData['status'];
 
@@ -74,9 +70,6 @@ class _StartRequestState extends State<StartRequest> {
             } else if (status == 'inCustomerAcceptance' &&
                 activateWiew &&
                 requestData['service'] != null) {
-              print("COMIDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-              print(activateWiew);
-              print(requestData['service']);
               return RequestDetailsView(
                 requestData: newRequest,
               );

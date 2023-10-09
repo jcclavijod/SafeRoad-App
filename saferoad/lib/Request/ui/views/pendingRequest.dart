@@ -20,10 +20,12 @@ class PendingRequest extends StatefulWidget {
 
 class _PendingRequestState extends State<PendingRequest> {
   bool activateWiew = false;
+  late Widget connectingDialog;
 
   @override
   void initState() {
     super.initState();
+    connectingDialog = const ConnectingDialog();
   }
 
   @override
@@ -31,7 +33,8 @@ class _PendingRequestState extends State<PendingRequest> {
     super.dispose();
   }
 
-  bool isNavigating = false; // Variable para rastrear si ya se está navegando
+  bool isNavigating = false;
+  // Variable para rastrear si ya se está navegando
 
   @override
   Widget build(BuildContext context) {
@@ -57,26 +60,20 @@ class _PendingRequestState extends State<PendingRequest> {
               Future.delayed(const Duration(milliseconds: 500), () {
                 showDialog(
                   context: context,
-                  barrierDismissible: false, 
+                  barrierDismissible: false,
                   builder: (BuildContext context) {
                     return AlertDialog(
-                      title: Text("¡Han aceptado su solicitud!"),
-                      content: Text("Presione el botón para continuar."),
-                      
+                      title: const Text("¡Han aceptado su solicitud!"),
+                      content: const Text("Presione el botón para continuar."),
                       actions: [
                         TextButton(
                           onPressed: () async {
                             await requestBloc.listenRequestChanges();
                             await requestBloc.loadRequestData();
                             await requestBloc.loadMechanic();
-                            print("9999999999999999999999999999");
-                            print(requestBloc.state.location2);
-                            print(requestBloc.state.authenticatedUser.uid);
-                            print(requestBloc.state.receiver.uid);
-                            print(requestBloc.state.request.id);
-                            print("9999999999999999999999999999");
+
                             // Navega a la siguiente pantalla cuando se presiona el botón
-                            await Navigator.push(
+                            Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => StartRequest(
@@ -89,19 +86,16 @@ class _PendingRequestState extends State<PendingRequest> {
                               ),
                             );
                           },
-                          child: Text("Continuar"),
+                          child: const Text("Continuar"),
                         ),
                       ],
                     );
                   },
                 );
               });
-
-              // Ejecuta el código de navegación una vez que los datos se han cargado
-
             }
           }
-          return ConnectingDialog();
+          return connectingDialog;
         },
       );
     });
