@@ -9,21 +9,28 @@ class QualificationRepository {
     required this.user,
   });
 
-Future<bool> saveRating(double rating, String mechanicId) async {
+  Future<bool> saveRating(
+    double rating,
+    String receiverUid,
+    String mechanicId,
+  ) async {
+    print("HOLAAAAAAAAAAAAAA");
+    print(receiverUid);
+    print(mechanicId);
+    print(rating);
     try {
       final ratingData = {
         'qualification': rating,
-        'user': user.uid,
+        'user': receiverUid,
         'mechanicId': mechanicId,
         'date': Timestamp.now(),
       };
 
-      await firestore
-          .collection('mechanicQualifications')
-          .add(ratingData);
-      return true; 
+      await firestore.collection('mechanicQualifications').add(ratingData);
+
+      return true;
     } catch (error) {
-      return false; 
+      return false;
     }
   }
 }

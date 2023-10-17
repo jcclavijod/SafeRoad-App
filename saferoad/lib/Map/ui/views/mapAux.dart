@@ -8,7 +8,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:saferoad/Auth/model/usuario_model.dart';
 import 'package:saferoad/Home/ui/widgets/SideMenuWidget.dart';
 
-import '../../../Auth/provider/auth_provider.dart';
 import '../../../Request/model/Request.dart';
 import '../../bloc/location/my_location_bloc.dart';
 import '../../bloc/map/map_bloc.dart';

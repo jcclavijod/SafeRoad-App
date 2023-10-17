@@ -38,7 +38,7 @@ class GeneralNotificationsState extends State<GeneralNotifications> {
             if (snapshot.hasData) {
               final notification = snapshot.data;
               final notificationType = notification!['type'];
-
+              /*
               if (notificationType == "finishedRequest") {
                 showDialog(
                   context: context,
@@ -50,6 +50,7 @@ class GeneralNotificationsState extends State<GeneralNotifications> {
                   ),
                 );
               }
+              */
               print("VAMOS A VER CUANTAS VECES LLGA LA GRAN PUTA NOTIFICACION");
               if (notificationType == "request") {
                 if (notificationsQueue.isEmpty) {

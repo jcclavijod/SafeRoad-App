@@ -6,6 +6,7 @@ import 'package:lottie/lottie.dart' as lot;
 import 'package:saferoad/Home/Repository/notifications.dart';
 import 'package:saferoad/Home/ui/views/generalNotifications.dart';
 import 'package:saferoad/Home/ui/widgets/SideMenuWidget.dart';
+import 'package:saferoad/Map/ui/views/searchMechanics.dart';
 import '../../../Auth/provider/auth_provider.dart';
 import '../../../Request/ui/views/createRequest.dart';
 import '../../bloc/location/my_location_bloc.dart';
@@ -51,11 +52,14 @@ class _MapViewState extends State<MapView> {
   Widget build(BuildContext context) {
     if (userType == "user") {
       final mapBloc = BlocProvider.of<MapBloc>(context);
-      return Scaffold(
-        drawer: const SideMenuWidget(),
-        body: BlocBuilder<MyLocationBloc, MyLocationState>(
-            builder: (context, state) => createMap(state)),
-      );
+      return Stack(children: [
+        Scaffold(
+          drawer: const SideMenuWidget(),
+          body: BlocBuilder<MyLocationBloc, MyLocationState>(
+              builder: (context, state) => createMap(state)),
+        ),
+        const SearchMechanics()
+      ]);
     } else if (userType == "mecanico") {
       print("VERIFICAR EL FOKIN MAPVIEW MALPARIDO ");
       return Stack(children: [
@@ -65,7 +69,6 @@ class _MapViewState extends State<MapView> {
             builder: (context, state) => createMapMechanic(state),
           ),
         ),
-        
         FutureBuilder<void>(
           future: VerificationMembership()
               .verifyMembership(context), // Verify membership here
@@ -112,18 +115,11 @@ class _MapViewState extends State<MapView> {
       target: location,
       zoom: 15,
     );
-    mapBloc.searchNearbyPlaces(location);
+    //mapBloc.searchNearbyPlaces(location);
     mapBloc.icon('assets/iconoMecanico.png');
     return BlocBuilder<MapBloc, MapState>(
       builder: (context, state) {
         return Stack(children: [
-          if (state.showDialogLoading)
-            const LoadingDialog(
-              message: 'Buscando locales cercanos en 2 KM...',
-              duration: 9000,
-            ),
-          if (state.showDialog) // Mostrar ventana emergente solo la primera vez
-            buildDialog(context),
           GoogleMap(
             initialCameraPosition: cameraPosition,
             myLocationEnabled: true,

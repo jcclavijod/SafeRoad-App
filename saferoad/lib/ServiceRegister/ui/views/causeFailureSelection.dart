@@ -9,7 +9,7 @@ import 'package:saferoad/ServiceRegister/ui/widgets/customButton.dart';
 class CauseOfFailureSelectionPage extends StatefulWidget {
   final Request requestData;
 
-  CauseOfFailureSelectionPage({
+  const CauseOfFailureSelectionPage({super.key, 
     required this.requestData,
   });
 
@@ -142,12 +142,12 @@ class _CauseOfFailureSelectionPageState
           },
           style: ElevatedButton.styleFrom(
             primary: Colors.green,
-            padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ),
           ),
-          child: Text(
+          child: const Text(
             'Finalizar servicio',
             style: TextStyle(
               fontSize: 16,

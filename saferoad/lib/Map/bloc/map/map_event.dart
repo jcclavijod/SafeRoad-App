@@ -22,9 +22,9 @@ class UpdateMechanicState extends MapEvent {
 
 class SaveShowDialog extends MapEvent {
   final bool showDialog;
-  final bool showDialogLoading;
+ 
 
-  const SaveShowDialog(this.showDialog, this.showDialogLoading);
+  const SaveShowDialog(this.showDialog, );
 }
 
 class SaveNearbyPlaces extends MapEvent {

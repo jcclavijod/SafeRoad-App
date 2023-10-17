@@ -55,3 +55,47 @@ class LoadingDialogState extends State<LoadingDialog> {
     });
   }
 }
+
+class AutoCloseAlertDialog extends StatefulWidget {
+  final String message;
+
+  const AutoCloseAlertDialog({
+    Key? key,
+    this.message = 'Buscando mecánicos cercanos',
+  }) : super(key: key);
+
+  @override
+  AutoCloseAlertDialogState createState() => AutoCloseAlertDialogState();
+}
+
+class AutoCloseAlertDialogState extends State<AutoCloseAlertDialog> {
+  @override
+  void initState() {
+    super.initState();
+    _closeDialogAfterDuration();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const CircularProgressIndicator(),
+          const SizedBox(height: 20.0),
+          Text(widget.message),
+        ],
+      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+    );
+  }
+
+  void _closeDialogAfterDuration() {
+    Future.delayed(const Duration(seconds: 5), () {
+      if (mounted) {
+        //context.read<MapBloc>().statusNearbyPlaces();
+        //Navigator.of(context).pop();
+      }
+    });
+  }
+}

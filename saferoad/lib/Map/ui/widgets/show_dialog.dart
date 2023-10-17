@@ -14,7 +14,7 @@ Widget buildDialog(BuildContext context) {
       actions: [
         TextButton(
           onPressed: () {
-            context.read<MapBloc>().add(const SaveShowDialog(false, false));
+            context.read<MapBloc>().add(const SaveShowDialog(false));
             //Navigator.of(context).pop();
           },
           child: const Text('Sí, ampliar a 4 km'),

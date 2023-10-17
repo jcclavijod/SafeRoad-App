@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
@@ -18,7 +20,8 @@ class QualificationBloc extends Bloc<QualificationEvent, QualificationState> {
         mechanicLocal: state.mechanicLocal)));
   }
 
-  final QualificationRepository qualificationRepository = QualificationRepository(
+  final QualificationRepository qualificationRepository =
+      QualificationRepository(
     firestore: FirebaseFirestore.instance,
     user: FirebaseAuth.instance.currentUser,
   );
@@ -32,7 +35,11 @@ class QualificationBloc extends Bloc<QualificationEvent, QualificationState> {
     add(AddParameters(mechanicId, mechanicPic, mechanicLocal));
   }
 
-  void setData() async {
-    qualificationRepository.saveRating(state.rating, state.mechanicUid);
+  void setData(double rating, String receiverUid, String mechanicId) async {
+    print("INFORMACION QUE SE DEBE DE PASAR AL RAAAAAAAAAAAAA");
+    print(receiverUid);
+    print(mechanicId);
+    print(rating);
+    qualificationRepository.saveRating(rating, mechanicId, receiverUid);
   }
 }

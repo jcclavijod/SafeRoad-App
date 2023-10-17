@@ -69,7 +69,7 @@ class NotificationHelper {
             );
           });
         } else if (message.data["type"] == "finishedRequest") {
-          modelRatingDialog(message.data, context);
+          //modelRatingDialog(message.data, context);
         } else if (message.data["type"] == "chat") {}
       }
     });
@@ -180,6 +180,7 @@ class NotificationHelper {
             RequestPopup2(address: address, request: request));
   }
 
+/*
   static void modelRatingDialog(
       Map<String, dynamic> message, BuildContext context) async {
     showDialog(
@@ -192,7 +193,7 @@ class NotificationHelper {
       ),
     );
   }
-
+*/
   void sendNotificationToDriver(
       String token, Map notificationMap, Map dataMap) async {
     Map<String, String> headerMap = {

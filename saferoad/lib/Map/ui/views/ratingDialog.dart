@@ -10,12 +10,14 @@ class RatingDialog extends StatefulWidget {
     required this.receiverUid,
     required this.mechanicPic,
     required this.mechanicLocal,
+    required this.mechanicUid,
   }) : super(key: key);
 
   final String? requestId;
   final String? receiverUid;
   final String? mechanicPic;
   final String? mechanicLocal;
+  final String? mechanicUid;
 
   @override
   RatingDialogState createState() => RatingDialogState();
@@ -112,10 +114,11 @@ class RatingDialogState extends State<RatingDialog> {
                         ratingBloc.getDocuments(widget.receiverUid!,
                             widget.mechanicPic!, widget.mechanicLocal!);
                         ratingBloc.updateState(rating);
-                        ratingBloc.setData();
-                        //Navigator.of(context).pop(); // Cierra el diálogo
-                        Navigator.of(context).pushReplacementNamed(
-                            '/'); // Navega a la página de usuario
+                        ratingBloc.setData(
+                            rating, widget.receiverUid!, widget.mechanicUid!);
+                        Navigator.of(context).pop(); // Cierra el diálogo
+                        //Navigator.of(context).pushReplacementNamed(
+                        //'/'); // Navega a la página de usuario
                       },
                       style: ElevatedButton.styleFrom(
                         primary: Colors.orange, // Color de fondo del botón
@@ -138,8 +141,8 @@ class RatingDialogState extends State<RatingDialog> {
                     TextButton(
                       onPressed: () {
                         // Tu lógica para omitir la calificación aquí
-                        Navigator.of(context).pushReplacementNamed(
-                            '/');  // Cierra el diálogo
+                        Navigator.of(context)
+                            .pushReplacementNamed('/'); // Cierra el diálogo
                       },
                       style: TextButton.styleFrom(
                         primary: Colors.grey, // Color del texto

@@ -189,6 +189,7 @@ class Notifications {
     request = await repo.getRequestNotification(userRequest);
   }
 
+/*
   static void modelRatingDialog(
       Map<String, dynamic> message, BuildContext context) async {
     showDialog(
@@ -201,7 +202,7 @@ class Notifications {
       ),
     );
   }
-
+*/
   void sendNotificationToDriver(
       String token, Map notificationMap, Map dataMap) async {
     Map<String, String> headerMap = {

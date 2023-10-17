@@ -119,6 +119,7 @@ class _StartRequestState extends State<StartRequest> {
                     receiverUid: widget.receiver!.uid,
                     mechanicLocal: widget.receiver!.name,
                     mechanicPic: widget.receiver!.profilePic,
+                    mechanicUid: widget.authenticatedUser!.uid,
                   ),
                 );
               });

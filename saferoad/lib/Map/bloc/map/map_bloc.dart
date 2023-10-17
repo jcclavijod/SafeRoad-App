@@ -26,7 +26,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
 
     on<SaveShowDialog>((event, emit) => emit(state.copyWith(
         showDialog: event.showDialog,
-        showDialogLoading: event.showDialogLoading)));
+       )));
 
     on<SaveNearbyPlaces>((event, emit) =>
         emit(state.copyWith(nearbyPlaces: event.nearbyPlaces)));
@@ -88,11 +88,11 @@ class MapBloc extends Bloc<MapEvent, MapState> {
 
   void statusNearbyPlaces() {
     if (state.nearbyPlaces.isEmpty) {
-      add(const SaveShowDialog(true, false));
+      add(const SaveShowDialog(true));
       add(const UpdateRange(2.6));
       searchNearbyPlaces(state.location);
     } else {
-      add(const SaveShowDialog(false, false));
+      add(const SaveShowDialog(false));
     }
   }
 
