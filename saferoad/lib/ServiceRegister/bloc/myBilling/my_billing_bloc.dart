@@ -1,5 +1,7 @@
 import 'package:bloc/bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:saferoad/ServiceRegister/Repository/serviceRepository.dart';
 import 'package:saferoad/ServiceRegister/model/billItem.dart';
@@ -9,7 +11,9 @@ part 'my_billing_event.dart';
 part 'my_billing_state.dart';
 
 class MyBillingBloc extends Bloc<MyBillingEvent, MyBillingState> {
-  ServiceRepository serviceRepository = ServiceRepository();
+  ServiceRepository serviceRepository = ServiceRepository(
+      user: FirebaseAuth.instance.currentUser!,
+      firestore: FirebaseFirestore.instance);
 
   MyBillingBloc()
       : super(MyBillingState(
@@ -108,8 +112,9 @@ class MyBillingBloc extends Bloc<MyBillingEvent, MyBillingState> {
     add(AddTotal(total));
   }
 
-  void saveWorkPerformed() async {
-    //await serviceRepository.saveWorkPerformed(state.billItems);
+  void clean() async {
+    add(const AddBillItem([]));
+    add(const AddTotal(0));
   }
 
   void saveService(String request) async {
@@ -118,18 +123,24 @@ class MyBillingBloc extends Bloc<MyBillingEvent, MyBillingState> {
     String id =
         await serviceRepository.finalizeService(request, state.total, list);
     add(UpdateServiceId(id));
+    clean();
   }
 
-  void getService(String requestId) async {
-    print(requestId);
+  void getService(String requestId,) async {
+    print("LISTA QUE DEBERIA ESTAR VACIA");
+    print(state.billItems.length);
     Service? service = await serviceRepository.getServiceData(requestId);
+    print(service);
     List<BillItem> updatedBillItems =
         await serviceRepository.getBillItems(service!.worksPerformed);
     add(AddService(service));
+    add(AddTotal(service.totalCost));
     updateBillItems(updatedBillItems);
+    print("LISTA CON LOS ITEMS ENVIADOS");
+    print(updatedBillItems.length);
   }
 
-  void updateStatus(String request) {
-    serviceRepository.updateStatus(request);
+  void updateStatus(String request, String status) {
+    serviceRepository.updateStatus(request, status);
   }
 }

@@ -1,7 +1,6 @@
 // ignore_for_file: unused_element, non_constant_identifier_names, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
 import 'package:saferoad/Auth/bloc/mecanico/bloc/mecanico_bloc.dart';
 import 'package:saferoad/Auth/ui/Mecanico/registerViewMecanico.dart';
@@ -9,10 +8,10 @@ import 'package:saferoad/Auth/ui/views/passwordReset.dart';
 
 class LoginMecanico extends StatefulWidget {
   @override
-  _LoginMecanicoViewState createState() => _LoginMecanicoViewState();
+  LoginMecanicoViewState createState() => LoginMecanicoViewState();
 }
 
-class _LoginMecanicoViewState extends State<LoginMecanico> {
+class LoginMecanicoViewState extends State<LoginMecanico> {
   final _formKey = GlobalKey<FormState>();
   final MecanicoBloc _mecanicoBloc = MecanicoBloc();
   String email = '';

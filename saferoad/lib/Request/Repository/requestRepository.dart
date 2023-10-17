@@ -12,16 +12,17 @@ import 'package:saferoad/Auth/model/usuario_model.dart';
 import '../model/Request.dart';
 
 class RequestRepository {
-  final _firestoreBd = FirebaseFirestore.instance;
-  final _authUser = FirebaseAuth.instance;
+  final FirebaseFirestore firestoreBd;
+  final user;
 
-  //final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+  RequestRepository({
+      required this.firestoreBd,
+      required this.user,
+    });
 
   Future<String> createRequest(String problem) async {
     try {
-      final requestRef = _firestoreBd.collection('requests').doc();
-      final user = _authUser.currentUser;
-
+      final requestRef = firestoreBd.collection('requests').doc();
       final location = await Geolocator.getCurrentPosition();
       final userLocation = GeoPoint(location.latitude, location.longitude);
       final String address = await getAddress(userLocation);
@@ -49,32 +50,10 @@ class RequestRepository {
     }
   }
 
-  Future<String> getAddressFromCoordinates() async {
-    final user = FirebaseAuth.instance.currentUser;
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-        .collection('requests')
-        .where('mecanicoId', isEqualTo: user?.uid)
-        .where('status', isEqualTo: 'pending')
-        .limit(1)
-        .get();
-
-    DocumentSnapshot requestDocument = querySnapshot.docs.first;
-    GeoPoint? location = requestDocument.get('userLocation') as GeoPoint?;
-    List<Placemark> placemarks =
-        await placemarkFromCoordinates(location!.latitude, location.longitude);
-    Placemark placemark = placemarks.first;
-
-    String address =
-        '${placemark.street}, ${placemark.subLocality}, ${placemark.locality}';
-    return address;
-  }
-
   Future<void> updateRequestStatus(String newStatus) async {
-    final user = FirebaseAuth.instance.currentUser;
     final location = await Geolocator.getCurrentPosition();
     final userLocation = GeoPoint(location.latitude, location.longitude);
-    print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+    QuerySnapshot querySnapshot = await firestoreBd
         .collection('requests')
         .where('mecanicoId', isEqualTo: user?.uid)
         .where('status', isEqualTo: 'pending')
@@ -85,12 +64,12 @@ class RequestRepository {
       DocumentSnapshot requestDocument = querySnapshot.docs.first;
       String requestId = requestDocument.id;
       if (newStatus == "inProcess") {
-        await FirebaseFirestore.instance
+        await firestoreBd
             .collection('requests')
             .doc(requestId)
             .update({'status': newStatus, 'mechanicLocation': userLocation});
       } else {
-        await FirebaseFirestore.instance
+        await firestoreBd
             .collection('requests')
             .doc(requestId)
             .update({'status': newStatus});
@@ -99,8 +78,7 @@ class RequestRepository {
   }
 
   Future<void> cancelRequest(String newStatus) async {
-    final user = FirebaseAuth.instance.currentUser;
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+    QuerySnapshot querySnapshot = await firestoreBd
         .collection('requests')
         .where('userId', isEqualTo: user?.uid)
         .where('status', isEqualTo: 'pending')
@@ -111,7 +89,7 @@ class RequestRepository {
       DocumentSnapshot requestDocument = querySnapshot.docs.first;
       String requestId = requestDocument.id;
 
-      await FirebaseFirestore.instance
+      await firestoreBd
           .collection('requests')
           .doc(requestId)
           .update({'status': newStatus});
@@ -119,21 +97,17 @@ class RequestRepository {
   }
 
   Future<LatLng> locationUser(Request request) async {
-    print("333333333333333333333333333333");
     LatLng locUser = const LatLng(0, 0);
     if (request.userLocation != null) {
       GeoPoint? location = request.userLocation;
       locUser = convertGeoPointToLatLng(location);
-      print("UBICACION PARA EL MECANICO...........");
-      print(locUser);
     }
     return locUser;
   }
 
-  Future<LatLng> locationMechanic() async {
-    final user = FirebaseAuth.instance.currentUser!;
+  Future<LatLng> locationMechanic(Request request) async {
     LatLng locUser = const LatLng(0, 0);
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+    QuerySnapshot querySnapshot = await firestoreBd
         .collection('requests')
         .where("userId", isEqualTo: user.uid)
         .where('status', isEqualTo: 'inProcess')
@@ -150,8 +124,6 @@ class RequestRepository {
   }
 
   Future<UserModel> getUser(Request request) async {
-    print("111111111111111111111111111111111");
-    final user = FirebaseAuth.instance.currentUser!;
     bool activateWiew = user.uid == request.userId;
     String usuario = await getTypeUser(activateWiew);
     if (usuario == "mecanico") {
@@ -164,18 +136,11 @@ class RequestRepository {
   }
 
   Future<UserModel> getClient(Request request) async {
-    print("2222222222222222222222222222222222");
-    final user = FirebaseAuth.instance.currentUser!;
     bool activateWiew = user.uid == request.userId;
-    print(activateWiew);
     String usuario = await getTypeUser(activateWiew);
-    print(usuario);
-    print(request.userId);
     if (usuario == "mecanico") {
       return await mapUser('users', request.userId);
     } else if (usuario == "usuario") {
-      print("VERIFICANDO LOS NUEVOS DATOS DEL MECANICO :: GET CLIENTE");
-      print(request.mechanicId);
       return await mapUser('mecanicos', request.mechanicId);
     } else {
       return UserModel.complete();
@@ -183,9 +148,8 @@ class RequestRepository {
   }
 
   Stream<List<Request>> getMechanicRequests() {
-    final user = FirebaseAuth.instance.currentUser!;
     try {
-      return _firestoreBd
+      return firestoreBd
           .collection('requests')
           .where('mechanicId', isEqualTo: user.uid)
           .where('status', whereNotIn: ['pending', 'rejected'])
@@ -195,7 +159,6 @@ class RequestRepository {
           .map((querySnapshot) {
             List<Request> requests = [];
             for (DocumentSnapshot doc in querySnapshot.docs) {
-              // Convierte cada documento en un objeto Request
               Request request =
                   Request.fromMap(doc.data() as Map<String, dynamic>);
               print(request.status);
@@ -203,18 +166,16 @@ class RequestRepository {
             }
             return requests;
           })
-          .distinct(); // Filtra eventos duplicados
+          .distinct(); 
     } catch (e) {
       print("Error: No se pudieron traer las requests finalizadas: $e");
       return Stream.error(e);
     }
   }
 
-
   Stream<List<Request>> getUserRequests() {
-    final user = FirebaseAuth.instance.currentUser!;
     try {
-      return _firestoreBd
+      return firestoreBd
           .collection('requests')
           .where('userId', isEqualTo: user.uid)
           .where('status', whereNotIn: ['pending', 'rejected'])
@@ -224,32 +185,27 @@ class RequestRepository {
           .map((querySnapshot) {
             List<Request> requests = [];
             for (DocumentSnapshot doc in querySnapshot.docs) {
-              // Convierte cada documento en un objeto Request
               Request request =
                   Request.fromMap(doc.data() as Map<String, dynamic>);
-              print(request.status);
               requests.add(request);
             }
             return requests;
           })
-          .distinct(); // Filtra eventos duplicados
+          .distinct(); 
     } catch (e) {
       print("Error: No se pudieron traer las requests finalizadas: $e");
       return Stream.error(e);
     }
   }
 
-
   Future<DocumentReference> getRequest(Request request) async {
     final docReference =
-        FirebaseFirestore.instance.collection('requests').doc(request.id);
+        firestoreBd.collection('requests').doc(request.id);
     return docReference;
   }
 
   Future<String> getTypeUser(bool uid) async {
-    //final usuario = await _firestoreBd.collection('users').doc(uid).get();
-    //final mecanico = await _firestoreBd.collection('mecanicos').doc(uid).get();
-    if (uid) {
+     if (uid) {
       return "usuario";
     } else if (!uid) {
       return "mecanico";
@@ -257,30 +213,18 @@ class RequestRepository {
     return "";
   }
 
-  Future<DocumentSnapshot> _getRequestUidByField(
-      String field, String uid) async {
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-        .collection('requests')
-        .where(field, isEqualTo: uid)
-        .where('status', isEqualTo: 'pending')
-        .limit(1)
-        .get();
-    return querySnapshot.docs.first;
-  }
-
   Future<UserModel> mapUser(String coleccion, final doc) async {
     final usuario =
-        await FirebaseFirestore.instance.collection(coleccion).doc(doc).get();
+        await firestoreBd.collection(coleccion).doc(doc).get();
     Map<String, dynamic> userData = usuario.data() ?? {};
     return UserModel.fromMap(userData);
   }
 
   Future<Request> getRequestNotification(String uidRequest) async {
     DocumentSnapshot documentSnapshot =
-        await _firestoreBd.collection('requests').doc(uidRequest).get();
+        await firestoreBd.collection('requests').doc(uidRequest).get();
 
     if (documentSnapshot.exists) {
-      // El documento existe, obtenemos los datos y los asignamos al modelo.
       Map<String, dynamic> data =
           documentSnapshot.data() as Map<String, dynamic>;
       return Request.fromMap(data);
@@ -303,18 +247,15 @@ class RequestRepository {
       String newStatus, String request) async {
     final location = await Geolocator.getCurrentPosition();
     final userLocation = GeoPoint(location.latitude, location.longitude);
-    print("ulala ulala ulala ulala ulala ulala ualala");
-    print(request);
-    DocumentSnapshot querySnapshot =
-        await _firestoreBd.collection('requests').doc(request).get();
     if (newStatus == "inProcess") {
-      await FirebaseFirestore.instance
+      await firestoreBd
           .collection('requests')
           .doc(request)
           .update({
         'status': newStatus,
         'mechanicLocation': userLocation,
-        'mechanicId': _authUser.currentUser!.uid
+        'mechanicId': user.uid
+      
       });
     }
   }

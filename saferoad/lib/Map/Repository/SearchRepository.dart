@@ -8,29 +8,15 @@ import 'package:google_maps_flutter/google_maps_flutter.dart' as ma;
 import 'package:saferoad/Request/model/Request.dart';
 
 class SearchRepository {
-  final geo = GeoFlutterFire();
-  final FirebaseFirestore firestore = FirebaseFirestore.instance;
-  final user = FirebaseAuth.instance.currentUser!;
+  final GeoFlutterFire geo;
+  final FirebaseFirestore firestore;
+  final user;
 
-
-
-  List<LatLng> nearbyPointsFunc(
-      List<LatLng> points, double distanceInMetersMax, LatLng location) {
-    List<LatLng> nearbyPoints = [];
-    for (final point in points) {
-      double distanceInMeters = Geolocator.distanceBetween(
-        point.latitude,
-        point.longitude,
-        location.latitude,
-        location.longitude,
-      );
-
-      if (distanceInMeters <= distanceInMetersMax) {
-        nearbyPoints.add(point);
-      }
-    }
-    return nearbyPoints;
-  }
+  SearchRepository({
+    required this.geo,
+    required this.firestore,
+    required this.user,
+  });
 
   Future<List<DocumentSnapshot>> mechanicNearby(
       ma.LatLng location, double radius) async {

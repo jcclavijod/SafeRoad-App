@@ -38,6 +38,7 @@ class Request {
     GeoPoint mechanicLocation = const GeoPoint(0, 0),
     String service = "",
     String selectedCauseId = "",
+    String id = ""
     // Otros campos aquí...
   }) {
     return Request(
@@ -50,7 +51,8 @@ class Request {
         requestDetails: requestDetails,
         mechanicLocation: mechanicLocation,
         service: service,
-        selectedCauseId: selectedCauseId);
+        selectedCauseId: selectedCauseId,
+        id: id);
   }
 
   factory Request.fromMap(Map<String, dynamic> map) {

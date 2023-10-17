@@ -4,10 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:saferoad/Auth/model/usuario_model.dart';
 import 'package:saferoad/Home/ui/widgets/SideMenuWidget.dart';
 
-
 import '../../bloc/chatBlc/chat_blc_bloc.dart';
 import '../../model/conversation.dart';
-import '../../provider/chatProvider.dart';
 import '../../repository/chatRepository.dart';
 import '../widgets/buttonChat.dart';
 import '../widgets/icon_empty.dart';
@@ -29,10 +27,7 @@ class ChatPage extends StatelessWidget {
       drawer: const SideMenuWidget(),
       body: BlocProvider(
         create: (context) => ChatBloc(
-          chatRepository: ChatRepository(
-            chatFirebaseProvider:
-                ChatFirebaseProvider(firestore: FirebaseFirestore.instance),
-          ),
+          chatRepository: ChatRepository(firestore: FirebaseFirestore.instance),
         )..add(ChatRequested(loginUID: authenticatedUser!.uid)),
         child: _ChatView(
           authenticatedUser: authenticatedUser,

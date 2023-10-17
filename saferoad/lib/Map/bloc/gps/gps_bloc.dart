@@ -5,8 +5,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:saferoad/Home/Repository/notifications.dart';
 
-import '../../../helpers/notificationHelper.dart';
-
 part 'gps_event.dart';
 part 'gps_state.dart';
 

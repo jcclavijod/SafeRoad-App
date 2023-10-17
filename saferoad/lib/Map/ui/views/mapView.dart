@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -8,11 +6,8 @@ import 'package:lottie/lottie.dart' as lot;
 import 'package:saferoad/Home/Repository/notifications.dart';
 import 'package:saferoad/Home/ui/views/generalNotifications.dart';
 import 'package:saferoad/Home/ui/widgets/SideMenuWidget.dart';
-import 'package:saferoad/Request/ui/views/ListRequests.dart';
 import '../../../Auth/provider/auth_provider.dart';
 import '../../../Request/ui/views/createRequest.dart';
-import '../../../Request/ui/views/requestMechanic.dart';
-import '../../../helpers/notificationHelper.dart';
 import '../../bloc/location/my_location_bloc.dart';
 import '../../bloc/map/map_bloc.dart';
 import '../widgets/loading_dialog.dart';
@@ -62,6 +57,7 @@ class _MapViewState extends State<MapView> {
             builder: (context, state) => createMap(state)),
       );
     } else if (userType == "mecanico") {
+      print("VERIFICAR EL FOKIN MAPVIEW MALPARIDO ");
       return Stack(children: [
         Scaffold(
           drawer: const SideMenuWidget(),
@@ -69,6 +65,7 @@ class _MapViewState extends State<MapView> {
             builder: (context, state) => createMapMechanic(state),
           ),
         ),
+        
         FutureBuilder<void>(
           future: VerificationMembership()
               .verifyMembership(context), // Verify membership here
@@ -83,8 +80,8 @@ class _MapViewState extends State<MapView> {
             }
           },
         ),
-        GeneralNotifications(),
-        AvailabilityOverlayWidget(),
+        const GeneralNotifications(),
+        const AvailabilityOverlayWidget(),
       ]);
     } else {
       return Center(
@@ -119,7 +116,6 @@ class _MapViewState extends State<MapView> {
     mapBloc.icon('assets/iconoMecanico.png');
     return BlocBuilder<MapBloc, MapState>(
       builder: (context, state) {
-        
         return Stack(children: [
           if (state.showDialogLoading)
             const LoadingDialog(
@@ -161,7 +157,6 @@ class _MapViewState extends State<MapView> {
 
   Widget createMapMechanic(MyLocationState state) {
     if (!state.existsLocation) return const Center(child: Text('Ubicando...'));
-
     final mapBloc = BlocProvider.of<MapBloc>(context);
 
     LatLng location = state.location;

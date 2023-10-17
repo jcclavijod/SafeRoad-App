@@ -1,4 +1,3 @@
-// ignore_for_file: avoid_print, use_key_in_widget_constructors, library_private_types_in_public_api, avoid_init_to_null, unnecessary_null_comparison, use_build_context_synchronously
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -351,7 +350,7 @@ class _RegisterMechanicViewState extends State<RegisterMechanicView> {
           geohash: defaultGeohash,
           geopoint: defaultGeoPoint!,
         );
-        _mecanicoBloc.registerMecanico(
+        await _mecanicoBloc.registerMecanico(
           name,
           lastname,
           mail,

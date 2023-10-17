@@ -4,25 +4,31 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:saferoad/Membresia/model/membresia_model.dart';
 
 class MembresiaRepository {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseFirestore firestore;
+
+  MembresiaRepository({
+    required this.firestore,
+  });
 
   Future<void> addMembresia(membresiaModel membresia) async {
     try {
-      await _firestore.collection('membresias').add(membresia.toMap());
+      await firestore.collection('membresias').add(membresia.toMap());
     } catch (e) {
       print("Error adding membresia: $e");
     }
   }
 
-  Future<void> addMembresiaWithCustomId(
+  Future<bool> addMembresiaWithCustomId(
       String documentId, membresiaModel membresia) async {
     try {
-      await _firestore
+      await firestore
           .collection('membresias')
           .doc(documentId)
           .set(membresia.toMap());
+      return true;
     } catch (e) {
       print("Error adding membresia with custom ID: $e");
+      return false;
     }
   }
 
@@ -31,7 +37,7 @@ class MembresiaRepository {
 
     try {
       QuerySnapshot querySnapshot =
-          await _firestore.collection('membresias').get();
+          await firestore.collection('membresias').get();
 
       for (var doc in querySnapshot.docs) {
         membresias
@@ -46,7 +52,7 @@ class MembresiaRepository {
 
   Future<bool> checkActiveMembership(String uid) async {
     try {
-      final membershipsSnapshot = await _firestore
+      final membershipsSnapshot = await firestore
           .collection('membresias')
           .where('uid', isEqualTo: uid)
           .where('estado', isEqualTo: 'Activo')
@@ -61,7 +67,7 @@ class MembresiaRepository {
 
   Future<membresiaModel> getActiveMembership(String uid) async {
     try {
-      final membershipsSnapshot = await _firestore
+      final membershipsSnapshot = await firestore
           .collection('membresias')
           .where('uid', isEqualTo: uid)
           .where('estado', isEqualTo: 'Activo')

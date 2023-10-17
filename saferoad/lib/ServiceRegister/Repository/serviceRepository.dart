@@ -1,18 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:saferoad/Request/model/Request.dart';
 import 'package:saferoad/ServiceRegister/model/billItem.dart';
 import 'package:saferoad/ServiceRegister/model/service.dart';
 
 class ServiceRepository {
-  final user = FirebaseAuth.instance.currentUser!;
+  final FirebaseFirestore firestore;
+  final user;
+
+
+   ServiceRepository({
+    required this.user,
+    required this.firestore,
+  });
 
   Future<List<String>> saveWorkPerformed(List<BillItem> localServices) async {
     List<String> serviceReferences = [];
-    final DateTime currentDate = DateTime.now();
     for (final service in localServices) {
       final workPerformedReference =
-          FirebaseFirestore.instance.collection('workPerformed').doc();
+          firestore.collection('workPerformed').doc();
       final workPerformedData = {
         'mechanic': user.uid,
         'name': service.name,
@@ -29,7 +33,7 @@ class ServiceRepository {
       String request, double total, List<String> serviceReferences) async {
     final DateTime currentDate = DateTime.now();
     final serviceReference =
-        FirebaseFirestore.instance.collection('services').doc();
+        firestore.collection('services').doc();
     final serviceData = {
       'date': currentDate,
       'worksPerformed': serviceReferences,
@@ -38,7 +42,7 @@ class ServiceRepository {
     };
     await serviceReference.set(serviceData);
     print(request);
-    await FirebaseFirestore.instance.collection('requests').doc(request).update(
+    await firestore.collection('requests').doc(request).update(
         {'service': serviceReference.id, 'status': 'inCustomerAcceptance'});
     return serviceReference.id;
   }
@@ -47,7 +51,7 @@ class ServiceRepository {
     print(serviceId);
     print("hola");
     try {
-      final DocumentSnapshot serviceSnapshot = await FirebaseFirestore.instance
+      final DocumentSnapshot serviceSnapshot = await firestore
           .collection('services')
           .doc(serviceId)
           .get();
@@ -65,7 +69,7 @@ class ServiceRepository {
     List<BillItem> billItems = [];
 
     for (String documentId in worksPerformed) {
-      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+      DocumentSnapshot documentSnapshot = await firestore
           .collection('workPerformed')
           .doc(documentId)
           .get();
@@ -80,10 +84,10 @@ class ServiceRepository {
     return billItems;
   }
 
-  void updateStatus(String request) async {
-    await FirebaseFirestore.instance
+  void updateStatus(String request, String status) async {
+    await firestore
         .collection('requests')
         .doc(request)
-        .update({'status': 'inSelectingCause'});
+        .update({'status': status});
   }
 }

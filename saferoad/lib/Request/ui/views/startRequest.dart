@@ -53,8 +53,7 @@ class _StartRequestState extends State<StartRequest> {
         if (snapshot.hasData) {
           final requestData = snapshot.data!.data() as Map<String, dynamic>;
           Request newRequest = Request.fromMap(requestData);
-          activateWiew =
-              widget.authenticatedUser!.uid == requestData['userId'];
+          activateWiew = widget.authenticatedUser!.uid == requestData['userId'];
           if (requestData != null) {
             final status = requestData['status'];
 
@@ -65,7 +64,7 @@ class _StartRequestState extends State<StartRequest> {
               );
             } else if (status == 'inBilling' && !activateWiew) {
               return MyBilling(
-                requestId: widget.request!.id!,
+                request: newRequest,
               );
             } else if (status == 'inCustomerAcceptance' &&
                 activateWiew &&
@@ -134,9 +133,14 @@ class _StartRequestState extends State<StartRequest> {
           }
         }
 
-        return const Center(
-          child: CircularProgressIndicator.adaptive(),
-        );
+        return Container(
+            decoration: const BoxDecoration(
+              color: Colors.white, // Cambia esto al color de fondo que desees
+            ),
+            child:const Center(
+              child: CircularProgressIndicator.adaptive(),
+            ),
+          );
       },
     );
   }

@@ -253,6 +253,8 @@ class _RegisterViewState extends State<RegisterView> {
                           token,
                           File(_imageFile!.path),
                         );
+                        print("SE DEBE REDIRECCIONAR MALAPARIDO");
+
                         Navigator.of(context).pushReplacementNamed('/');
                       } catch (e) {
                         print('Error al registrar usuario: $e');

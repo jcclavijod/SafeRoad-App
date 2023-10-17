@@ -10,7 +10,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:saferoad/Auth/model/usuario_model.dart';
 import 'package:saferoad/helpers/notificationHelper.dart';
-
+import 'package:rxdart/rxdart.dart';
 import '../../Repository/requestRepository.dart';
 import '../../model/Request.dart';
 
@@ -18,8 +18,14 @@ part 'request_event.dart';
 part 'request_state.dart';
 
 class RequestBloc extends Bloc<RequestEvent, RequestState> {
-  final _requestRepository = RequestRepository();
-  late StreamSubscription<DocumentSnapshot> _requestSubscription;
+  final _requestRepository = RequestRepository(
+    firestoreBd: FirebaseFirestore.instance,
+    user: FirebaseAuth.instance.currentUser,
+  );
+  late StreamSubscription _requestSubscription;
+  final BehaviorSubject<List<Request>> requestsSubject =
+      BehaviorSubject<List<Request>>();
+
   NotificationHelper notification = NotificationHelper();
   final _requestUpdatesController = StreamController<Request>();
   Stream<Request> get requestUpdatesStream => _requestUpdatesController.stream;
@@ -105,9 +111,28 @@ class RequestBloc extends Bloc<RequestEvent, RequestState> {
     });
   }
 
-  void loadListRequest() async {
-    //add(FinishedRequestsLoaded(_requestRepository.getUserRequests()));
-    add(FinishedRequestsLoaded(_requestRepository.getMechanicRequests()));
+  void loadListRequest(String type) async {
+    //
+    if (type == "user") {
+      _requestSubscription =
+          _requestRepository.getUserRequests().listen((requests) {
+        // Actualizar el stream de solicitudess
+        final updatedRequests = requests.where((request) {
+          // Compara la marca de tiempo de lastUpdated con la marca de tiempo anterior
+          return !requestsSubject.hasValue ||
+              !requestsSubject.value.contains(request);
+        }).toList();
+
+        // Actualizar el stream de solicitudes solo si hay cambios
+        if (updatedRequests.isNotEmpty) {
+          requestsSubject.add(requests);
+        }
+      });
+      add(FinishedRequestsLoaded(_requestRepository.getUserRequests()));
+    } else {
+      add(FinishedRequestsLoaded(_requestRepository.getMechanicRequests()));
+    }
+
     createSubscription();
   }
 
@@ -120,7 +145,7 @@ class RequestBloc extends Bloc<RequestEvent, RequestState> {
   }
 
   Future<void> loadMechanic() async {
-    final location = await _requestRepository.locationMechanic();
+    final location = await _requestRepository.locationMechanic(state.request);
     add(LoadLocation2(location));
   }
 
@@ -131,11 +156,13 @@ class RequestBloc extends Bloc<RequestEvent, RequestState> {
     final receiver = await _requestRepository.getClient(state.request);
     final location = await _requestRepository.locationUser(state.request);
     //final request = await _requestRepository.getRequest(state.request);
+    /*
     print("MOSTRANDO LOS DATOS QUE SE ESTAN ENVIANDO AL MAPA HIJO PUTA");
     print(authenticatedUser.uid);
     print(receiver.uid);
     print(location);
     //print(request);
+    */
     emit(state.copyWith(
         authenticatedUser: authenticatedUser,
         receiver: receiver,

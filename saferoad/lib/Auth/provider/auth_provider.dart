@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -67,7 +66,6 @@ class FirebaseDataSource {
 
       final storageRef = storage.ref(imagePath);
       await storageRef.putFile(image);
-      final url = await storageRef.getDownloadURL();
     }
     await ref.set(myUser.toMap(), SetOptions(merge: true));
   }

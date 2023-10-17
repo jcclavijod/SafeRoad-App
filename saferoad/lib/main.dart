@@ -26,24 +26,18 @@ Future<void> main(context) async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-            create: (_) => RequestProvider()..listenToRequests()),
-      ],
-      child: MultiBlocProvider(providers: [
-        BlocProvider(create: (context) => GpsBloc()),
-        BlocProvider(create: (context) => MyLocationBloc()),
-        BlocProvider(create: (context) => MapBloc()),
-        BlocProvider(create: (context) => RequestBloc()),
-        BlocProvider(create: (context) => AvailabilityBloc()),
-        BlocProvider(create: (context) => UsersInRoadBloc()),
-        BlocProvider(create: (context) => QualificationBloc()),
-        BlocProvider(create: (context) => ManageNotificationsBloc()),
-        BlocProvider(create: (context) => MyBillingBloc()),
-        BlocProvider(create: (context) => CauseFailureBloc()),
-      ], child: const MyApp()),
-    ),
+    MultiBlocProvider(providers: [
+      BlocProvider(create: (context) => GpsBloc()),
+      BlocProvider(create: (context) => MyLocationBloc()),
+      BlocProvider(create: (context) => MapBloc()),
+      BlocProvider(create: (context) => RequestBloc()),
+      BlocProvider(create: (context) => AvailabilityBloc()),
+      BlocProvider(create: (context) => UsersInRoadBloc()),
+      BlocProvider(create: (context) => QualificationBloc()),
+      BlocProvider(create: (context) => ManageNotificationsBloc()),
+      BlocProvider(create: (context) => MyBillingBloc()),
+      BlocProvider(create: (context) => CauseFailureBloc()),
+    ], child: const MyApp()),
   );
 }
 

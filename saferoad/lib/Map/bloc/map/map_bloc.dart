@@ -2,10 +2,10 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:geoflutterfire2/geoflutterfire2.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import '../../../Request/model/Request.dart';
 import '../../Repository/mapRepository.dart';
 import '../../repository/SearchRepository.dart';
 
@@ -36,7 +36,13 @@ class MapBloc extends Bloc<MapEvent, MapState> {
 
   late GoogleMapController _mapController;
 
-  SearchRepository searchRepository = SearchRepository();
+
+  final SearchRepository searchRepository = SearchRepository(
+    geo:GeoFlutterFire(),
+    firestore: FirebaseFirestore.instance,
+    user: FirebaseAuth.instance.currentUser,
+  );
+
   MapRepository mapRepository = MapRepository();
   late StreamSubscription<LatLng> _locationSubscription;
 
@@ -53,10 +59,6 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   }
 
   void updateMechanicState(bool mechanicState) {
-    print("ESTE ES EL ESTADO original");
-    print(state.mechanicState);
-    print("ESTE ES EL ESTADO QUE SE ESTA COLOCANDO");
-    print(mechanicState);
     add(UpdateMechanicState(mechanicState));
   }
 

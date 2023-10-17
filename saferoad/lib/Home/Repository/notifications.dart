@@ -1,20 +1,16 @@
 import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-
 import 'package:http/http.dart' as http;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:saferoad/Home/Repository/notificationsManager.dart';
-import 'package:saferoad/Map/ui/views/mapView.dart';
 import 'package:saferoad/Map/ui/views/ratingDialog.dart';
 import 'package:saferoad/Map/ui/widgets/show_dialog.dart';
 import 'package:saferoad/Request/Repository/requestRepository.dart';
 import 'package:saferoad/Request/model/Request.dart';
-import 'package:saferoad/Request/ui/views/ensayo.dart';
 
 class Notifications {
   static FirebaseMessaging messaging = FirebaseMessaging.instance;
@@ -40,12 +36,6 @@ class Notifications {
   static Future<void> _firebaseMessagingBackgroundHandler(
       RemoteMessage message) async {
     await Firebase.initializeApp();
-    //showFlutterNotification(message);
-    print('Handling a background message ${message.messageId}');
-    print('title ${message.notification?.title}');
-    print('body ${message.notification?.body}');
-    print('payload ${message.data}');
-    print('type ${message.data['type']}');
     showFlutterNotification(message);
   }
 
@@ -62,14 +52,16 @@ class Notifications {
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       //showFlutterNotification(message);
-      print('SI SE DEBERIA DE MOSTRAR ALGO');
+
       if (message.notification != null) {
         if (message.data["type"] == "request") {
-          print('type ${message.data['type']}');
-          print('SI SE DEBERIA DE MOSTRAR ALGO');
-          notificationManager.sendNotification(message.data);
+          //print('type ${message.data['type']}');
+          if (message.data["request_id"] != null) {
+            print('SI SE DEBERIA DE MOSTRAR ALGO');
+            notificationManager.sendNotification(message.data);
+          }
           //print("perroooooooooooooooo");
-          await modelRequestDialog(getRequest(message.data), context);
+          //await modelRequestDialog(getRequest(message.data), context);
           //print("perroooooooooooooooo");
           //print(request!.id);
           //print("CAMINO");
@@ -144,16 +136,21 @@ class Notifications {
   Future<void> getToken() async {
     String? token = await messaging.getToken();
     final user = FirebaseAuth.instance.currentUser!;
+    print("##########################");
+    print(user.uid);
     final String collection = await getTypeUser(user.uid);
     print(collection);
-    await FirebaseFirestore.instance
-        .collection(collection)
-        .doc(_authUser!.uid)
-        .update({
-      'token': token,
-    });
-    messaging.subscribeToTopic("AllUsers");
-    messaging.subscribeToTopic("AvailaibleMechanics");
+    print("##########################");
+    if (collection != "") {
+      await FirebaseFirestore.instance
+          .collection(collection)
+          .doc(user.uid)
+          .update({
+        'token': token,
+      });
+      messaging.subscribeToTopic("AllUsers");
+      messaging.subscribeToTopic("AvailaibleMechanics");
+    }
   }
 
   void setupCloudMessaging() async {
@@ -185,7 +182,10 @@ class Notifications {
 
   static Future<void> modelRequestDialog(
       String userRequest, BuildContext context) async {
-    RequestRepository repo = RequestRepository();
+    RequestRepository repo = RequestRepository(
+      firestoreBd: FirebaseFirestore.instance,
+      user: FirebaseAuth.instance.currentUser,
+    );
     request = await repo.getRequestNotification(userRequest);
   }
 

@@ -15,7 +15,4 @@ class MapRepository {
     final Uint8List markerBytes = resizedImage!.buffer.asUint8List();
     return BitmapDescriptor.fromBytes(markerBytes);
   }
-
-
-  
 }

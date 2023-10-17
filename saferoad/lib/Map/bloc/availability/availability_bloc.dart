@@ -1,5 +1,7 @@
 import 'package:bloc/bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../Repository/availabilityRepository.dart';
 
@@ -14,8 +16,10 @@ class AvailabilityBloc extends Bloc<AvailabilityEvent, AvailabilityState> {
         emit(state.copyWith(availabilityText: event.availabilityText)));
   }
 
-  final AvailabilityRepository availabilityRepository =
-      AvailabilityRepository();
+  final AvailabilityRepository availabilityRepository = AvailabilityRepository(
+    firestore: FirebaseFirestore.instance,
+    user: FirebaseAuth.instance.currentUser,
+  );
 
   void updateState(bool availability) async {
     availabilityRepository.updateMechanicAvailability(availability);

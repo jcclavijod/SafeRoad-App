@@ -1,9 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class AvailabilityRepository {
-  final FirebaseFirestore firestore = FirebaseFirestore.instance;
-  final user = FirebaseAuth.instance.currentUser!;
+  final FirebaseFirestore firestore;
+  final user;
+
+  AvailabilityRepository({
+    required this.firestore,
+    required this.user,
+  });
 
   Future<bool> getMechanicAvailability() async {
     try {
@@ -19,13 +23,15 @@ class AvailabilityRepository {
     }
   }
 
-  Future<void> updateMechanicAvailability(bool isAvailable) async {
+  Future<bool> updateMechanicAvailability(bool isAvailable) async {
     try {
       await firestore.collection('mecanicos').doc(user.uid).update({
         'isAvailable': isAvailable,
       });
+      return true;
     } catch (e) {
-      throw Exception('Error al actualizar el estado del mecánico');
+      print('Error al actualizar el estado del mecánico: $e');
+      return false;
     }
   }
 }

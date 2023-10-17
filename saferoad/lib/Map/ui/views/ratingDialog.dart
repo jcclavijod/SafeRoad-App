@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-
-import '../../../Home/ui/views/userpage.dart';
 import '../../bloc/qualification/qualification_bloc.dart';
 
 class RatingDialog extends StatefulWidget {
@@ -20,10 +18,10 @@ class RatingDialog extends StatefulWidget {
   final String? mechanicLocal;
 
   @override
-  _RatingDialogState createState() => _RatingDialogState();
+  RatingDialogState createState() => RatingDialogState();
 }
 
-class _RatingDialogState extends State<RatingDialog> {
+class RatingDialogState extends State<RatingDialog> {
   @override
   void initState() {
     super.initState();
@@ -52,7 +50,7 @@ class _RatingDialogState extends State<RatingDialog> {
               // Título informativo en la parte superior
               Container(
                 color: Colors.orange, // Color de fondo
-                padding: EdgeInsets.symmetric(vertical: 12.0),
+                padding: const EdgeInsets.symmetric(vertical: 12.0),
                 child: const Center(
                   child: Text(
                     'Solicitud Finalizada con Éxito',

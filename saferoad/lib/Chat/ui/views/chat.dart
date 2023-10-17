@@ -5,7 +5,6 @@ import 'package:saferoad/Auth/model/usuario_model.dart';
 
 import '../../bloc/messageReceiverBlc/msReceiverBloc.dart';
 import '../../bloc/messageSenderBlc/msSenderBloc.dart';
-import '../../provider/messageProvider.dart';
 import '../../repository/messageRepository.dart';
 import 'chatMessage.dart';
 import 'chatSender.dart';
@@ -36,9 +35,7 @@ class ConversationMainView extends StatelessWidget {
           child: BlocProvider(
             create: (context) => MessageReceiverBloc(
               messageRepository: MessageRepository(
-                messageFirebaseProvider: MessageProvider(
                   firestore: FirebaseFirestore.instance,
-                ),
               ),
             )..add(MessageRequested(conversationId: conversationId)),
             child: ConversationMessageView(
@@ -54,9 +51,7 @@ class ConversationMainView extends StatelessWidget {
             child: BlocProvider(
               create: (context) => MessageSenderBloc(
                 MessageRepository(
-                  messageFirebaseProvider: MessageProvider(
                     firestore: FirebaseFirestore.instance,
-                  ),
                 ),
               ),
               child: ConversationSenderView(

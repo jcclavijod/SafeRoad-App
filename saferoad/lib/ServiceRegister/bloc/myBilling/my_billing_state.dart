@@ -11,6 +11,7 @@ class MyBillingState extends Equatable {
   final bool isEditing;
   final String serviceId;
   final Service service;
+  
 
   MyBillingState(
       {this.billItems = const [],

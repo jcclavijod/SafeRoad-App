@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
+import 'package:saferoad/Request/model/Request.dart';
 import 'package:saferoad/ServiceRegister/bloc/myBilling/my_billing_bloc.dart';
 import 'package:saferoad/ServiceRegister/ui/widgets/billItemWidget.dart';
 import 'package:saferoad/ServiceRegister/ui/widgets/customButton.dart';
 
 class MyBilling extends StatefulWidget {
-  final String requestId;
+  final Request request;
+
   const MyBilling({
     Key? key,
-    required this.requestId,
+    required this.request,
   }) : super(key: key);
 
   @override
@@ -17,6 +19,19 @@ class MyBilling extends StatefulWidget {
 }
 
 class _MyBillingState extends State<MyBilling> {
+  bool isRejected = false;
+  @override
+  void initState() {
+    final myBillingBloc = BlocProvider.of<MyBillingBloc>(context);
+    print("BUSCANDO SERVICIO AL INICIO");
+    print(widget.request.service);
+    if (widget.request.service != "") {
+      myBillingBloc.getService(widget.request.service);
+      isRejected = true;
+    }
+    super.initState();
+  }
+
   @override
   void dispose() {
     super.dispose();
@@ -33,10 +48,13 @@ class _MyBillingState extends State<MyBilling> {
         ),
         body: Column(
           children: [
-            if (state.billItems.isEmpty) _buildEmptyState(context),
+            if (state.billItems.isEmpty ||
+                (widget.request.service == "" && isRejected))
+              _buildEmptyState(context),
             if (state.billItems.isNotEmpty)
               _buildBillItemsList(context, state, myBillingBloc),
-            _buildAddItemForm(context, state, myBillingBloc, widget.requestId),
+            _buildAddItemForm(
+                context, state, myBillingBloc, widget.request.id!),
           ],
         ),
       );
@@ -129,9 +147,17 @@ class _MyBillingState extends State<MyBilling> {
                 CustomElevatedButton(
                   label: 'Enviar costo total',
                   onPressed: () {
-                    myBillingBloc.saveWorkPerformed();
-                    myBillingBloc.saveService(requestId);
-                    Navigator.of(context).pop();
+                    if (state.total == 0) {
+                      const snackBar = SnackBar(
+                        content: Text(
+                            'Por favor, Ingresa al menos el costo de tu viaje'),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    } else {
+                      myBillingBloc.saveService(requestId);
+
+                      //Navigator.of(context).pop();
+                    }
                   },
                   color: Colors.green,
                 ),

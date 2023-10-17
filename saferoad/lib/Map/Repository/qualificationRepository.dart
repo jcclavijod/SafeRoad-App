@@ -1,24 +1,29 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class QualificationRepository {
-  final FirebaseFirestore firestore = FirebaseFirestore.instance;
-  final user = FirebaseAuth.instance.currentUser!;
+  final FirebaseFirestore firestore;
+  final user;
 
-  Future<void> saveRating(double rating, String mechanicId) async {
-  try {
-    final ratingData = {
-      'qualification': rating,
-      'user': user.uid,
-      'mechanicId': mechanicId,
-      'date': Timestamp.now(),
-    };
+  QualificationRepository({
+    required this.firestore,
+    required this.user,
+  });
 
-    await FirebaseFirestore.instance.collection('mechanicQualifications').add(ratingData);
-  } catch (error) {
-    throw Exception('Error al guardar la calificación: $error');
+Future<bool> saveRating(double rating, String mechanicId) async {
+    try {
+      final ratingData = {
+        'qualification': rating,
+        'user': user.uid,
+        'mechanicId': mechanicId,
+        'date': Timestamp.now(),
+      };
+
+      await firestore
+          .collection('mechanicQualifications')
+          .add(ratingData);
+      return true; 
+    } catch (error) {
+      return false; 
+    }
   }
-}
-
-
 }

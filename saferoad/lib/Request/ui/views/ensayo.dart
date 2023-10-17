@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -29,39 +31,19 @@ class RequestPopup2State extends State<RequestPopup2> {
   late LatLng location;
   late UserModel? authenticatedUser;
   late UserModel? receiver;
-  final repository = RequestRepository();
+  final repository = RequestRepository(
+    firestoreBd: FirebaseFirestore.instance,
+    user: FirebaseAuth.instance.currentUser,
+  );
 
   @override
   void initState() {
     super.initState();
-
     final requestBloc = BlocProvider.of<RequestBloc>(context);
     requestBloc.loadRequestInitial(widget.request!);
     requestBloc.loadRequestData();
-    //_setUserAuth();
-    //_setClient();
-    /*repository.locationUser().then((result) {
-      setState(() {
-        location = result;
-      });
-    });*/
   }
 
-/*
-  void _setUserAuth() async {
-    final user = await repository.getUserAuth();
-    setState(() {
-      authenticatedUser = user;
-    });
-  }
-
-  void _setClient() async {
-    final client = await repository.getClient();
-    setState(() {
-      receiver = client;
-    });
-  }
-  */
 
   @override
   Widget build(BuildContext context) {
@@ -176,7 +158,7 @@ class RequestPopup2State extends State<RequestPopup2> {
                   ),
                 ),
                 onPressed: () {
-                  repository.updateRequestStatus('rejected');
+                  //repository.updateRequestStatus('rejected');
                   //Navigator.of(context).pop();
                   widget.onClose?.call();
                 },

@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:saferoad/Request/model/Request.dart';
 import 'package:saferoad/ServiceRegister/Repository/causeFailuresRepository.dart';
@@ -8,7 +9,8 @@ part 'cause_failure_event.dart';
 part 'cause_failure_state.dart';
 
 class CauseFailureBloc extends Bloc<CauseFailureEvent, CauseFailureState> {
-  CauseFailureRepository causeFailureRepo = CauseFailureRepository();
+  CauseFailureRepository causeFailureRepo = CauseFailureRepository(
+      causeFailureInstance: FirebaseFirestore.instance);
 
   CauseFailureBloc() : super(const CauseFailureState()) {
     on<CauseFailureEvent>((event, emit) {});

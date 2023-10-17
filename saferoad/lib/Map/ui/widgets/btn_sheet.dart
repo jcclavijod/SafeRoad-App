@@ -115,7 +115,7 @@ class BottomSheetContentState extends State<BottomSheetContent> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16.0),
                           child: FinishButtonSection(
-                            requestId: widget.request!.id,
+                            request: widget.request!,
                             receiver: widget.authenticatedUser,
                           ),
                         ),
@@ -292,11 +292,11 @@ class ContactButtonSection extends StatelessWidget {
 class FinishButtonSection extends StatelessWidget {
   const FinishButtonSection({
     Key? key,
-    required this.requestId,
+    required this.request,
     required this.receiver,
   }) : super(key: key);
 
-  final String? requestId;
+  final Request request;
 
   final UserModel? receiver;
 
@@ -327,14 +327,15 @@ class FinishButtonSection extends StatelessWidget {
               );*/
 
               final usersInRoadBloc = BlocProvider.of<UsersInRoadBloc>(context);
-              usersInRoadBloc.change(requestId);
-              Navigator.push(
+              usersInRoadBloc.change(request.id);
+              /*Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) => MyBilling(
-                          requestId: requestId!,
+                          request: request,
+                          isRejected: false,
                         )),
-              );
+              );*/
             },
             style: ElevatedButton.styleFrom(
               primary: Colors.green,

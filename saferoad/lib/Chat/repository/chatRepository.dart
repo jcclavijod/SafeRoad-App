@@ -1,14 +1,27 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:saferoad/Chat/utils/conversationKey.dart';
+
 import '../model/conversation.dart';
-import '../provider/chatProvider.dart';
 
 class ChatRepository {
-  final ChatFirebaseProvider chatFirebaseProvider;
+  final FirebaseFirestore firestore;
+
   ChatRepository({
-    required this.chatFirebaseProvider,
+    required this.firestore,
   });
 
+  Future<List<Map<String, dynamic>>> _getChats({
+    required String loginUID,
+  }) async {
+    final querySnap = await firestore
+        .collection(ConversationKey.collectionName)
+        .where(ConversationKey.members, arrayContains: loginUID)
+        .get();
+    return querySnap.docs.map((e) => e.data()).toList();
+  }
+
   Future<List<Conversation>> getChats({required String loginUID}) async {
-    final chatMaps = await chatFirebaseProvider.getChats(loginUID: loginUID);
+    final chatMaps = await _getChats(loginUID: loginUID);
     return chatMaps.map((chatMap) => Conversation.fromMap(chatMap)).toList();
   }
 }

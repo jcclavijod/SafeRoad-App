@@ -7,16 +7,20 @@ import 'package:saferoad/Request/ui/widgets/iconEmpty.dart';
 import 'package:saferoad/Request/ui/views/startRequest.dart';
 
 class ListRequests extends StatefulWidget {
+  final String type;
+  const ListRequests({super.key, required this.type});
+
   @override
-  _ListRequestsState createState() => _ListRequestsState();
+  ListRequestsState createState() => ListRequestsState();
 }
 
-class _ListRequestsState extends State<ListRequests> {
+class ListRequestsState extends State<ListRequests> {
   @override
   void initState() {
     super.initState();
+    print("LISTA DE VIAJES MALPARIDO");
     final requestBloc = BlocProvider.of<RequestBloc>(context);
-    requestBloc.loadListRequest();
+    requestBloc.loadListRequest(widget.type);
   }
 
   @override
@@ -36,10 +40,9 @@ class _ListRequestsState extends State<ListRequests> {
   }
 
   Widget _buildFinishedRequestCard(BuildContext context) {
-    final requestBloc = BlocProvider.of<RequestBloc>(context);
     return BlocBuilder<RequestBloc, RequestState>(builder: (context, state) {
       return StreamBuilder<List<Request>>(
-        stream: requestBloc.state.finishedRequests,
+        stream: state.finishedRequests,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const CircularProgressIndicator();
@@ -58,7 +61,7 @@ class _ListRequestsState extends State<ListRequests> {
                 final request = requests[index];
                 print("tamaño: ${requests.length}");
                 print("estado: ${request.status}");
-                return _requestCard(request, index, state, requestBloc);
+                return _requestCard(request, index, state, context);
               },
             );
           }
@@ -68,13 +71,14 @@ class _ListRequestsState extends State<ListRequests> {
   }
 
   Widget _requestCard(
-      Request request, int index, RequestState state, RequestBloc requestBloc) {
+      Request request, int index, RequestState state, BuildContext context) {
     Widget serviceImage;
     Color buttonColor;
     String spanishStatus = "";
-    bool shouldNavigate = false;
-
-    requestBloc.loadRequest(request);
+    final requestBloc = BlocProvider.of<RequestBloc>(context);
+    if (request.status == "inProcess") {
+      print("EN PROCESOOOOOOOOO");
+    }
     switch (request.status) {
       case 'pending':
         serviceImage =
@@ -170,42 +174,31 @@ class _ListRequestsState extends State<ListRequests> {
               ],
             ),
           ),
-          ElevatedButton(
-            onPressed: () async {
-              //await requestBloc.loadRequest(request);
-              setState(() {
-                shouldNavigate =
-                    true; // Establece la variable en verdadero para indicar que debes navegar
-              });
+          if (request.status != "finished")
+            ElevatedButton(
+              onPressed: () async {
+                await requestBloc.loadRequest(request);
 
-              print("??????????????????????????");
-              print(request.id);
-              print(state.request.id);
-              print(state.authenticatedUser.uid);
-              print(state.receiver.uid);
-              print(state.location);
-              print("??????????????????????????");
-
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => StartRequest(
-                    location: state.location,
-                    authenticatedUser: state.authenticatedUser,
-                    receiver: state.receiver,
-                    request: request,
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => StartRequest(
+                      location: state.location,
+                      authenticatedUser: state.authenticatedUser,
+                      receiver: state.receiver,
+                      request: request,
+                    ),
                   ),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                primary: buttonColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
                 ),
-              );
-            },
-            style: ElevatedButton.styleFrom(
-              primary: buttonColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
               ),
+              child: const Text('Ver Detalle'),
             ),
-            child: const Text('Ver Detalle'),
-          ),
         ],
       ),
     );

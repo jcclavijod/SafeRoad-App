@@ -35,8 +35,9 @@ class ManageNotificationsBloc
         emit(state.copyWith(requestNotification: event.requestNotification)));
   }
 
-  void init(BuildContext context) {
-    final requests = Provider.of<RequestProvider>(context).requests;
+  void init() {
+    RequestListen request = RequestListen();
+    final requests = request.requests;
     add(AddNotificationsListener(
         Notifications.notificationManager.notificationStream));
     add(AddProviderRequests(requests));
@@ -63,20 +64,38 @@ class ManageNotificationsBloc
   }
   */
 
-  void closeNotification() {
-    add(const UpdateOpenDialog(false));
-    
-
-    if (state.notificationsQueue.isNotEmpty) {
-      final nextNotification = state.notificationsQueue.removeAt(0);
-      //handleNotification(nextNotification);
-    }
-    add(const UpdateCurrentNotification({}));
-  }
-
   void addCurrentNotification(Map<String, dynamic> notification) {
     add(UpdateCurrentNotification(notification));
     add(const UpdateIsCurrentNotification(true));
+  }
+
+  // Define una variable para mantener un registro de las solicitudes notificadas.
+  Set<String> notifiedRequests = Set();
+  Set<String> notifiedRequests2 = Set();
+
+  void subscribeToRequestStatusChanges(Map<String, dynamic> notification) {
+    String requestId = notification["request_id"];
+    //add(UpdateCurrentNotification(notification));
+    FirebaseFirestore.instance
+        .collection('requests')
+        .doc(requestId)
+        .snapshots()
+        .listen((snapshot) {
+      if (snapshot.exists) {
+        final request =
+            Request.fromMap(snapshot.data() as Map<String, dynamic>);
+        if (request.status == "pending" &&
+            !notifiedRequests.contains(requestId)) {
+          // Notificar solo si la solicitud está en "pending" y no se ha notificado antes.
+          notifiedRequests.add(requestId); // Registra la notificación.
+          add(AddNotificationRequest(request));
+        } else if (request.status == "rejected" &&
+            !notifiedRequests2.contains(requestId)) {
+          notifiedRequests2.add(requestId);
+          add(AddNotificationRequest(request));
+        }
+      }
+    });
   }
 
   void addNotificationRequest(String requestId) {
@@ -84,11 +103,36 @@ class ManageNotificationsBloc
       (request) => request.id == requestId,
       orElse: () => Request.complete(),
     );
+    print("MOSTRAR LA REQUEST QUE SE VA A AÑADIR A LA COLA");
+    print(request.id);
     add(AddNotificationRequest(request));
   }
-/*
-  void addNotificationQueue(Map<String, dynamic> notification) {
-    state.notificationsQueue.sink.add(notification);
+
+  void addNotificationToQueue(Map<String, dynamic> notification) {
+    print("MALDITA PERRA HIJA DE LA GRAN PUTA");
+    final updatedQueue =
+        List<Map<String, dynamic>>.from(state.notificationsQueue)
+          ..add(notification);
+    //add(AddNotificationRequest(Request.complete()));
+    //print("hola bebe, se que contigo no sirve la magia");
+    //final newState = state.copyWith(notificationsQueue: updatedQueue);
+    //emit(newState);
+    //add(AddQueue(updatedQueue));
+    /*
+    
+    
+   
+    */
   }
-*/
+
+  void closeNotificationAndProcessQueue() {
+    add(const UpdateOpenDialog(false)); // Cierra la notificación actual
+
+    if (state.notificationsQueue.isNotEmpty) {
+      final nextNotification = state.notificationsQueue.removeAt(0);
+      addNotificationRequest(nextNotification[
+          'request_id']); // Muestra la siguiente notificación en la cola
+    }
+    add(const UpdateCurrentNotification({})); // Limpia la notificación actual
+  }
 }

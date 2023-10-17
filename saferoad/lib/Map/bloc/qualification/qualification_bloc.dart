@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:saferoad/Map/Repository/qualificationRepository.dart';
@@ -16,8 +17,11 @@ class QualificationBloc extends Bloc<QualificationEvent, QualificationState> {
         mechanicPic: state.mechanicPic,
         mechanicLocal: state.mechanicLocal)));
   }
-  final QualificationRepository qualificationRepository =
-      QualificationRepository();
+
+  final QualificationRepository qualificationRepository = QualificationRepository(
+    firestore: FirebaseFirestore.instance,
+    user: FirebaseAuth.instance.currentUser,
+  );
 
   void updateState(double rating) {
     add(RatingUpdated(rating));
@@ -25,12 +29,7 @@ class QualificationBloc extends Bloc<QualificationEvent, QualificationState> {
 
   void getDocuments(
       String mechanicId, String mechanicPic, String mechanicLocal) {
-    print("°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°");
-    print(mechanicId);
-    print(mechanicPic);
-    print(mechanicLocal);
     add(AddParameters(mechanicId, mechanicPic, mechanicLocal));
-    print("°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°");
   }
 
   void setData() async {

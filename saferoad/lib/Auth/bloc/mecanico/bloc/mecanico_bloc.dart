@@ -1,7 +1,5 @@
 // ignore_for_file: depend_on_referenced_packages, avoid_print
 import 'dart:io';
-import 'package:bloc/bloc.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:saferoad/Auth/bloc/cliente/cliente_bloc.dart';
 import 'package:saferoad/Auth/model/mecanico_model.dart';
 import 'package:saferoad/Auth/repository/mecanicoRepository/login_repository.dart';

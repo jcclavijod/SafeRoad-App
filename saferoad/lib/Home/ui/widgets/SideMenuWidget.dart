@@ -11,10 +11,26 @@ import '../../../Auth/provider/auth_provider.dart';
 import '../../../Request/ui/views/ListRequests.dart';
 import '../views/userpage.dart';
 
-class SideMenuWidget extends StatelessWidget {
+class SideMenuWidget extends StatefulWidget {
   const SideMenuWidget({
     Key? key,
   }) : super(key: key);
+
+  @override
+  State<SideMenuWidget> createState() => _SideMenuWidgetState();
+}
+
+class _SideMenuWidgetState extends State<SideMenuWidget> {
+  String tipo = "";
+  @override
+  void initState() {
+    initializeData();
+    super.initState();
+  }
+
+  Future<void> initializeData() async {
+    tipo = await FirebaseDataSource().getUserType();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,9 +39,12 @@ class SideMenuWidget extends StatelessWidget {
       future: FirebaseDataSource().getMyUsers(),
       builder: (BuildContext context, AsyncSnapshot<UserModel> snapshot) {
         Widget wid;
-        if (snapshot.connectionState == ConnectionState.waiting) {
+
+        if (snapshot.connectionState == ConnectionState.waiting && tipo == "") {
           wid = const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasData) {
+          print("TIPO HIJO DE LA GRAN PUTA");
+          print(tipo);
           userM = snapshot.data;
           wid = Drawer(
             child: ListView(
@@ -53,7 +72,7 @@ class SideMenuWidget extends StatelessWidget {
                   onTap: () {
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => ListRequests()),
+                      MaterialPageRoute(builder: (context) => ListRequests(type:tipo)),
                     );
                   },
                 ),

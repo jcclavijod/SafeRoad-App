@@ -5,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import '../Home/ui/views/userpage.dart';
 import '../Map/ui/views/ratingDialog.dart';
 import '../Map/ui/widgets/show_dialog.dart';
 import '../Request/Repository/requestRepository.dart';
@@ -170,7 +169,8 @@ class NotificationHelper {
 
   static void modelRequestDialog(
       String userRequest, BuildContext context) async {
-    RequestRepository repo = RequestRepository();
+    RequestRepository repo = RequestRepository(firestoreBd: FirebaseFirestore.instance,
+    user: FirebaseAuth.instance.currentUser,);
     Request? request = await repo.getRequestNotification(userRequest);
     String address = await repo.getAddress(request.userLocation);
     showDialog(

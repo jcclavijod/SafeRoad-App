@@ -27,7 +27,8 @@ class ConnectingDialogState extends State<ConnectingDialog> {
   late UserModel? receiver;
   late Request? request;
   late Timer _timer;
-  final repository = RequestRepository();
+  final repository = RequestRepository(firestoreBd: FirebaseFirestore.instance,
+    user: FirebaseAuth.instance.currentUser,);
 
   @override
   void initState() {

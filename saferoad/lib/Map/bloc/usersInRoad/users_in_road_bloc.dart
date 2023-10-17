@@ -1,7 +1,10 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:geoflutterfire2/geoflutterfire2.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:saferoad/Auth/model/usuario_model.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -26,7 +29,13 @@ class UsersInRoadBloc extends Bloc<UsersInRoadEvent, UsersInRoadState> {
   }
 
   MapRepository mapRepository = MapRepository();
-  SearchRepository searchRepository = SearchRepository();
+
+  final SearchRepository searchRepository = SearchRepository(
+    geo: GeoFlutterFire(),
+    firestore: FirebaseFirestore.instance,
+    user: FirebaseAuth.instance.currentUser,
+  );
+
   NotificationHelper notification = NotificationHelper();
   late StreamSubscription<LatLng> _locationSubscription;
 
@@ -45,7 +54,6 @@ class UsersInRoadBloc extends Bloc<UsersInRoadEvent, UsersInRoadState> {
     BitmapDescriptor icon2 =
         await mapRepository.getMarkerIcon("assets/marcador.png", 208);
     if (state.userType == "mecanico") {
-      print("ICONOOOOOOO ICONOOOOOOO ICONOOOOOOO ICONOOOOOO");
       add(SaveIcons(icon1, icon2));
     } else {
       add(SaveIcons(icon2, icon1));
@@ -60,9 +68,6 @@ class UsersInRoadBloc extends Bloc<UsersInRoadEvent, UsersInRoadState> {
         add(OnLocations(location, state.location2));
       });
     }
-    print(
-        "----------- VERIFICANDOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO 2222-------------");
-    print(state.location);
   }
 
   void newLocationMechanic(Request? request) async {
@@ -74,17 +79,13 @@ class UsersInRoadBloc extends Bloc<UsersInRoadEvent, UsersInRoadState> {
   void openPhoneApp(String url) async {
     final uri = Uri(scheme: 'tel', path: url);
     if (await canLaunchUrl(uri)) {
-      await launchUrl(uri); // Abre la aplicación de teléfono
+      await launchUrl(uri); 
     } else {
-      // No se pudo abrir la aplicación de teléfono, maneja este caso aquí
       print('No se pudo abrir la aplicación de teléfono');
     }
   }
 
   void saveUsers(UserModel authenticatedUser, UserModel receiver) {
-    print("TTTTTTTTTTTTTTTTTTTTTTT");
-    print(receiver.token);
-    print(authenticatedUser.token);
     add(SaveUsers(authenticatedUser, receiver));
   }
 
@@ -127,11 +128,9 @@ class UsersInRoadBloc extends Bloc<UsersInRoadEvent, UsersInRoadState> {
     searchRepository.changeStatusRequest(requestId!, "finished");
   }
 
-  void change(final String? requestId){
+  void change(final String? requestId) {
     searchRepository.changeStatusRequest(requestId!, "inBilling");
   }
-
-
 
   @override
   Future<void> close() {

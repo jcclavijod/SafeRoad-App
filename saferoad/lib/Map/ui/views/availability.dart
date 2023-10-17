@@ -60,8 +60,11 @@ class AvailabilitySwitchWidget extends StatelessWidget {
 }
 
 class AvailabilityOverlayWidget extends StatelessWidget {
+  const AvailabilityOverlayWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
+    print("AVAILABILITYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
     return BlocBuilder<AvailabilityBloc, AvailabilityState>(
       builder: (context, state) {
         if (!state.isAvailable) {

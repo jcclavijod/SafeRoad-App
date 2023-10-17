@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:saferoad/Auth/model/usuario_model.dart';
 import '../../bloc/conversationBlc/conversationBloc.dart';
-import '../../provider/conversationProvider.dart';
 import '../../repository/conversationRepository.dart';
 import 'chat.dart';
 
@@ -24,9 +23,7 @@ class ConversationPage extends StatelessWidget {
     return BlocProvider(
       create: (context) => ConversationBloc(
         conversationRepository: ConversationRepository(
-          conversationFirebaseProvider: ConversationFirebaseProvider(
             firestore: FirebaseFirestore.instance,
-          ),
         ),
       )..add(
           ConversationDetailRequested(

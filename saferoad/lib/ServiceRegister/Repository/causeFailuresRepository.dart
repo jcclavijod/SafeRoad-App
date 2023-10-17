@@ -5,19 +5,25 @@ import 'package:saferoad/ServiceRegister/model/billItem.dart';
 import 'package:saferoad/ServiceRegister/model/causeFailure.dart';
 
 class CauseFailureRepository {
-  final causeFailureInstance =
-      FirebaseFirestore.instance.collection('CauseOfFailures');
+  final causeFailureInstance;
+
+  CauseFailureRepository({
+    required this.causeFailureInstance,
+  });
 
   Future<List<CauseOfFailure>> fetchCausesOfFailure() async {
-    final querySnapshot = await causeFailureInstance.get();
-    return querySnapshot.docs.map((doc) {
+    final querySnapshot =
+        await causeFailureInstance.collection('CauseOfFailures').get();
+    final causes = <CauseOfFailure>[];
+
+    for (final doc in querySnapshot.docs) {
       final causeData = doc.data();
-      print(causeData['name']);
-      return CauseOfFailure.fromMap({
+      causes.add(CauseOfFailure.fromMap({
         'id': causeData['id'],
         'name': causeData['name'],
-      });
-    }).toList();
+      }));
+    }
+    return causes;
   }
 
   void addCauseFailure(String request, String causeId) async {

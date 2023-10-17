@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../utils/conversationKey.dart';
@@ -24,10 +22,7 @@ class ConversationFirebaseProvider {
         members.reversed.toList(),
       ],
     ).get();
-
-    log(conversationQuerySnap.docs.length.toString());
     if (conversationQuerySnap.docs.isNotEmpty) {
-
       return conversationQuerySnap.docs.first.data();
     }
     return null;
